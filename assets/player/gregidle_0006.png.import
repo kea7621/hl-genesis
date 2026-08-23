@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bpmb26k7cbfwj"
-path="res://.godot/imported/greg.png-2126bd33b2c11e6a7384129e0fa77317.ctex"
+uid="uid://dqcuwpj5f5ax6"
+path="res://.godot/imported/gregidle_0006.png-f4ad857fa40ba79704fdfca7badabef3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/player/greg.png"
-dest_files=["res://.godot/imported/greg.png-2126bd33b2c11e6a7384129e0fa77317.ctex"]
+source_file="res://assets/player/gregidle_0006.png"
+dest_files=["res://.godot/imported/gregidle_0006.png-f4ad857fa40ba79704fdfca7badabef3.ctex"]
 
 [params]
 

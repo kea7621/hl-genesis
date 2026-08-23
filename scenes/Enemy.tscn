@@ -2,7 +2,26 @@
 
 [ext_resource type="Script" uid="uid://2qakbhgsew00" path="res://scripts/Enemy.gd" id="1"]
 [ext_resource type="Script" uid="uid://tbbxwkm4oqjg" path="res://scripts/EnemyVitalsLabel.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://bc6hs7k5joavc" path="res://assets/enemies/civpro.png" id="2_mpr68"]
+[ext_resource type="Texture2D" uid="uid://dxrpd7pqpumxg" path="res://assets/enemies/civpro/civpro_0001.png" id="2_1i2q2"]
+[ext_resource type="Texture2D" uid="uid://b7cf101tkqmu2" path="res://assets/enemies/civpro/civpro_0002.png" id="3_ly5gv"]
+[ext_resource type="Texture2D" uid="uid://44tueggmxu6i" path="res://assets/enemies/civpro/civpro_0003.png" id="4_82o86"]
+[ext_resource type="Texture2D" uid="uid://dmm0kmpliumqn" path="res://assets/enemies/civpro/civpro_0004.png" id="5_1gqeq"]
+[ext_resource type="Texture2D" uid="uid://d6uvswd2wl52" path="res://assets/enemies/civpro/civpro_0005.png" id="6_isvm2"]
+[ext_resource type="Texture2D" uid="uid://c5ppmdgcdawaw" path="res://assets/enemies/civpro/civpro_0006.png" id="7_gr8dl"]
+
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_axa8o"]
+frames = 6
+frame_0/texture = ExtResource("2_1i2q2")
+frame_1/texture = ExtResource("3_ly5gv")
+frame_1/duration = 1.0
+frame_2/texture = ExtResource("4_82o86")
+frame_2/duration = 1.0
+frame_3/texture = ExtResource("5_1gqeq")
+frame_3/duration = 1.0
+frame_4/texture = ExtResource("6_isvm2")
+frame_4/duration = 1.0
+frame_5/texture = ExtResource("7_gr8dl")
+frame_5/duration = 1.0
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 16.0
@@ -15,7 +34,7 @@ collision_layer = 2
 script = ExtResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=887714199]
-texture = ExtResource("2_mpr68")
+texture = SubResource("AnimatedTexture_axa8o")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1680795637]
 shape = SubResource("1")
