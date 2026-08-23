@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="RecipeIngredient" format=3 uid="uid://b57qldm0ui85n"]
+
+[ext_resource type="Resource" uid="uid://dr8lb2ioh7bvq" path="res://resources/items/BrokenUSP.tres" id="1_7l8m0"]
+[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="2_djbdj"]
+
+[resource]
+script = ExtResource("2_djbdj")
+item = ExtResource("1_7l8m0")

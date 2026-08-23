@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://2qakbhgsew00" path="res://scripts/Enemy.gd" id="1"]
 [ext_resource type="Script" uid="uid://tbbxwkm4oqjg" path="res://scripts/EnemyVitalsLabel.gd" id="2"]
-[ext_resource type="Resource" path="res://resources/items/SMG.tres" id="3"]
+[ext_resource type="Resource" uid="uid://b6ov07hb7hwqe" path="res://resources/items/SMG.tres" id="3"]
 [ext_resource type="Texture2D" uid="uid://bc6hs7k5joavc" path="res://assets/enemies/civpro.png" id="3_2cdpj"]
 
 [sub_resource type="CircleShape2D" id="1"]

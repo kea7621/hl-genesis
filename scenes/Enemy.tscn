@@ -32,6 +32,8 @@ radius = 250.0
 [node name="Enemy" type="CharacterBody2D" unique_id=624923832]
 collision_layer = 2
 script = ExtResource("1")
+attack_damage = 10.0
+max_health = 100.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=887714199]
 texture = SubResource("AnimatedTexture_axa8o")
