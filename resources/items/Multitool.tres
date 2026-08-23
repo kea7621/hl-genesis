@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cugiun4a68fp4"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_name = "Multitool"
+item_type = 3
+muzzle_offset = Vector2(18, 0)
+metadata/_custom_type_script = "uid://c56x3t3npnhhk"

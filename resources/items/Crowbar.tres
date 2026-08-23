@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cpyg74t0qeqe5"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_name = "Crowbar"
+item_type = 0
+muzzle_offset = Vector2(28, 0)
+melee_range = 45.0
+melee_cooldown = 0.5
+damage = 18.0
