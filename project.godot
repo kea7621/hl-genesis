@@ -12,8 +12,12 @@ config_version=5
 
 config/name="HL-Genesis"
 run/main_scene="res://scenes/Main.tscn"
-config/features=PackedStringArray("4.6", "Mobile")
+config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
+
+[dotnet]
+
+project/assembly_name="HL-Genesis"
 
 [input]
 

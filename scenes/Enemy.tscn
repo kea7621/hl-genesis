@@ -1,27 +1,10 @@
 [gd_scene format=3 uid="uid://bcx3hhu6l8mis"]
 
 [ext_resource type="Script" uid="uid://2qakbhgsew00" path="res://scripts/Enemy.gd" id="1"]
-[ext_resource type="Script" uid="uid://tbbxwkm4oqjg" path="res://scripts/EnemyVitalsLabel.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://dxrpd7pqpumxg" path="res://assets/enemies/civpro/civpro_0001.png" id="2_1i2q2"]
-[ext_resource type="Texture2D" uid="uid://b7cf101tkqmu2" path="res://assets/enemies/civpro/civpro_0002.png" id="3_ly5gv"]
-[ext_resource type="Texture2D" uid="uid://44tueggmxu6i" path="res://assets/enemies/civpro/civpro_0003.png" id="4_82o86"]
-[ext_resource type="Texture2D" uid="uid://dmm0kmpliumqn" path="res://assets/enemies/civpro/civpro_0004.png" id="5_1gqeq"]
-[ext_resource type="Texture2D" uid="uid://d6uvswd2wl52" path="res://assets/enemies/civpro/civpro_0005.png" id="6_isvm2"]
-[ext_resource type="Texture2D" uid="uid://c5ppmdgcdawaw" path="res://assets/enemies/civpro/civpro_0006.png" id="7_gr8dl"]
+[ext_resource type="Script" path="res://scripts/EnemyVitalsLabel.gd" id="2"]
 
-[sub_resource type="AnimatedTexture" id="AnimatedTexture_axa8o"]
-frames = 6
-frame_0/texture = ExtResource("2_1i2q2")
-frame_1/texture = ExtResource("3_ly5gv")
-frame_1/duration = 1.0
-frame_2/texture = ExtResource("4_82o86")
-frame_2/duration = 1.0
-frame_3/texture = ExtResource("5_1gqeq")
-frame_3/duration = 1.0
-frame_4/texture = ExtResource("6_isvm2")
-frame_4/duration = 1.0
-frame_5/texture = ExtResource("7_gr8dl")
-frame_5/duration = 1.0
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v6fml"]
+size = Vector2(40, 50)
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 16.0
@@ -32,11 +15,10 @@ radius = 250.0
 [node name="Enemy" type="CharacterBody2D" unique_id=624923832]
 collision_layer = 2
 script = ExtResource("1")
-attack_damage = 10.0
-max_health = 100.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=887714199]
-texture = SubResource("AnimatedTexture_axa8o")
+modulate = Color(0.8, 0.2, 0.2, 1)
+texture = SubResource("PlaceholderTexture2D_v6fml")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1680795637]
 shape = SubResource("1")
@@ -53,6 +35,6 @@ offset_top = -46.0
 offset_right = 50.0
 offset_bottom = -28.0
 theme_override_font_sizes/font_size = 11
-text = "Full Vitals"
 horizontal_alignment = 1
+text = "Full Vitals"
 script = ExtResource("2")

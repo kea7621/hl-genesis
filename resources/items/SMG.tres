@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b6ov07hb7hwqe"]
+[gd_resource type="Resource" script_class="ItemData" format=3]
 
 [ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://y7qsbruhjbtq" path="res://scenes/Projectile.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/Projectile.tscn" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -11,4 +11,4 @@ fire_mode = 1
 projectile_scene = ExtResource("2")
 fire_rate = 0.09
 projectile_speed = 950.0
-damage = 9.0
+damage = 6.0
