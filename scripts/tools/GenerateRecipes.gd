@@ -21,13 +21,12 @@ extends EditorScript
 
 const RECIPES := [
 	{
-		"file": "CraftUSP",  # -> resources/recipes/CraftPipeWrench.tres
-		"name": "USP Match",
+		"file": "CraftPipeWrench",  # -> resources/recipes/CraftPipeWrench.tres
+		"name": "Pipe Wrench",
 		"ingredients": [
 			{"item": "res://resources/items/ScrapMetal.tres", "count": 2},
-			{"item": "res://resources/items/BrokenUSP.tres", "count": 1},
 		],
-		"result": "res://resources/items/USPMatch.tres",
+		"result": "res://resources/items/PipeWrench.tres",
 		"result_count": 1,
 	},
 	# Add more recipes here — copy the entry above and edit it.

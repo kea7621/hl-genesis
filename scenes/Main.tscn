@@ -12,6 +12,9 @@
 [ext_resource type="PackedScene" path="res://scenes/EnemyPistol.tscn" id="9"]
 [ext_resource type="PackedScene" path="res://scenes/EnemySMG.tscn" id="10"]
 [ext_resource type="Resource" uid="uid://c5bbcljije8r1" path="res://resources/recipes/CraftUSP.tres" id="10_bjd11"]
+[ext_resource type="PackedScene" path="res://scenes/LootUI.tscn" id="13_qmy6f"]
+[ext_resource type="PackedScene" uid="uid://bfokfdcs88bas" path="res://scenes/LootContainer.tscn" id="14_3p2gp"]
+[ext_resource type="Resource" uid="uid://cige1tgtelugn" path="res://resources/loot/TableLootBasic.tres" id="15_cvmbd"]
 
 [node name="Main" type="Node2D" unique_id=512461581]
 script = ExtResource("2")
@@ -41,3 +44,10 @@ crafting_path = NodePath("../Crafting")
 
 [node name="HUD" parent="." unique_id=123671991 instance=ExtResource("8")]
 player_path = NodePath("../Player")
+
+[node name="LootUI" parent="." unique_id=76289545 instance=ExtResource("13_qmy6f")]
+inventory_path = NodePath("../Player/Inventory")
+
+[node name="LootContainer" parent="." unique_id=1519604328 instance=ExtResource("14_3p2gp")]
+position = Vector2(-326, 370)
+loot_table = ExtResource("15_cvmbd")
