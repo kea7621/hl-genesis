@@ -1,14 +1,16 @@
-[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b6ov07hb7hwqe"]
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://pumi1f73ghns"]
 
 [ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://y7qsbruhjbtq" path="res://scenes/Projectile.tscn" id="2"]
+[ext_resource type="Texture2D" uid="uid://cxpk7228ay2oh" path="res://assets/Weapons/mp7.png" id="3_3qf2s"]
 
 [resource]
 script = ExtResource("1")
 item_name = "SMG"
-muzzle_offset = Vector2(24, 0)
+torso_texture = ExtResource("3_3qf2s")
+muzzle_offset = Vector2(27, 10.5)
 fire_mode = 1
 projectile_scene = ExtResource("2")
 fire_rate = 0.09
 projectile_speed = 950.0
-damage = 9.0
+damage = 6.0

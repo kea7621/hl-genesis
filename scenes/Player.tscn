@@ -2,20 +2,17 @@
 
 [ext_resource type="Script" uid="uid://dgtgev42waux0" path="res://scripts/Player.gd" id="1"]
 [ext_resource type="Script" uid="uid://db72yyyescxaj" path="res://scripts/Inventory.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://bmrbkwxi4ahu5" path="res://assets/player/gregidle_0001.png" id="2_lkdrv"]
+[ext_resource type="Texture2D" uid="uid://dqcuwpj5f5ax6" path="res://assets/player/gregidle_0006.png" id="2_lkdrv"]
 [ext_resource type="Resource" uid="uid://cpyg74t0qeqe5" path="res://resources/items/Crowbar.tres" id="3"]
-[ext_resource type="Texture2D" uid="uid://ch2qar50xu1ij" path="res://assets/player/gregidle_0002.png" id="3_p7iby"]
+[ext_resource type="Texture2D" uid="uid://ddiaq2gynxbj5" path="res://assets/player/gregidle_0005.png" id="3_p7iby"]
 [ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="3_qu4a1"]
 [ext_resource type="Resource" uid="uid://kr2vui2qja2a" path="res://resources/items/USPMatch.tres" id="4"]
-[ext_resource type="Texture2D" uid="uid://da3x0awm87m67" path="res://assets/player/gregidle_0003.png" id="4_0rnld"]
-[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="5"]
-[ext_resource type="Texture2D" uid="uid://c35shsyt7458s" path="res://assets/player/gregidle_0004.png" id="5_srp4u"]
+[ext_resource type="Texture2D" uid="uid://bmrbkwxi4ahu5" path="res://assets/player/gregidle_0001.png" id="4_0rnld"]
+[ext_resource type="Texture2D" uid="uid://ch2qar50xu1ij" path="res://assets/player/gregidle_0002.png" id="5_srp4u"]
 [ext_resource type="Resource" uid="uid://cugiun4a68fp4" path="res://resources/items/Multitool.tres" id="6"]
-[ext_resource type="Texture2D" uid="uid://ddiaq2gynxbj5" path="res://assets/player/gregidle_0005.png" id="6_jfpux"]
-[ext_resource type="Texture2D" uid="uid://dqcuwpj5f5ax6" path="res://assets/player/gregidle_0006.png" id="7_61ith"]
-[ext_resource type="Resource" uid="uid://dr8lb2ioh7bvq" path="res://resources/items/BrokenUSP.tres" id="14_p7iby"]
-[ext_resource type="Resource" path="res://resources/items/SMG.tres" id="15_0rnld"]
-[ext_resource type="Resource" uid="uid://cy1jiau0lst66" path="res://resources/items/Shotgun.tres" id="16_srp4u"]
+[ext_resource type="Texture2D" uid="uid://da3x0awm87m67" path="res://assets/player/gregidle_0003.png" id="6_jfpux"]
+[ext_resource type="Texture2D" uid="uid://c35shsyt7458s" path="res://assets/player/gregidle_0004.png" id="7_61ith"]
+[ext_resource type="Resource" uid="uid://pumi1f73ghns" path="res://resources/items/SMG.tres" id="13_lkdrv"]
 
 [sub_resource type="AnimatedTexture" id="AnimatedTexture_ebwui"]
 frames = 6
@@ -63,4 +60,4 @@ position_smoothing_speed = 8.0
 
 [node name="Inventory" type="Node" parent="." unique_id=1795019051]
 script = ExtResource("2")
-starting_items = Array[ExtResource("3_qu4a1")]([ExtResource("3"), ExtResource("4"), ExtResource("6"), ExtResource("5"), ExtResource("14_p7iby"), ExtResource("15_0rnld"), ExtResource("16_srp4u")])
+starting_items = Array[ExtResource("3_qu4a1")]([ExtResource("3"), ExtResource("4"), ExtResource("6"), ExtResource("13_lkdrv")])

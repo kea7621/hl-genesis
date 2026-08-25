@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="LootTable" format=3 uid="uid://cbrmu3m71j8ev"]
+
+[ext_resource type="Script" uid="uid://pifsavv2p4wt" path="res://scripts/LootEntry.gd" id="1_k3jln"]
+[ext_resource type="Resource" uid="uid://kr2vui2qja2a" path="res://resources/items/USPMatch.tres" id="2_2r52m"]
+[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="3_clhjc"]
+[ext_resource type="Script" uid="uid://dfn4s6losuybw" path="res://scripts/LootTable.gd" id="4_qpiup"]
+
+[sub_resource type="Resource" id="Resource_ste24"]
+script = ExtResource("1_k3jln")
+item = ExtResource("2_2r52m")
+chance = 20.0
+
+[sub_resource type="Resource" id="Resource_e2dif"]
+script = ExtResource("1_k3jln")
+item = ExtResource("3_clhjc")
+
+[resource]
+script = ExtResource("4_qpiup")
+entries = Array[ExtResource("1_k3jln")]([SubResource("Resource_ste24"), SubResource("Resource_e2dif")])
