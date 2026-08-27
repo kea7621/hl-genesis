@@ -29,6 +29,26 @@ const RECIPES := [
 		"result": "res://resources/items/PipeWrench.tres",
 		"result_count": 1,
 	},
+	{
+		"file": "CraftSMG",  # -> resources/recipes/CraftPipeWrench.tres
+		"name": "MP7",
+		"ingredients": [
+			{"item": "res://resources/items/ScrapMetal.tres", "count": 5},
+			{"item": "res://resources/items/BrokenSMG.tres", "count": 1},
+		],
+		"result": "res://resources/items/SMG.tres",
+		"result_count": 1,
+	},
+	{
+		"file": "CraftUSP",  # -> resources/recipes/CraftPipeWrench.tres
+		"name": "USP",
+		"ingredients": [
+			{"item": "res://resources/items/ScrapMetal.tres", "count": 2},
+			{"item": "res://resources/items/BrokenUSP.tres", "count": 1},
+		],
+		"result": "res://resources/items/USPMatch.tres",
+		"result_count": 1,
+	},
 	# Add more recipes here — copy the entry above and edit it.
 	# Multiple ingredients: just add more {"item": ..., "count": ...} entries.
 ]

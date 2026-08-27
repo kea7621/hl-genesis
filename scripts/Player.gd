@@ -37,19 +37,30 @@ func _ready() -> void:
 	stamina = max_stamina
 	health = max_health
 
-	inventory.equipped_changed.connect(_on_weapon_equipped)
-	# Inventory is a child node, so its _ready() (and initial equip()) runs
-	# BEFORE this _ready() in Godot's bottom-up ready order — meaning the
-	# very first equipped_changed signal fires before we've connected to it.
-	# Call the handler manually once, using whatever's already equipped.
-	_on_weapon_equipped(inventory.get_equipped())
+	inventory.active_weapon_changed.connect(_on_active_weapon_changed)
+	# Inventory is a child node, so its _ready() runs BEFORE this one in
+	# Godot's bottom-up ready order — meaning if starting_items auto-equips
+	# a weapon, that happens before we've connected to the signal here.
+	# Call the handler manually once, using whatever's already active.
+	_on_active_weapon_changed(inventory.get_active_weapon())
 
 
-func _on_weapon_equipped(item: ItemData) -> void:
+func _on_active_weapon_changed(item: ItemData) -> void:
 	if item == null:
 		return
 	torso.texture = item.torso_texture
 	muzzle.position = item.muzzle_offset
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_1:
+				inventory.set_active_weapon("primary")
+			KEY_2:
+				inventory.set_active_weapon("secondary")
+			KEY_3:
+				inventory.set_active_weapon("melee")
 
 
 func _physics_process(delta: float) -> void:
@@ -114,7 +125,7 @@ func _handle_attack(delta: float) -> void:
 	if _attack_cooldown > 0.0:
 		_attack_cooldown -= delta
 
-	var item: ItemData = inventory.get_equipped()
+	var item: ItemData = inventory.get_active_weapon()
 	if item == null:
 		return
 
@@ -131,9 +142,10 @@ func _handle_attack(delta: float) -> void:
 		ItemData.ItemType.TOOL:
 			_do_tool_use(item)
 			_attack_cooldown = item.use_cooldown
-		ItemData.ItemType.CRAFTING:
-			pass  # Inventory.equip() already blocks these from being equipped;
-				  # this case only exists so the match is exhaustive.
+		ItemData.ItemType.CRAFTING, ItemData.ItemType.ARMOR:
+			pass  # neither can ever be the active weapon in practice — Crafting
+				  # has no equip_slot, Armor isn't in WEAPON_SLOTS — this case
+				  # only exists so the match is exhaustive.
 
 
 ## Melee/Tool stay "hold to keep attacking" (gated by their own cooldowns
@@ -213,7 +225,11 @@ func _do_tool_use(item: ItemData) -> void:
 func take_damage(amount: float) -> void:
 	if is_dead:
 		return
-	health = max(health - amount, 0.0)
+
+	var armor: ItemData = inventory.get_armor()
+	var reduced_amount: float = max(amount - armor.armor_value, 0.0) if armor != null else amount
+
+	health = max(health - reduced_amount, 0.0)
 	health_changed.emit(health, max_health)
 	if health <= 0.0:
 		die()

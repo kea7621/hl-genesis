@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bcx3hhu6l8mis"]
 
 [ext_resource type="Script" uid="uid://2qakbhgsew00" path="res://scripts/Enemy.gd" id="1"]
-[ext_resource type="Script" uid="uid://tbbxwkm4oqjg" path="res://scripts/EnemyVitalsLabel.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/EnemyVitalsLabel.gd" id="2"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v6fml"]
 size = Vector2(40, 50)
@@ -15,8 +15,6 @@ radius = 250.0
 [node name="Enemy" type="CharacterBody2D" unique_id=624923832]
 collision_layer = 2
 script = ExtResource("1")
-vision_radius = 225.0
-max_health = 150.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=887714199]
 modulate = Color(0.8, 0.2, 0.2, 1)
@@ -37,6 +35,6 @@ offset_top = -46.0
 offset_right = 50.0
 offset_bottom = -28.0
 theme_override_font_sizes/font_size = 11
-text = "Full Vitals"
 horizontal_alignment = 1
+text = "Full Vitals"
 script = ExtResource("2")

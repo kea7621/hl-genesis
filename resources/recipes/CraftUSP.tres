@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CraftingRecipe" format=3 uid="uid://y36pb7u8lmg6"]
+
+[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1_st2t1"]
+[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="2_2uipd"]
+[ext_resource type="Resource" uid="uid://cplayjo63nmh7" path="res://resources/items/BrokenUSP.tres" id="3_hjutb"]
+[ext_resource type="Resource" uid="uid://kr2vui2qja2a" path="res://resources/items/USPMatch.tres" id="4_pb750"]
+[ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="5_u833m"]
+
+[sub_resource type="Resource" id="Resource_prw7q"]
+script = ExtResource("1_st2t1")
+item = ExtResource("2_2uipd")
+count = 2
+
+[sub_resource type="Resource" id="Resource_6qvfp"]
+script = ExtResource("1_st2t1")
+item = ExtResource("3_hjutb")
+
+[resource]
+script = ExtResource("5_u833m")
+recipe_name = "USP"
+ingredients = Array[ExtResource("1_st2t1")]([SubResource("Resource_prw7q"), SubResource("Resource_6qvfp")])
+result_item = ExtResource("4_pb750")

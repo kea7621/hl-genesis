@@ -1,24 +1,33 @@
 extends CanvasLayer
 
-## A proper toggleable inventory screen: a slot grid, tooltips on hover,
-## click a slot to equip it as primary. Press Tab or I to open/close,
-## Escape to close. A future Crafting UI can follow this same pattern —
-## read Inventory.slots, write via Inventory.add_item()/remove_item().
+## A proper toggleable inventory screen: four equip-slot icons
+## (Primary/Secondary/Melee/Armor) plus the general backpack grid below.
+## Click a backpack item to equip it into whichever slot its equip_slot
+## points at; click an occupied equip slot to unequip it back to the
+## backpack. Switching which equipped weapon is ACTIVE (what you actually
+## attack with) is handled by Player.gd via number keys 1/2/3, not by
+## clicking here — see Inventory.gd's comments for why those are kept
+## separate. Press Tab or I to open/close, Escape to close.
 
 @export var inventory_path: NodePath
 @export var columns: int = 5
+
+const EQUIP_SLOT_ORDER := ["primary", "secondary", "melee", "armor"]
+const EQUIP_SLOT_LABELS := {"primary": "Primary", "secondary": "Secondary", "melee": "Melee", "armor": "Armor"}
 
 var inventory: Inventory
 var is_open: bool = false
 
 @onready var panel: Panel = $Panel
+@onready var equip_row: HBoxContainer = $Panel/VBoxContainer/EquipRow
 @onready var grid: GridContainer = $Panel/VBoxContainer/GridContainer
 
 
 func _ready() -> void:
 	inventory = get_node(inventory_path)
 	inventory.inventory_changed.connect(_refresh)
-	inventory.equipped_changed.connect(func(_item: ItemData) -> void: _refresh())
+	inventory.equip_slot_changed.connect(func(_slot: String, _item: ItemData) -> void: _refresh())
+	inventory.active_weapon_changed.connect(func(_item: ItemData) -> void: _refresh_equip_row())
 	grid.columns = columns
 	panel.visible = false
 	_refresh()
@@ -45,6 +54,52 @@ func _close() -> void:
 
 
 func _refresh() -> void:
+	_refresh_equip_row()
+	_refresh_grid()
+
+
+func _refresh_equip_row() -> void:
+	for child in equip_row.get_children():
+		child.queue_free()
+
+	for slot_name in EQUIP_SLOT_ORDER:
+		equip_row.add_child(_build_equip_slot_button(slot_name))
+
+
+func _build_equip_slot_button(slot_name: String) -> Control:
+	var item: ItemData = inventory.equipped.get(slot_name)
+
+	var column := VBoxContainer.new()
+	column.alignment = BoxContainer.ALIGNMENT_CENTER
+
+	var btn := Button.new()
+	btn.custom_minimum_size = Vector2(64, 64)
+
+	if item != null:
+		btn.tooltip_text = _build_tooltip(item)
+		if item.icon:
+			btn.icon = item.icon
+		else:
+			btn.text = item.item_name
+		var is_active: bool = slot_name in Inventory.WEAPON_SLOTS and inventory.active_weapon_slot == slot_name
+		btn.modulate = Color(1, 0.9, 0.4, 1) if is_active else Color(1, 1, 1, 1)
+	else:
+		btn.disabled = true
+		btn.modulate = Color(1, 1, 1, 0.35)
+
+	btn.pressed.connect(func() -> void: _on_equip_slot_pressed(slot_name))
+	column.add_child(btn)
+
+	var label := Label.new()
+	label.text = EQUIP_SLOT_LABELS[slot_name]
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size", 10)
+	column.add_child(label)
+
+	return column
+
+
+func _refresh_grid() -> void:
 	for child in grid.get_children():
 		child.queue_free()
 
@@ -54,23 +109,29 @@ func _refresh() -> void:
 		btn.custom_minimum_size = Vector2(64, 64)
 
 		if item != null:
-			btn.text = item.item_name
 			btn.tooltip_text = _build_tooltip(item)
 			if item.icon:
 				btn.icon = item.icon
-			btn.modulate = Color(1, 0.9, 0.4, 1) if i == inventory.equipped_index else Color(1, 1, 1, 1)
+			else:
+				btn.text = item.item_name
+			if item.equip_slot == ItemData.EquipSlot.NONE:
+				btn.modulate = Color(1, 1, 1, 0.7)  # can't be equipped — dimmed, not disabled (still viewable)
 		else:
 			btn.disabled = true
 			btn.modulate = Color(1, 1, 1, 0.35)
 
 		var slot_index := i
-		btn.pressed.connect(func() -> void: _on_slot_pressed(slot_index))
+		btn.pressed.connect(func() -> void: _on_grid_slot_pressed(slot_index))
 		grid.add_child(btn)
 
 
-func _on_slot_pressed(index: int) -> void:
+func _on_equip_slot_pressed(slot_name: String) -> void:
+	inventory.unequip_slot(slot_name)
+
+
+func _on_grid_slot_pressed(index: int) -> void:
 	if inventory.slots[index] != null:
-		inventory.equip(index)
+		inventory.equip_item(index)
 
 
 func _build_tooltip(item: ItemData) -> String:
@@ -79,6 +140,8 @@ func _build_tooltip(item: ItemData) -> String:
 		lines.append("Crafting material — used by the crafting station")
 	elif item.item_type == ItemData.ItemType.TOOL:
 		lines.append("Use range: %s" % item.use_range)
+	elif item.item_type == ItemData.ItemType.ARMOR:
+		lines.append("Armor: -%s damage per hit" % item.armor_value)
 	else:
 		lines.append("Damage: %s" % item.damage)
 	return "\n".join(lines)

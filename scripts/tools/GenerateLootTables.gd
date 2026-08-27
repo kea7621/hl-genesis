@@ -16,8 +16,9 @@ const LOOT_TABLES := [
 	{
 		"file": "TableLootBasic",  # -> resources/loot/TableLootBasic.tres
 		"entries": [
-			{"item": "res://resources/items/USPMatch.tres", "chance": 20.0},
-			{"item": "res://resources/items/ScrapMetal.tres", "chance": 50.0},
+			{"item": "res://resources/items/BrokenUSP.tres", "chance": 20.0},
+			{"item": "res://resources/items/BrokenSMG.tres", "chance": 5.0},
+			{"item": "res://resources/items/ScrapMetal.tres", "chance": 75.0},
 		],
 	},
 	# Add more loot tables here — copy the entry above and edit it.

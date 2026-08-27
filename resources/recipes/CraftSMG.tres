@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CraftingRecipe" format=3 uid="uid://uvkyh8h6dmfu"]
+
+[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1_q3vj0"]
+[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="2_re1pk"]
+[ext_resource type="Resource" uid="uid://b8ehyeecmhn04" path="res://resources/items/BrokenSMG.tres" id="3_3rcw4"]
+[ext_resource type="Resource" uid="uid://b7q7ufe3dd5al" path="res://resources/items/SMG.tres" id="4_ug3q3"]
+[ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="5_xxrcf"]
+
+[sub_resource type="Resource" id="Resource_q3vj0"]
+script = ExtResource("1_q3vj0")
+item = ExtResource("2_re1pk")
+count = 5
+
+[sub_resource type="Resource" id="Resource_re1pk"]
+script = ExtResource("1_q3vj0")
+item = ExtResource("3_3rcw4")
+
+[resource]
+script = ExtResource("5_xxrcf")
+recipe_name = "MP7"
+ingredients = Array[ExtResource("1_q3vj0")]([SubResource("Resource_q3vj0"), SubResource("Resource_re1pk")])
+result_item = ExtResource("4_ug3q3")

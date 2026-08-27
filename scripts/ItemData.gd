@@ -1,20 +1,30 @@
 extends Resource
 class_name ItemData
 
-## Data-only description of an item. Melee, Ranged, Crafting, and Tool
-## items all use this same resource type — only the relevant export group
-## matters for a given item_type. Create these as .tres files (Crowbar.tres,
-## USPMatch.tres, etc.) rather than hardcoding weapon stats into Player.gd.
+## Data-only description of an item. Melee, Ranged, Crafting, Tool, and
+## Armor items all use this same resource type — only the relevant export
+## group matters for a given item_type. Create these as .tres files
+## (Crowbar.tres, USPMatch.tres, etc.) rather than hardcoding weapon stats
+## into Player.gd.
 
-enum ItemType { MELEE, RANGED, CRAFTING, TOOL }
+enum ItemType { MELEE, RANGED, CRAFTING, TOOL, ARMOR }
 enum FireMode { SEMI_AUTO, FULL_AUTO, PUMP_ACTION }
+enum EquipSlot { NONE, PRIMARY, SECONDARY, MELEE, ARMOR }
 
 @export var item_name: String = "Item"
 @export var item_type: ItemType = ItemType.RANGED
-@export var icon: Texture2D  # used by the inventory grid once you have art
+@export var icon: Texture2D  # shown on both the inventory grid AND the equip-slot icons
+
+## Which paperdoll slot this item goes into when equipped (see
+## Inventory.equip_item()). Leave NONE for items that just sit in the
+## general inventory (crafting materials, etc.) and can't be equipped at
+## all. This is independent of item_type — e.g. a Tool could be assigned
+## to PRIMARY or SECONDARY, whichever fits your design, it isn't hardcoded
+## to any one item_type.
+@export var equip_slot: EquipSlot = EquipSlot.NONE
 
 @export_group("Visuals")
-@export var torso_texture: Texture2D   # swapped onto Player's Pivot/Torso when equipped
+@export var torso_texture: Texture2D   # swapped onto Player's Pivot/Torso when this becomes the active weapon
 @export var muzzle_offset: Vector2 = Vector2(20, 0)  # where shots/melee/tool-use originate
 
 @export_group("Ranged")
@@ -40,8 +50,15 @@ enum FireMode { SEMI_AUTO, FULL_AUTO, PUMP_ACTION }
 # once those exist — this item just carries how far and how often it can
 # attempt to use something. See Player._do_tool_use() for the current stub.
 
+@export_group("Armor")
+@export var armor_value: float = 0.0
+# Flat damage reduction, subtracted from every hit while equipped (see
+# Player.take_damage()) — not a percentage. A 5.0 armor_value turns a
+# 12-damage hit into 7. Damage is clamped so it can never go negative or
+# heal you.
+
 @export_group("Shared")
-@export var damage: float = 10.0  # unused by Crafting/Tool items
+@export var damage: float = 10.0  # unused by Crafting/Tool/Armor items
 
 
 func get_type_label() -> String:
@@ -54,4 +71,6 @@ func get_type_label() -> String:
 			return "Crafting Material"
 		ItemType.TOOL:
 			return "Tool"
+		ItemType.ARMOR:
+			return "Armor"
 	return "Item"
