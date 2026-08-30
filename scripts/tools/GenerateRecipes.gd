@@ -33,21 +33,63 @@ const RECIPES := [
 		"file": "CraftSMG",  # -> resources/recipes/CraftPipeWrench.tres
 		"name": "MP7",
 		"ingredients": [
-			{"item": "res://resources/items/ScrapMetal.tres", "count": 5},
+			{"item": "res://resources/items/SMGParts.tres", "count": 1},
 			{"item": "res://resources/items/BrokenSMG.tres", "count": 1},
+			{"item": "res://resources/items/Plastic.tres", "count": 6},
 		],
 		"result": "res://resources/items/SMG.tres",
 		"result_count": 1,
 	},
 	{
-		"file": "CraftUSP",  # -> resources/recipes/CraftPipeWrench.tres
+		"file": "CraftUSP",  
 		"name": "USP",
 		"ingredients": [
-			{"item": "res://resources/items/ScrapMetal.tres", "count": 2},
+			{"item": "res://resources/items/PistolParts.tres", "count": 1},
 			{"item": "res://resources/items/BrokenUSP.tres", "count": 1},
+			{"item": "res://resources/items/Plastic.tres", "count": 4},
 		],
 		"result": "res://resources/items/USPMatch.tres",
 		"result_count": 1,
+	},
+	{
+		"file": "CraftPParts",  
+		"name": "Pistol Parts",
+		"ingredients": [
+			{"item": "res://resources/items/ScrapMetal.tres", "count": 5},
+			{"item": "res://resources/items/Springs.tres", "count": 4},
+			{"item": "res://resources/items/Screws.tres", "count": 6},
+		],
+		"result": "res://resources/items/PistolParts.tres",
+		"result_count": 1,
+	},
+	{
+		"file": "CraftSMParts",  
+		"name": "SMG Parts",
+		"ingredients": [
+			{"item": "res://resources/items/ScrapMetal.tres", "count": 8},
+			{"item": "res://resources/items/Springs.tres", "count": 6},
+			{"item": "res://resources/items/Screws.tres", "count": 6},
+		],
+		"result": "res://resources/items/SMGParts.tres",
+		"result_count": 1,
+	},
+	{
+		"file": "CraftSprings",  
+		"name": "Springs",
+		"ingredients": [
+			{"item": "res://resources/items/ScrapMetal.tres", "count": 1},
+		],
+		"result": "res://resources/items/Springs.tres",
+		"result_count": 2,
+	},
+	{
+		"file": "CraftScrews",  
+		"name": "Screws",
+		"ingredients": [
+			{"item": "res://resources/items/ScrapMetal.tres", "count": 1},
+		],
+		"result": "res://resources/items/Screws.tres",
+		"result_count": 2,
 	},
 	# Add more recipes here — copy the entry above and edit it.
 	# Multiple ingredients: just add more {"item": ..., "count": ...} entries.

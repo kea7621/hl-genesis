@@ -48,7 +48,6 @@ shape = SubResource("1")
 [node name="Pivot" type="Node2D" parent="." unique_id=620578409]
 
 [node name="Torso" type="Sprite2D" parent="Pivot" unique_id=1378175880]
-modulate = Color(0.2, 0.35, 0.28, 1)
 texture = SubResource("PlaceholderTexture2D_v6fml")
 offset = Vector2(9, 3)
 

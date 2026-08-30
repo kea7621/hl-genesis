@@ -38,6 +38,41 @@ const ITEMS := [
 		"name": "Broken USP",
 		"type": ItemData.ItemType.CRAFTING,
 	},
+	{
+		"file": "SMGParts",  # -> resources/items/SMGParts.tres
+		"name": "SMG Parts",
+		"type": ItemData.ItemType.CRAFTING,
+	},
+	{
+		"file": "ShotgunParts",  # -> resources/items/ShotgunParts.tres
+		"name": "Shotgun Parts",
+		"type": ItemData.ItemType.CRAFTING,
+	},
+	{
+		"file": "PistolParts",  # -> resources/items/PistolParts.tres
+		"name": "Pistol Parts",
+		"type": ItemData.ItemType.CRAFTING,
+	},
+	{
+		"file": "BrokenShotgun",  # -> resources/items/BrokenShotgun.tres
+		"name": "Broken M870",
+		"type": ItemData.ItemType.CRAFTING,
+	},
+	{
+		"file": "Screws",  # -> resources/items/Screws.tres
+		"name": "Screws",
+		"type": ItemData.ItemType.CRAFTING,
+	},
+	{
+		"file": "Springs",  # -> resources/items/Springs.tres
+		"name": "Springs",
+		"type": ItemData.ItemType.CRAFTING,
+	},
+	{
+		"file": "Plastic",  # -> resources/items/Plastic.tres
+		"name": "Plastic",
+		"type": ItemData.ItemType.CRAFTING,
+	},
 	# Add more items here — copy the entry above and edit it.
 	# equip_slot: ItemData.EquipSlot.{PRIMARY,SECONDARY,MELEE,ARMOR,NONE}
 	#   — leave unset (defaults to NONE) for anything that can't be equipped.

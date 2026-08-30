@@ -1,19 +1,21 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://bb45da1hg5bei"]
 
-[ext_resource type="Script" path="res://scripts/GameOverUI.gd" id="1"]
+[ext_resource type="Script" uid="uid://bk4h66od0adag" path="res://scripts/GameOverUI.gd" id="1"]
 
 [sub_resource type="StyleBoxFlat" id="1"]
 bg_color = Color(0, 0, 0, 0.75)
 
-[node name="GameOverUI" type="CanvasLayer"]
+[node name="GameOverUI" type="CanvasLayer" unique_id=1650438845]
 script = ExtResource("1")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=302683632]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme_override_styles/panel = SubResource("1")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=64281563]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -24,16 +26,19 @@ offset_right = 150.0
 offset_bottom = 60.0
 theme_override_constants/separation = 16
 
-[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
-text = "YOU DIED"
-horizontal_alignment = 1
+[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer" unique_id=1142274305]
+modulate = Color(0.39, 0.39, 0.39, 1)
+layout_mode = 2
 theme_override_font_sizes/font_size = 32
-modulate = Color(0.85, 0.15, 0.15, 1)
+text = "Deceased"
+horizontal_alignment = 1
 
-[node name="RespawnButton" type="Button" parent="Panel/VBoxContainer"]
+[node name="RespawnButton" type="Button" parent="Panel/VBoxContainer" unique_id=1140217552]
 custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
 text = "Respawn"
 
-[node name="MainMenuButton" type="Button" parent="Panel/VBoxContainer"]
+[node name="MainMenuButton" type="Button" parent="Panel/VBoxContainer" unique_id=1546204974]
 custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
 text = "Main Menu"

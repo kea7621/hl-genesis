@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b7o1jhfc7brrb"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1_guuun"]
+
+[resource]
+script = ExtResource("1_guuun")
+item_name = "Pistol Parts"
+item_type = 2
+damage = 0.0
