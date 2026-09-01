@@ -1,11 +1,37 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://241ftusj5d8g"]
 
-[ext_resource type="Script" path="res://scripts/CraftingUI.gd" id="1"]
+[ext_resource type="Script" uid="uid://cxlux7exdxxcs" path="res://scripts/CraftingUI.gd" id="1"]
+[ext_resource type="Theme" uid="uid://cnjhvd8aw71dr" path="res://theme/GameTheme.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://v1ntmbxgddvm" path="res://assets/terminal_0001.png" id="3_ghmeh"]
+[ext_resource type="Texture2D" uid="uid://bimlrwhlbtmf7" path="res://assets/terminal_0002.png" id="4_dp6hr"]
+[ext_resource type="Texture2D" uid="uid://kme2op1aq617" path="res://assets/terminal_0007.png" id="4_qmagn"]
+[ext_resource type="Texture2D" uid="uid://sdo4ky8q6rfa" path="res://assets/terminal_0003.png" id="5_xb8q4"]
+[ext_resource type="Texture2D" uid="uid://bxuotqawwylv0" path="res://assets/terminal_0004.png" id="6_8yshb"]
+[ext_resource type="Texture2D" uid="uid://bnmoc3pt37q5m" path="res://assets/terminal_0005.png" id="7_h0bms"]
+[ext_resource type="Texture2D" uid="uid://cxxwd8j80hfs4" path="res://assets/terminal_0006.png" id="8_eupil"]
 
-[node name="CraftingUI" type="CanvasLayer"]
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_3ntvf"]
+frames = 7
+frame_0/texture = ExtResource("3_ghmeh")
+frame_1/texture = ExtResource("4_dp6hr")
+frame_1/duration = 1.0
+frame_2/texture = ExtResource("5_xb8q4")
+frame_2/duration = 1.0
+frame_3/texture = ExtResource("6_8yshb")
+frame_3/duration = 1.0
+frame_4/texture = ExtResource("7_h0bms")
+frame_4/duration = 1.0
+frame_5/texture = ExtResource("8_eupil")
+frame_5/duration = 1.0
+frame_6/texture = ExtResource("4_qmagn")
+frame_6/duration = 1.0
+
+[node name="CraftingUI" type="CanvasLayer" unique_id=1916610630]
 script = ExtResource("1")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1987192280]
+clip_contents = true
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -14,8 +40,26 @@ offset_left = -240.0
 offset_top = -200.0
 offset_right = 240.0
 offset_bottom = 200.0
+theme = ExtResource("2")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+[node name="BackgroundArt" type="TextureRect" parent="Panel" unique_id=1850429016]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = SubResource("AnimatedTexture_3ntvf")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Scrim" type="ColorRect" parent="Panel" unique_id=1369163969]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.02, 0.03, 0.035, 0.45)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=321482956]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 16.0
@@ -24,21 +68,31 @@ offset_right = -16.0
 offset_bottom = -16.0
 theme_override_constants/separation = 12
 
-[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer" unique_id=2006716338]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.55, 0.1, 1)
+theme_override_font_sizes/font_size = 22
 text = "CRAFTING"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 20
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer"]
+[node name="AccentDivider" type="ColorRect" parent="Panel/VBoxContainer" unique_id=1856715245]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.25, 0.75, 0.85, 0.6)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer" unique_id=1561873980]
 custom_minimum_size = Vector2(0, 280)
+layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RecipeList" type="VBoxContainer" parent="Panel/VBoxContainer/ScrollContainer"]
+[node name="RecipeList" type="VBoxContainer" parent="Panel/VBoxContainer/ScrollContainer" unique_id=858100233]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="HintLabel" type="Label" parent="Panel/VBoxContainer"]
+[node name="HintLabel" type="Label" parent="Panel/VBoxContainer" unique_id=1306358449]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.55, 0.58, 1)
+theme_override_font_sizes/font_size = 12
 text = "Press C to close"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 12
-modulate = Color(0.7, 0.7, 0.7, 1)

@@ -82,7 +82,7 @@ func _build_equip_slot_button(slot_name: String) -> Control:
 		else:
 			btn.text = item.item_name
 		var is_active: bool = slot_name in Inventory.WEAPON_SLOTS and inventory.active_weapon_slot == slot_name
-		btn.modulate = Color(1, 0.9, 0.4, 1) if is_active else Color(1, 1, 1, 1)
+		btn.modulate = Color(1.0, 0.55, 0.1, 1) if is_active else Color(1, 1, 1, 1)
 	else:
 		btn.disabled = true
 		btn.modulate = Color(1, 1, 1, 0.35)
@@ -104,18 +104,21 @@ func _refresh_grid() -> void:
 		child.queue_free()
 
 	for i in inventory.slots.size():
-		var item: ItemData = inventory.slots[i]
+		var stack: ItemStack = inventory.slots[i]
 		var btn := Button.new()
 		btn.custom_minimum_size = Vector2(64, 64)
 
-		if item != null:
-			btn.tooltip_text = _build_tooltip(item)
+		if stack != null:
+			var item: ItemData = stack.item
+			btn.tooltip_text = _build_tooltip(item, stack.quantity)
 			if item.icon:
 				btn.icon = item.icon
 			else:
 				btn.text = item.item_name
 			if item.equip_slot == ItemData.EquipSlot.NONE:
 				btn.modulate = Color(1, 1, 1, 0.7)  # can't be equipped — dimmed, not disabled (still viewable)
+			if stack.quantity > 1:
+				btn.add_child(_build_quantity_badge(stack.quantity))
 		else:
 			btn.disabled = true
 			btn.modulate = Color(1, 1, 1, 0.35)
@@ -123,6 +126,23 @@ func _refresh_grid() -> void:
 		var slot_index := i
 		btn.pressed.connect(func() -> void: _on_grid_slot_pressed(slot_index))
 		grid.add_child(btn)
+
+
+## Small "xN" label pinned to a slot button's bottom-right corner, for
+## stacked (quantity > 1) items. mouse_filter=IGNORE so it never steals
+## the button's click. Black outline keeps it legible over any icon or
+## background art the slot happens to show.
+func _build_quantity_badge(quantity: int) -> Label:
+	var badge := Label.new()
+	badge.text = "x%d" % quantity
+	badge.add_theme_font_size_override("font_size", 12)
+	badge.add_theme_color_override("font_color", Color(1.0, 0.55, 0.1, 1))
+	badge.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	badge.add_theme_constant_override("outline_size", 3)
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	badge.position = Vector2(-22, -18)
+	return badge
 
 
 func _on_equip_slot_pressed(slot_name: String) -> void:
@@ -134,8 +154,10 @@ func _on_grid_slot_pressed(index: int) -> void:
 		inventory.equip_item(index)
 
 
-func _build_tooltip(item: ItemData) -> String:
+func _build_tooltip(item: ItemData, quantity: int = 1) -> String:
 	var lines: Array[String] = [item.item_name, "Type: %s" % item.get_type_label()]
+	if quantity > 1:
+		lines.append("Quantity: %d" % quantity)
 	if item.item_type == ItemData.ItemType.CRAFTING:
 		lines.append("Crafting material — used by the crafting station")
 	elif item.item_type == ItemData.ItemType.TOOL:

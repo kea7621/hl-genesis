@@ -12,13 +12,21 @@ class_name Inventory
 ## three can be equipped simultaneously — that's active_weapon_slot,
 ## switched via number keys in Player.gd, independent of what's equipped
 ## where. Armor has no "active" concept, it's passive.
+##
+## Stacking: each general slot holds an ItemStack (item + quantity) rather
+## than a bare ItemData, so several units of a stackable item (crafting
+## materials — see ItemData.is_stackable()) share one slot instead of
+## eating one slot per unit. Weapons/tools/armor are never stackable, so a
+## slot holding one of those always has quantity 1 — functionally
+## identical to the old one-item-per-slot behavior. An empty slot is still
+## just `null`.
 
 const WEAPON_SLOTS := ["primary", "secondary", "melee"]  # armor excluded — not switchable/active
 
 @export var capacity: int = 20
 @export var starting_items: Array[ItemData] = []  # assign starting gear here, in order — auto-equips if equip_slot is set
 
-var slots: Array[ItemData] = []
+var slots: Array[ItemStack] = []
 var equipped: Dictionary = {"primary": null, "secondary": null, "melee": null, "armor": null}
 var active_weapon_slot: String = ""
 var is_ui_open: bool = false  # set by InventoryUI/CraftingUI/LootUI; Player checks this to block firing while browsing
@@ -44,7 +52,7 @@ func _ready() -> void:
 		if slot_name != "" and equipped.get(slot_name) == null:
 			_equip_direct(item)
 		else:
-			slots[i] = item
+			slots[i] = ItemStack.new(item, 1)
 	inventory_changed.emit()
 
 
@@ -56,14 +64,17 @@ func equip_item(index: int) -> bool:
 	if index < 0 or index >= slots.size() or slots[index] == null:
 		return false
 
-	var item: ItemData = slots[index]
+	var item: ItemData = slots[index].item
 	if item.equip_slot == ItemData.EquipSlot.NONE:
 		return false
 
 	var slot_name: String = _slot_name(item.equip_slot)
 	var previous: ItemData = equipped.get(slot_name)
 
-	slots[index] = previous  # swap — previous occupant (or null) goes back where the new item came from
+	# Equippable items (weapons/armor) are never stackable, so this is
+	# always a straight 1-for-1 swap — previous occupant (or null) goes
+	# back where the new item came from, as its own single-quantity stack.
+	slots[index] = ItemStack.new(previous, 1) if previous != null else null
 	equipped[slot_name] = item
 	equip_slot_changed.emit(slot_name, item)
 	inventory_changed.emit()
@@ -90,7 +101,7 @@ func unequip_slot(slot_name: String) -> bool:
 	if free_index == -1:
 		return false  # backpack full — leave it equipped rather than deleting it
 
-	slots[free_index] = item
+	slots[free_index] = ItemStack.new(item, 1)
 	equipped[slot_name] = null
 	equip_slot_changed.emit(slot_name, null)
 	inventory_changed.emit()
@@ -125,22 +136,70 @@ func get_armor() -> ItemData:
 	return equipped.get("armor")
 
 
-## Puts an item in the first empty general slot. Returns false if full.
-## Used for loot/crafting output — never auto-equips, even if the item is
+## Adds one unit of `item`. If it's stackable (ItemData.is_stackable()) and
+## an existing slot already holds that same item with room under its
+## max_stack, this tops that stack up instead of spending a new slot.
+## Otherwise — including for every weapon/tool/armor, which never
+## stack — it falls back to the first empty slot as its own new stack of
+## quantity 1. Returns false only if neither option is available (no
+## stack with room, no empty slot). Never auto-equips, even if the item is
 ## equippable, so picking things up doesn't silently swap your gear.
 func add_item(item: ItemData) -> bool:
+	if item.is_stackable():
+		for stack in slots:
+			if stack != null and stack.item == item and stack.quantity < item.max_stack:
+				stack.quantity += 1
+				inventory_changed.emit()
+				return true
+
 	for i in slots.size():
 		if slots[i] == null:
-			slots[i] = item
+			slots[i] = ItemStack.new(item, 1)
 			inventory_changed.emit()
 			return true
 	return false
 
 
+## Removes one unit from the stack at `index`, clearing the slot entirely
+## once its quantity reaches zero.
 func remove_item(index: int) -> void:
-	if index < 0 or index >= slots.size():
+	if index < 0 or index >= slots.size() or slots[index] == null:
 		return
-	slots[index] = null
+	slots[index].quantity -= 1
+	if slots[index].quantity <= 0:
+		slots[index] = null
+	inventory_changed.emit()
+
+
+## Total quantity of `item` held across every stack — the stacking-aware
+## replacement for "count matching slots". Used by Crafting.gd.
+func count_item(item: ItemData) -> int:
+	if item == null:
+		return 0
+	var total := 0
+	for stack in slots:
+		if stack != null and stack.item == item:
+			total += stack.quantity
+	return total
+
+
+## Removes up to `amount` units of `item`, spread across as many stacks as
+## needed (in slot order). Used by Crafting.gd to consume ingredients.
+func remove_item_amount(item: ItemData, amount: int) -> void:
+	if item == null or amount <= 0:
+		return
+	var remaining := amount
+	for i in slots.size():
+		if remaining <= 0:
+			break
+		var stack: ItemStack = slots[i]
+		if stack == null or stack.item != item:
+			continue
+		var take: int = min(remaining, stack.quantity)
+		stack.quantity -= take
+		remaining -= take
+		if stack.quantity <= 0:
+			slots[i] = null
 	inventory_changed.emit()
 
 

@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="CraftingRecipe" format=3 uid="uid://ba1cybbfspq61"]
+
+[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/items/Shotgun.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/items/CircuitBoard.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/items/BatteryPack.tres" id="4"]
+[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="5"]
+[ext_resource type="Resource" uid="uid://b3crdynse51aa" path="res://resources/items/Springs.tres" id="6"]
+[ext_resource type="Resource" path="res://resources/items/WireSpool.tres" id="7"]
+[ext_resource type="Resource" path="res://resources/items/AutoShotgun.tres" id="8"]
+[ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="9"]
+
+[sub_resource type="Resource" id="Resource_as1"]
+script = ExtResource("1")
+item = ExtResource("2")
+
+[sub_resource type="Resource" id="Resource_as2"]
+script = ExtResource("1")
+item = ExtResource("3")
+count = 2
+
+[sub_resource type="Resource" id="Resource_as3"]
+script = ExtResource("1")
+item = ExtResource("4")
+count = 2
+
+[sub_resource type="Resource" id="Resource_as4"]
+script = ExtResource("1")
+item = ExtResource("5")
+count = 8
+
+[sub_resource type="Resource" id="Resource_as5"]
+script = ExtResource("1")
+item = ExtResource("6")
+count = 6
+
+[sub_resource type="Resource" id="Resource_as6"]
+script = ExtResource("1")
+item = ExtResource("7")
+count = 4
+
+[resource]
+script = ExtResource("9")
+recipe_name = "Auto Shotgun"
+ingredients = Array[ExtResource("1")]([SubResource("Resource_as1"), SubResource("Resource_as2"), SubResource("Resource_as3"), SubResource("Resource_as4"), SubResource("Resource_as5"), SubResource("Resource_as6")])
+result_item = ExtResource("8")

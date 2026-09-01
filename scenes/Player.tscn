@@ -3,18 +3,11 @@
 [ext_resource type="Script" uid="uid://dgtgev42waux0" path="res://scripts/Player.gd" id="1"]
 [ext_resource type="Script" uid="uid://db72yyyescxaj" path="res://scripts/Inventory.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://bxdrc154ufwdl" path="res://assets/player/gregidle_0001.png" id="2_0rnld"]
-[ext_resource type="Resource" uid="uid://cpyg74t0qeqe5" path="res://resources/items/Crowbar.tres" id="3"]
-[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="3_qu4a1"]
 [ext_resource type="Texture2D" uid="uid://2eijqa1b5mf5" path="res://assets/player/gregidle_0002.png" id="3_srp4u"]
 [ext_resource type="Texture2D" uid="uid://cw58i1bpr68q3" path="res://assets/player/gregidle_0003.png" id="4_jfpux"]
-[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="5"]
 [ext_resource type="Texture2D" uid="uid://bokty2drsb1c4" path="res://assets/player/gregidle_0004.png" id="5_61ith"]
-[ext_resource type="Resource" uid="uid://cugiun4a68fp4" path="res://resources/items/Multitool.tres" id="6"]
 [ext_resource type="Texture2D" uid="uid://dum22blw6f32o" path="res://assets/player/gregidle_0005.png" id="6_ebwui"]
-[ext_resource type="Resource" path="res://resources/items/RebelVest.tres" id="7"]
 [ext_resource type="Texture2D" uid="uid://dypk6qo04qumq" path="res://assets/player/gregidle_0006.png" id="7_sfy4j"]
-[ext_resource type="Resource" uid="uid://cplayjo63nmh7" path="res://resources/items/BrokenUSP.tres" id="8_bruh7"]
-[ext_resource type="Resource" uid="uid://b8ehyeecmhn04" path="res://resources/items/BrokenSMG.tres" id="9_6eyey"]
 
 [sub_resource type="AnimatedTexture" id="AnimatedTexture_gv3ic"]
 frames = 6
@@ -61,4 +54,3 @@ position_smoothing_speed = 8.0
 
 [node name="Inventory" type="Node" parent="." unique_id=1795019051]
 script = ExtResource("2")
-starting_items = Array[ExtResource("3_qu4a1")]([ExtResource("3"), ExtResource("6"), ExtResource("5"), ExtResource("7"), ExtResource("5"), ExtResource("5"), ExtResource("5"), ExtResource("5"), ExtResource("5"), ExtResource("5"), ExtResource("8_bruh7"), ExtResource("9_6eyey")])

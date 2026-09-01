@@ -17,6 +17,7 @@ radius = 280.0
 collision_layer = 2
 script = ExtResource("1")
 attack_range = 240.0
+vision_radius = 280.0
 max_health = 100.0
 weapon = ExtResource("3")
 

@@ -4,23 +4,41 @@
 [ext_resource type="Script" uid="uid://bbc5to480dcif" path="res://scripts/Main.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://ccfqyiicxm17i" path="res://assets/tile_set.png" id="2_bb450"]
 [ext_resource type="PackedScene" uid="uid://bcx3hhu6l8mis" path="res://scenes/Enemy.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/InventoryUI.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://cf8uyna52yxi2" path="res://scenes/InventoryUI.tscn" id="4"]
 [ext_resource type="Script" uid="uid://csjolprwf87xd" path="res://scripts/Crafting.gd" id="5"]
 [ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="6_q8u5g"]
-[ext_resource type="PackedScene" path="res://scenes/CraftingUI.tscn" id="7"]
-[ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="8"]
+[ext_resource type="PackedScene" uid="uid://241ftusj5d8g" path="res://scenes/CraftingUI.tscn" id="7"]
+[ext_resource type="PackedScene" uid="uid://d3b015djtl7vt" path="res://scenes/HUD.tscn" id="8"]
 [ext_resource type="PackedScene" path="res://scenes/EnemyPistol.tscn" id="9"]
 [ext_resource type="PackedScene" path="res://scenes/EnemySMG.tscn" id="10"]
 [ext_resource type="Resource" uid="uid://uvkyh8h6dmfu" path="res://resources/recipes/CraftSMG.tres" id="10_ft6cd"]
-[ext_resource type="PackedScene" path="res://scenes/GameOverUI.tscn" id="11"]
+[ext_resource type="PackedScene" uid="uid://se0bva8df6qw" path="res://scenes/GameOverUI.tscn" id="11"]
 [ext_resource type="Resource" uid="uid://y36pb7u8lmg6" path="res://resources/recipes/CraftUSP.tres" id="11_bb450"]
 [ext_resource type="Resource" uid="uid://dgff6kqbj83bc" path="res://resources/recipes/CraftPipeWrench.tres" id="12_nfivy"]
 [ext_resource type="Resource" uid="uid://h6w7qpj51oaa" path="res://resources/recipes/CraftPParts.tres" id="13_1iba3"]
 [ext_resource type="PackedScene" path="res://scenes/LootContainer.tscn" id="13_mwfav"]
-[ext_resource type="Resource" uid="uid://cbrmu3m71j8ev" path="res://resources/loot/TableLootBasic.tres" id="14_3p2gp"]
+[ext_resource type="Resource" uid="uid://fhe27ht7wwav" path="res://resources/loot/TableLootBasic.tres" id="14_3p2gp"]
 [ext_resource type="Resource" uid="uid://cb2u85a22ka7n" path="res://resources/recipes/CraftSMParts.tres" id="14_yxlcp"]
 [ext_resource type="Resource" uid="uid://bk1t44kc8rrmj" path="res://resources/recipes/CraftSprings.tres" id="15_ebg2g"]
 [ext_resource type="Resource" uid="uid://snnpah1txg43" path="res://resources/recipes/CraftScrews.tres" id="16_2ofn6"]
+[ext_resource type="Resource" uid="uid://d4fs31422mv20" path="res://resources/recipes/CraftSharpenedRebar.tres" id="17_rebar"]
+[ext_resource type="PackedScene" uid="uid://dst420agwis6v" path="res://scenes/LootUI.tscn" id="18_lootui"]
+[ext_resource type="Resource" uid="uid://be8ctiu258a0h" path="res://resources/recipes/CraftZipGun.tres" id="19_zipgun"]
+[ext_resource type="Resource" uid="uid://ceq5wau3j3s6x" path="res://resources/recipes/CraftFireAxe.tres" id="20_fireaxe"]
+[ext_resource type="Resource" uid="uid://can1ovs8w7mnq" path="res://resources/recipes/CraftNailGun.tres" id="21_nailgun"]
+[ext_resource type="Resource" uid="uid://dcgr4785bvm5b" path="res://resources/recipes/CraftShotgunParts.tres" id="22_sgparts"]
+[ext_resource type="Resource" uid="uid://cg4j7kxglog5h" path="res://resources/recipes/CraftShotgun.tres" id="23_shotgun"]
+[ext_resource type="Resource" uid="uid://cpavwy1toq3ou" path="res://resources/recipes/CraftRevolverParts.tres" id="24_revparts"]
+[ext_resource type="Resource" uid="uid://cm0f15fp68xhb" path="res://resources/recipes/CraftRevolver.tres" id="25_revolver"]
+[ext_resource type="Resource" uid="uid://ixa8sfm0rsaw" path="res://resources/recipes/CraftRebarCrossbow.tres" id="26_crossbow"]
+[ext_resource type="Resource" uid="uid://ba1cybbfspq61" path="res://resources/recipes/CraftAutoShotgun.tres" id="27_autoshotgun"]
+[ext_resource type="Resource" uid="uid://dyj7pl6if0jg7" path="res://resources/loot/TableLootArmory.tres" id="31_cmqll"]
+[ext_resource type="Resource" uid="uid://bt5j1l1qvs3fo" path="res://resources/loot/TableLootBoss.tres" id="32_8cp6k"]
+[ext_resource type="Resource" uid="uid://bcfs4l8ysvhk" path="res://resources/loot/TableLootEndGame.tres" id="35_8b871"]
+[ext_resource type="Resource" uid="uid://balsrc8i36jgm" path="res://resources/loot/TableLootScavenger.tres" id="36_pdwbg"]
+[ext_resource type="Resource" uid="uid://bfx1xfbdurr6h" path="res://resources/loot/TableLootMilitary.tres" id="37_5grtr"]
+[ext_resource type="Resource" uid="uid://pqmiacfmhthq" path="res://resources/loot/TableLootHighTier.tres" id="38_vua0o"]
+[ext_resource type="Resource" uid="uid://crvn4uuyqqwt3" path="res://resources/loot/TableLootIndustrial.tres" id="39_t70y2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nfivy"]
 texture = ExtResource("2_bb450")
@@ -93,7 +111,7 @@ inventory_path = NodePath("../Player/Inventory")
 [node name="Crafting" type="Node" parent="." unique_id=1949253984]
 script = ExtResource("5")
 inventory_path = NodePath("../Player/Inventory")
-recipes = Array[ExtResource("6_q8u5g")]([ExtResource("10_ft6cd"), ExtResource("11_bb450"), ExtResource("12_nfivy"), ExtResource("13_1iba3"), ExtResource("14_yxlcp"), ExtResource("15_ebg2g"), ExtResource("16_2ofn6")])
+recipes = Array[ExtResource("6_q8u5g")]([ExtResource("10_ft6cd"), ExtResource("11_bb450"), ExtResource("12_nfivy"), ExtResource("13_1iba3"), ExtResource("14_yxlcp"), ExtResource("15_ebg2g"), ExtResource("16_2ofn6"), ExtResource("17_rebar"), ExtResource("19_zipgun"), ExtResource("20_fireaxe"), ExtResource("21_nailgun"), ExtResource("22_sgparts"), ExtResource("23_shotgun"), ExtResource("24_revparts"), ExtResource("25_revolver"), ExtResource("26_crossbow"), ExtResource("27_autoshotgun")])
 
 [node name="CraftingUI" parent="." unique_id=1462574967 instance=ExtResource("7")]
 inventory_path = NodePath("../Player/Inventory")
@@ -106,13 +124,36 @@ player_path = NodePath("../Player")
 player_path = NodePath("../Player")
 
 [node name="LootContainer" parent="." unique_id=722191933 instance=ExtResource("13_mwfav")]
-position = Vector2(-257, 127)
-loot_table = ExtResource("14_3p2gp")
+position = Vector2(-682, -27)
+loot_table = ExtResource("31_cmqll")
 
 [node name="LootContainer2" parent="." unique_id=2099680812 instance=ExtResource("13_mwfav")]
-position = Vector2(-260, 198)
-loot_table = ExtResource("14_3p2gp")
+position = Vector2(-520, -25)
+loot_table = ExtResource("32_8cp6k")
 
 [node name="LootContainer3" parent="." unique_id=1862925706 instance=ExtResource("13_mwfav")]
-position = Vector2(-265, 286)
+position = Vector2(-681, 94)
 loot_table = ExtResource("14_3p2gp")
+
+[node name="LootUI" parent="." unique_id=53843274 instance=ExtResource("18_lootui")]
+inventory_path = NodePath("../Player/Inventory")
+
+[node name="LootContainer4" parent="." unique_id=117916158 instance=ExtResource("13_mwfav")]
+position = Vector2(-519, 93)
+loot_table = ExtResource("35_8b871")
+
+[node name="LootContainer5" parent="." unique_id=218272683 instance=ExtResource("13_mwfav")]
+position = Vector2(-692, 289)
+loot_table = ExtResource("36_pdwbg")
+
+[node name="LootContainer6" parent="." unique_id=1824226531 instance=ExtResource("13_mwfav")]
+position = Vector2(-509, 185)
+loot_table = ExtResource("37_5grtr")
+
+[node name="LootContainer7" parent="." unique_id=385992350 instance=ExtResource("13_mwfav")]
+position = Vector2(-691, 185)
+loot_table = ExtResource("38_vua0o")
+
+[node name="LootContainer8" parent="." unique_id=321427962 instance=ExtResource("13_mwfav")]
+position = Vector2(-506, 290)
+loot_table = ExtResource("39_t70y2")

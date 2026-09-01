@@ -1,4 +1,5 @@
 extends CanvasLayer
+class_name LootUI
 
 ## The single shared loot screen. Set up ONE of these in your scene with
 ## inventory_path pointing at the player's Inventory — every LootContainer

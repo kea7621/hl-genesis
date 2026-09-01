@@ -1,0 +1,97 @@
+[gd_resource type="Resource" script_class="LootTable" format=3 uid="uid://pqmiacfmhthq"]
+
+[ext_resource type="Script" uid="uid://dfn4s6losuybw" path="res://scripts/LootTable.gd" id="1_table"]
+[ext_resource type="Script" uid="uid://pifsavv2p4wt" path="res://scripts/LootEntry.gd" id="2_entry"]
+[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="item_0"]
+[ext_resource type="Resource" uid="uid://cvc73fsce3esl" path="res://resources/items/Screws.tres" id="item_1"]
+[ext_resource type="Resource" uid="uid://b3crdynse51aa" path="res://resources/items/Springs.tres" id="item_2"]
+[ext_resource type="Resource" path="res://resources/items/CircuitBoard.tres" id="item_3"]
+[ext_resource type="Resource" path="res://resources/items/BatteryPack.tres" id="item_4"]
+[ext_resource type="Resource" uid="uid://duk8y00c3118q" path="res://resources/items/SMGParts.tres" id="item_5"]
+[ext_resource type="Resource" uid="uid://cvd85emi7pcs8" path="res://resources/items/ShotgunParts.tres" id="item_6"]
+[ext_resource type="Resource" uid="uid://b7o1jhfc7brrb" path="res://resources/items/PistolParts.tres" id="item_7"]
+[ext_resource type="Resource" path="res://resources/items/RebelVest.tres" id="item_8"]
+[ext_resource type="Resource" uid="uid://kr2vui2qja2a" path="res://resources/items/USPMatch.tres" id="item_9"]
+[ext_resource type="Resource" uid="uid://b7q7ufe3dd5al" path="res://resources/items/SMG.tres" id="item_10"]
+[ext_resource type="Resource" path="res://resources/items/Shotgun.tres" id="item_11"]
+[ext_resource type="Resource" path="res://resources/items/AutoShotgun.tres" id="item_12"]
+[ext_resource type="Resource" path="res://resources/items/RebarCrossbow.tres" id="item_13"]
+[ext_resource type="Resource" uid="uid://cugiun4a68fp4" path="res://resources/items/Multitool.tres" id="item_14"]
+
+[sub_resource type="Resource" id="LootEntry_0"]
+script = ExtResource("2_entry")
+item = ExtResource("item_0")
+chance = 55.0
+
+[sub_resource type="Resource" id="LootEntry_1"]
+script = ExtResource("2_entry")
+item = ExtResource("item_1")
+
+[sub_resource type="Resource" id="LootEntry_2"]
+script = ExtResource("2_entry")
+item = ExtResource("item_2")
+chance = 45.0
+
+[sub_resource type="Resource" id="LootEntry_3"]
+script = ExtResource("2_entry")
+item = ExtResource("item_3")
+chance = 45.0
+
+[sub_resource type="Resource" id="LootEntry_4"]
+script = ExtResource("2_entry")
+item = ExtResource("item_4")
+chance = 45.0
+
+[sub_resource type="Resource" id="LootEntry_5"]
+script = ExtResource("2_entry")
+item = ExtResource("item_5")
+chance = 35.0
+
+[sub_resource type="Resource" id="LootEntry_6"]
+script = ExtResource("2_entry")
+item = ExtResource("item_6")
+chance = 30.0
+
+[sub_resource type="Resource" id="LootEntry_7"]
+script = ExtResource("2_entry")
+item = ExtResource("item_7")
+chance = 25.0
+
+[sub_resource type="Resource" id="LootEntry_8"]
+script = ExtResource("2_entry")
+item = ExtResource("item_8")
+chance = 30.0
+
+[sub_resource type="Resource" id="LootEntry_9"]
+script = ExtResource("2_entry")
+item = ExtResource("item_9")
+chance = 22.0
+
+[sub_resource type="Resource" id="LootEntry_10"]
+script = ExtResource("2_entry")
+item = ExtResource("item_10")
+chance = 18.0
+
+[sub_resource type="Resource" id="LootEntry_11"]
+script = ExtResource("2_entry")
+item = ExtResource("item_11")
+chance = 16.0
+
+[sub_resource type="Resource" id="LootEntry_12"]
+script = ExtResource("2_entry")
+item = ExtResource("item_12")
+chance = 8.0
+
+[sub_resource type="Resource" id="LootEntry_13"]
+script = ExtResource("2_entry")
+item = ExtResource("item_13")
+chance = 6.0
+
+[sub_resource type="Resource" id="LootEntry_14"]
+script = ExtResource("2_entry")
+item = ExtResource("item_14")
+chance = 8.0
+
+[resource]
+script = ExtResource("1_table")
+entries = Array[ExtResource("2_entry")]([SubResource("LootEntry_0"), SubResource("LootEntry_1"), SubResource("LootEntry_2"), SubResource("LootEntry_3"), SubResource("LootEntry_4"), SubResource("LootEntry_5"), SubResource("LootEntry_6"), SubResource("LootEntry_7"), SubResource("LootEntry_8"), SubResource("LootEntry_9"), SubResource("LootEntry_10"), SubResource("LootEntry_11"), SubResource("LootEntry_12"), SubResource("LootEntry_13"), SubResource("LootEntry_14")])

@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://15oxnrblxwgp"]
 
 [ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://6gexpxjmw1li" path="res://assets/resources/scrapmetal.png" id="1_vkxkf"]
 
 [resource]
 script = ExtResource("1")
 item_name = "Scrap Metal"
 item_type = 2
+icon = ExtResource("1_vkxkf")
 metadata/_custom_type_script = "uid://c56x3t3npnhhk"

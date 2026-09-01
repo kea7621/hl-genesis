@@ -59,6 +59,16 @@ enum EquipSlot { NONE, PRIMARY, SECONDARY, MELEE, ARMOR }
 
 @export_group("Shared")
 @export var damage: float = 10.0  # unused by Crafting/Tool/Armor items
+@export var max_stack: int = 99  # only relevant when is_stackable() is true
+
+
+## Whether multiple units of this item can share one inventory slot (see
+## ItemStack / Inventory.add_item()). Only Crafting materials stack —
+## Melee, Ranged, Tool, and Armor items are all equippable/wieldable and
+## need a distinct slot per copy, so they're deliberately excluded even if
+## you crank max_stack up.
+func is_stackable() -> bool:
+	return item_type == ItemType.CRAFTING
 
 
 func get_type_label() -> String:
