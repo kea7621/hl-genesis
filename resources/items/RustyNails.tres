@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="ItemData" format=3]
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://btj1h7lgkj0cy"]
 
-[ext_resource type="Script" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://dxaq3tgnirjyx" path="res://assets/resources/nail.png" id="1_3i51o"]
 
 [resource]
 script = ExtResource("1")
 item_name = "Rusty Nails"
 item_type = 2
+icon = ExtResource("1_3i51o")
 damage = 0.0

@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="ItemData" format=3]
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://dxqdd4sa3hmca"]
 
-[ext_resource type="Script" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://c4xpxrevhkhol" path="res://assets/resources/fabric.png" id="1_d53p2"]
 
 [resource]
 script = ExtResource("1")
 item_name = "Cloth Scraps"
 item_type = 2
+icon = ExtResource("1_d53p2")
 damage = 0.0

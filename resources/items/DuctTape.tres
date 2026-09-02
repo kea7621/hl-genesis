@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="ItemData" format=3]
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://ctinyyvtl3rgu"]
 
-[ext_resource type="Script" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://ch7r0b4qwxysw" path="res://assets/resources/ducttape.png" id="1_blnsv"]
 
 [resource]
 script = ExtResource("1")
 item_name = "Duct Tape"
 item_type = 2
+icon = ExtResource("1_blnsv")
 damage = 0.0

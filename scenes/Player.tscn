@@ -26,9 +26,6 @@ frame_5/duration = 1.0
 [sub_resource type="CircleShape2D" id="1"]
 radius = 16.0
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v6fml"]
-size = Vector2(50, 10)
-
 [node name="Player" type="CharacterBody2D" unique_id=1423533616]
 script = ExtResource("1")
 
@@ -41,7 +38,6 @@ shape = SubResource("1")
 [node name="Pivot" type="Node2D" parent="." unique_id=620578409]
 
 [node name="Torso" type="Sprite2D" parent="Pivot" unique_id=1378175880]
-texture = SubResource("PlaceholderTexture2D_v6fml")
 offset = Vector2(9, 3)
 
 [node name="Muzzle" type="Marker2D" parent="Pivot" unique_id=2007809670]
