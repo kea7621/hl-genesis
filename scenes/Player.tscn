@@ -2,27 +2,35 @@
 
 [ext_resource type="Script" uid="uid://dgtgev42waux0" path="res://scripts/Player.gd" id="1"]
 [ext_resource type="Script" uid="uid://db72yyyescxaj" path="res://scripts/Inventory.gd" id="2"]
-[ext_resource type="Resource" uid="uid://cpyg74t0qeqe5" path="res://resources/items/Crowbar.tres" id="3"]
-[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="3_qu4a1"]
-[ext_resource type="Resource" uid="uid://kr2vui2qja2a" path="res://resources/items/USPMatch.tres" id="4"]
-[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="5"]
-[ext_resource type="Resource" uid="uid://cugiun4a68fp4" path="res://resources/items/Multitool.tres" id="6"]
+[ext_resource type="Texture2D" uid="uid://bxdrc154ufwdl" path="res://assets/player/gregidle_0001.png" id="2_0rnld"]
+[ext_resource type="Texture2D" uid="uid://2eijqa1b5mf5" path="res://assets/player/gregidle_0002.png" id="3_srp4u"]
+[ext_resource type="Texture2D" uid="uid://cw58i1bpr68q3" path="res://assets/player/gregidle_0003.png" id="4_jfpux"]
+[ext_resource type="Texture2D" uid="uid://bokty2drsb1c4" path="res://assets/player/gregidle_0004.png" id="5_61ith"]
+[ext_resource type="Texture2D" uid="uid://dum22blw6f32o" path="res://assets/player/gregidle_0005.png" id="6_ebwui"]
+[ext_resource type="Texture2D" uid="uid://dypk6qo04qumq" path="res://assets/player/gregidle_0006.png" id="7_sfy4j"]
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_rvslj"]
-size = Vector2(32, 32)
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_gv3ic"]
+frames = 6
+frame_0/texture = ExtResource("2_0rnld")
+frame_1/texture = ExtResource("3_srp4u")
+frame_1/duration = 1.0
+frame_2/texture = ExtResource("4_jfpux")
+frame_2/duration = 1.0
+frame_3/texture = ExtResource("5_61ith")
+frame_3/duration = 1.0
+frame_4/texture = ExtResource("6_ebwui")
+frame_4/duration = 1.0
+frame_5/texture = ExtResource("7_sfy4j")
+frame_5/duration = 1.0
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 16.0
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v6fml"]
-size = Vector2(50, 10)
 
 [node name="Player" type="CharacterBody2D" unique_id=1423533616]
 script = ExtResource("1")
 
 [node name="Body" type="Sprite2D" parent="." unique_id=1270554711]
-modulate = Color(0.3, 0.5, 0.4, 1)
-texture = SubResource("PlaceholderTexture2D_rvslj")
+texture = SubResource("AnimatedTexture_gv3ic")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1727325151]
 shape = SubResource("1")
@@ -30,8 +38,6 @@ shape = SubResource("1")
 [node name="Pivot" type="Node2D" parent="." unique_id=620578409]
 
 [node name="Torso" type="Sprite2D" parent="Pivot" unique_id=1378175880]
-modulate = Color(0.2, 0.35, 0.28, 1)
-texture = SubResource("PlaceholderTexture2D_v6fml")
 offset = Vector2(9, 3)
 
 [node name="Muzzle" type="Marker2D" parent="Pivot" unique_id=2007809670]
@@ -44,4 +50,3 @@ position_smoothing_speed = 8.0
 
 [node name="Inventory" type="Node" parent="." unique_id=1795019051]
 script = ExtResource("2")
-starting_items = Array[ExtResource("3_qu4a1")]([ExtResource("3"), ExtResource("4"), ExtResource("6"), ExtResource("5")])

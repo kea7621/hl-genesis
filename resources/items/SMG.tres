@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b7q7ufe3dd5al"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://cxpk7228ay2oh" path="res://assets/Weapons/mp7.png" id="1_3qf2s"]
+[ext_resource type="PackedScene" uid="uid://y7qsbruhjbtq" path="res://scenes/Projectile.tscn" id="2"]
+
+[resource]
+script = ExtResource("1")
+item_name = "MP7"
+icon = ExtResource("1_3qf2s")
+equip_slot = 1
+torso_texture = ExtResource("1_3qf2s")
+muzzle_offset = Vector2(6, 5)
+fire_mode = 1
+projectile_scene = ExtResource("2")
+fire_rate = 0.09
+projectile_speed = 950.0
+damage = 6.0

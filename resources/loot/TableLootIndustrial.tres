@@ -1,0 +1,104 @@
+[gd_resource type="Resource" script_class="LootTable" format=3 uid="uid://crvn4uuyqqwt3"]
+
+[ext_resource type="Script" uid="uid://dfn4s6losuybw" path="res://scripts/LootTable.gd" id="1_table"]
+[ext_resource type="Script" uid="uid://pifsavv2p4wt" path="res://scripts/LootEntry.gd" id="2_entry"]
+[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="item_0"]
+[ext_resource type="Resource" uid="uid://cvc73fsce3esl" path="res://resources/items/Screws.tres" id="item_1"]
+[ext_resource type="Resource" uid="uid://b3crdynse51aa" path="res://resources/items/Springs.tres" id="item_2"]
+[ext_resource type="Resource" uid="uid://ctinyyvtl3rgu" path="res://resources/items/DuctTape.tres" id="item_3"]
+[ext_resource type="Resource" uid="uid://o0872k00jbxx" path="res://resources/items/WireSpool.tres" id="item_4"]
+[ext_resource type="Resource" uid="uid://s58rwl1d41pf" path="res://resources/items/RubberTubing.tres" id="item_5"]
+[ext_resource type="Resource" uid="uid://cidsohgptfrf1" path="res://resources/items/CircuitBoard.tres" id="item_6"]
+[ext_resource type="Resource" uid="uid://06li4p78ulgl" path="res://resources/items/BatteryPack.tres" id="item_7"]
+[ext_resource type="Resource" uid="uid://cvd85emi7pcs8" path="res://resources/items/ShotgunParts.tres" id="item_8"]
+[ext_resource type="Resource" path="res://resources/items/RevolverParts.tres" id="item_9"]
+[ext_resource type="Resource" uid="uid://duk8y00c3118q" path="res://resources/items/SMGParts.tres" id="item_10"]
+[ext_resource type="Resource" uid="uid://dgxco16i2uhjb" path="res://resources/items/BrokenShotgun.tres" id="item_11"]
+[ext_resource type="Resource" uid="uid://b8ehyeecmhn04" path="res://resources/items/BrokenSMG.tres" id="item_12"]
+[ext_resource type="Resource" path="res://resources/items/SalvagedRevolver.tres" id="item_13"]
+[ext_resource type="Resource" path="res://resources/items/NailGun.tres" id="item_14"]
+[ext_resource type="Resource" uid="uid://cugiun4a68fp4" path="res://resources/items/Multitool.tres" id="item_15"]
+
+[sub_resource type="Resource" id="LootEntry_0"]
+script = ExtResource("2_entry")
+item = ExtResource("item_0")
+chance = 95.0
+
+[sub_resource type="Resource" id="LootEntry_1"]
+script = ExtResource("2_entry")
+item = ExtResource("item_1")
+chance = 90.0
+
+[sub_resource type="Resource" id="LootEntry_2"]
+script = ExtResource("2_entry")
+item = ExtResource("item_2")
+chance = 85.0
+
+[sub_resource type="Resource" id="LootEntry_3"]
+script = ExtResource("2_entry")
+item = ExtResource("item_3")
+chance = 80.0
+
+[sub_resource type="Resource" id="LootEntry_4"]
+script = ExtResource("2_entry")
+item = ExtResource("item_4")
+chance = 70.0
+
+[sub_resource type="Resource" id="LootEntry_5"]
+script = ExtResource("2_entry")
+item = ExtResource("item_5")
+chance = 65.0
+
+[sub_resource type="Resource" id="LootEntry_6"]
+script = ExtResource("2_entry")
+item = ExtResource("item_6")
+chance = 40.0
+
+[sub_resource type="Resource" id="LootEntry_7"]
+script = ExtResource("2_entry")
+item = ExtResource("item_7")
+chance = 35.0
+
+[sub_resource type="Resource" id="LootEntry_8"]
+script = ExtResource("2_entry")
+item = ExtResource("item_8")
+chance = 28.0
+
+[sub_resource type="Resource" id="LootEntry_9"]
+script = ExtResource("2_entry")
+item = ExtResource("item_9")
+chance = 25.0
+
+[sub_resource type="Resource" id="LootEntry_10"]
+script = ExtResource("2_entry")
+item = ExtResource("item_10")
+chance = 18.0
+
+[sub_resource type="Resource" id="LootEntry_11"]
+script = ExtResource("2_entry")
+item = ExtResource("item_11")
+chance = 16.0
+
+[sub_resource type="Resource" id="LootEntry_12"]
+script = ExtResource("2_entry")
+item = ExtResource("item_12")
+chance = 10.0
+
+[sub_resource type="Resource" id="LootEntry_13"]
+script = ExtResource("2_entry")
+item = ExtResource("item_13")
+chance = 8.0
+
+[sub_resource type="Resource" id="LootEntry_14"]
+script = ExtResource("2_entry")
+item = ExtResource("item_14")
+chance = 8.0
+
+[sub_resource type="Resource" id="LootEntry_15"]
+script = ExtResource("2_entry")
+item = ExtResource("item_15")
+chance = 5.0
+
+[resource]
+script = ExtResource("1_table")
+entries = Array[ExtResource("2_entry")]([SubResource("LootEntry_0"), SubResource("LootEntry_1"), SubResource("LootEntry_2"), SubResource("LootEntry_3"), SubResource("LootEntry_4"), SubResource("LootEntry_5"), SubResource("LootEntry_6"), SubResource("LootEntry_7"), SubResource("LootEntry_8"), SubResource("LootEntry_9"), SubResource("LootEntry_10"), SubResource("LootEntry_11"), SubResource("LootEntry_12"), SubResource("LootEntry_13"), SubResource("LootEntry_14"), SubResource("LootEntry_15")])

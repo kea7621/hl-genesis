@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b7o1jhfc7brrb"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1_guuun"]
+[ext_resource type="Texture2D" uid="uid://cgypjpdwhskm4" path="res://assets/resources/weaponparts.png" id="1_hx22l"]
+
+[resource]
+script = ExtResource("1_guuun")
+item_name = "Pistol Parts"
+item_type = 2
+icon = ExtResource("1_hx22l")
+damage = 0.0

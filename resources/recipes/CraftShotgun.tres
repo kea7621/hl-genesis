@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="CraftingRecipe" format=3 uid="uid://cg4j7kxglog5h"]
+
+[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1"]
+[ext_resource type="Resource" uid="uid://cvd85emi7pcs8" path="res://resources/items/ShotgunParts.tres" id="2"]
+[ext_resource type="Resource" uid="uid://dgxco16i2uhjb" path="res://resources/items/BrokenShotgun.tres" id="3"]
+[ext_resource type="Resource" uid="uid://7xclar2xp55f" path="res://resources/items/Plastic.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/items/Shotgun.tres" id="5"]
+[ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="6"]
+
+[sub_resource type="Resource" id="Resource_sh1"]
+script = ExtResource("1")
+item = ExtResource("2")
+
+[sub_resource type="Resource" id="Resource_sh2"]
+script = ExtResource("1")
+item = ExtResource("3")
+
+[sub_resource type="Resource" id="Resource_sh3"]
+script = ExtResource("1")
+item = ExtResource("4")
+count = 3
+
+[resource]
+script = ExtResource("6")
+recipe_name = "Shotgun"
+ingredients = Array[ExtResource("1")]([SubResource("Resource_sh1"), SubResource("Resource_sh2"), SubResource("Resource_sh3")])
+result_item = ExtResource("5")

@@ -37,6 +37,7 @@ var target: Node2D = null
 var last_known_position: Vector2 = Vector2.ZERO
 var _suspicion_timer: float = 0.0
 var _attack_timer: float = 0.0
+var is_dead: bool = false  # guards against die() firing twice — see take_damage()
 
 @onready var vision_area: Area2D = $VisionArea
 @onready var vision_shape: CollisionShape2D = $VisionArea/CollisionShape2D
@@ -186,6 +187,9 @@ func _fire_at_target(item: ItemData) -> void:
 ## Called by anything that hits this enemy — the Projectile already checks
 ## for this method automatically.
 func take_damage(amount: float) -> void:
+	if is_dead:
+		return
+
 	health = max(health - amount, 0.0)
 	health_changed.emit(health, max_health)
 	if health <= 0.0:
@@ -193,6 +197,15 @@ func take_damage(amount: float) -> void:
 
 
 func die() -> void:
+	# Bug fix: two hits landing in the same frame (e.g. a shotgun blast, or
+	# melee + a projectile already in flight) could both bring health to 0
+	# before queue_free() actually removes the node — without this guard,
+	# die() ran twice, emitting `died` twice and double-firing anything
+	# hooked to it (future loot drops, kill counters, etc.), matching the
+	# same guard Player.gd already uses for take_damage()/die().
+	if is_dead:
+		return
+	is_dead = true
 	died.emit()
 	queue_free()
 
