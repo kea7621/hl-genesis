@@ -22,6 +22,7 @@ var _regen_timer: float = 0.0
 var is_sprinting: bool = false
 var _attack_cooldown: float = 0.0
 var is_dead: bool = false
+var _default_body_texture: Texture2D  # cached in _ready() so armor without body_texture can revert Body to normal
 
 @onready var body: Sprite2D = $Body
 @onready var pivot: Node2D = $Pivot
@@ -36,13 +37,17 @@ signal died
 func _ready() -> void:
 	stamina = max_stamina
 	health = max_health
+	_default_body_texture = body.texture  # so we can revert when armor with no body_texture is unequipped
 
 	inventory.active_weapon_changed.connect(_on_active_weapon_changed)
+	inventory.equip_slot_changed.connect(_on_equip_slot_changed)
 	# Inventory is a child node, so its _ready() runs BEFORE this one in
 	# Godot's bottom-up ready order — meaning if starting_items auto-equips
-	# a weapon, that happens before we've connected to the signal here.
-	# Call the handler manually once, using whatever's already active.
+	# a weapon/armor, that happens before we've connected to these signals
+	# here. Call both handlers manually once, using whatever's already
+	# equipped, so a starting loadout still shows up correctly.
 	_on_active_weapon_changed(inventory.get_active_weapon())
+	_on_equip_slot_changed("armor", inventory.get_armor())
 
 
 func _on_active_weapon_changed(item: ItemData) -> void:
@@ -50,6 +55,18 @@ func _on_active_weapon_changed(item: ItemData) -> void:
 		return
 	torso.texture = item.torso_texture
 	muzzle.position = item.muzzle_offset
+
+
+## Forces the player's Body sprite to a different look while armor with a
+## body_texture is equipped (a hazmat suit, plate armor, etc.), and puts
+## it back to whatever Body originally had once that armor comes off —
+## whether by unequipping (item == null) or swapping in armor that leaves
+## body_texture blank. Only reacts to the "armor" slot; primary/secondary/
+## melee equip changes are handled by _on_active_weapon_changed() instead.
+func _on_equip_slot_changed(slot_name: String, item: ItemData) -> void:
+	if slot_name != "armor":
+		return
+	body.texture = item.body_texture if item != null and item.body_texture != null else _default_body_texture
 
 
 func _unhandled_input(event: InputEvent) -> void:

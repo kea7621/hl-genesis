@@ -78,7 +78,7 @@ const ITEMS := [
 	#   — leave unset (defaults to NONE) for anything that can't be equipped.
 	# Ranged example fields: fire_mode, projectile_scene, fire_rate, projectile_speed
 	# Tool example fields: use_range, use_cooldown
-	# Armor example fields: armor_value
+	# Armor example fields: armor_value, body_texture
 	# Crafting materials: just "file", "name", "type" — nothing else needed.
 ]
 
@@ -110,6 +110,7 @@ func _run() -> void:
 
 		# Armor
 		item.armor_value = spec.get("armor_value", 0.0)
+		item.body_texture = spec.get("body_texture", null)
 
 		var path := "res://resources/items/%s.tres" % spec["file"]
 		var result := ResourceSaver.save(item, path)
