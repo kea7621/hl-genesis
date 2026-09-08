@@ -56,6 +56,11 @@ enum EquipSlot { NONE, PRIMARY, SECONDARY, MELEE, ARMOR }
 # Player.take_damage()) — not a percentage. A 5.0 armor_value turns a
 # 12-damage hit into 7. Damage is clamped so it can never go negative or
 # heal you.
+@export var body_texture: Texture2D
+# Forces Player's Body sprite to this texture while the armor is equipped
+# (a hazmat suit, plate armor, etc. — a visibly different character, not
+# just a color tint). Leave blank for armor that shouldn't change how the
+# player looks. See Player._on_equip_slot_changed().
 
 @export_group("Shared")
 @export var damage: float = 10.0  # unused by Crafting/Tool/Armor items

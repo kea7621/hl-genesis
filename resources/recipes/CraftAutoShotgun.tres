@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/items/Shotgun.tres" id="2"]
-[ext_resource type="Resource" path="res://resources/items/CircuitBoard.tres" id="3"]
-[ext_resource type="Resource" path="res://resources/items/BatteryPack.tres" id="4"]
+[ext_resource type="Resource" uid="uid://cidsohgptfrf1" path="res://resources/items/CircuitBoard.tres" id="3"]
+[ext_resource type="Resource" uid="uid://06li4p78ulgl" path="res://resources/items/BatteryPack.tres" id="4"]
 [ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="5"]
 [ext_resource type="Resource" uid="uid://b3crdynse51aa" path="res://resources/items/Springs.tres" id="6"]
-[ext_resource type="Resource" path="res://resources/items/WireSpool.tres" id="7"]
+[ext_resource type="Resource" uid="uid://o0872k00jbxx" path="res://resources/items/WireSpool.tres" id="7"]
 [ext_resource type="Resource" path="res://resources/items/AutoShotgun.tres" id="8"]
 [ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="9"]
 

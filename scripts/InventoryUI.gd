@@ -74,6 +74,9 @@ func _build_equip_slot_button(slot_name: String) -> Control:
 
 	var btn := Button.new()
 	btn.custom_minimum_size = Vector2(64, 64)
+	btn.clip_text = true  # keep the slot fixed at 64x64 even for long names like "Salvaged Revolver" — see _refresh_grid()
+	btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	btn.add_theme_font_size_override("font_size", 10)
 
 	if item != null:
 		btn.tooltip_text = _build_tooltip(item)
@@ -99,6 +102,12 @@ func _build_equip_slot_button(slot_name: String) -> Control:
 	return column
 
 
+## Fixed 64x64 grid of every backpack slot. Buttons fall back to showing
+## item_name as text when an item has no icon assigned yet (several
+## weapons/tools in this project still don't) — clip_text on the button
+## keeps that name from stretching the slot (and, via GridContainer's
+## per-column sizing, every other slot in that column) wider than 64px.
+## The full name is still available via the tooltip.
 func _refresh_grid() -> void:
 	for child in grid.get_children():
 		child.queue_free()
@@ -107,6 +116,9 @@ func _refresh_grid() -> void:
 		var stack: ItemStack = inventory.slots[i]
 		var btn := Button.new()
 		btn.custom_minimum_size = Vector2(64, 64)
+		btn.clip_text = true
+		btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		btn.add_theme_font_size_override("font_size", 10)
 
 		if stack != null:
 			var item: ItemData = stack.item

@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/items/RevolverParts.tres" id="2"]
 [ext_resource type="Resource" path="res://resources/items/BrokenRevolver.tres" id="3"]
-[ext_resource type="Resource" path="res://resources/items/WireSpool.tres" id="4"]
-[ext_resource type="Resource" path="res://resources/items/ClothScraps.tres" id="5"]
+[ext_resource type="Resource" uid="uid://o0872k00jbxx" path="res://resources/items/WireSpool.tres" id="4"]
+[ext_resource type="Resource" uid="uid://dxqdd4sa3hmca" path="res://resources/items/ClothScraps.tres" id="5"]
 [ext_resource type="Resource" path="res://resources/items/SalvagedRevolver.tres" id="6"]
 [ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="7"]
 

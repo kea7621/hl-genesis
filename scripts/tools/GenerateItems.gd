@@ -19,66 +19,17 @@ extends EditorScript
 
 const ITEMS := [
 	{
-		"file": "PipeWrench",  # -> resources/items/PipeWrench.tres
-		"name": "Pipe Wrench",
-		"type": ItemData.ItemType.MELEE,
-		"equip_slot": ItemData.EquipSlot.MELEE,
-		"damage": 16.0,
-		"melee_range": 44.0,
-		"melee_cooldown": 0.45,
-		"muzzle_offset": Vector2(26, 0),
-	},
-	{
-		"file": "BrokenSMG",  # -> resources/items/BrokenSMG.tres
-		"name": "Broken MP7",
+		"file": "Gold",  # -> resources/items/AramidFiber.tres
+		"name": "Gold",
 		"type": ItemData.ItemType.CRAFTING,
 	},
-	{
-		"file": "BrokenUSP",  # -> resources/items/BrokenUSP.tres
-		"name": "Broken USP",
-		"type": ItemData.ItemType.CRAFTING,
-	},
-	{
-		"file": "SMGParts",  # -> resources/items/SMGParts.tres
-		"name": "SMG Parts",
-		"type": ItemData.ItemType.CRAFTING,
-	},
-	{
-		"file": "ShotgunParts",  # -> resources/items/ShotgunParts.tres
-		"name": "Shotgun Parts",
-		"type": ItemData.ItemType.CRAFTING,
-	},
-	{
-		"file": "PistolParts",  # -> resources/items/PistolParts.tres
-		"name": "Pistol Parts",
-		"type": ItemData.ItemType.CRAFTING,
-	},
-	{
-		"file": "BrokenShotgun",  # -> resources/items/BrokenShotgun.tres
-		"name": "Broken M870",
-		"type": ItemData.ItemType.CRAFTING,
-	},
-	{
-		"file": "Screws",  # -> resources/items/Screws.tres
-		"name": "Screws",
-		"type": ItemData.ItemType.CRAFTING,
-	},
-	{
-		"file": "Springs",  # -> resources/items/Springs.tres
-		"name": "Springs",
-		"type": ItemData.ItemType.CRAFTING,
-	},
-	{
-		"file": "Plastic",  # -> resources/items/Plastic.tres
-		"name": "Plastic",
-		"type": ItemData.ItemType.CRAFTING,
-	},
+
 	# Add more items here — copy the entry above and edit it.
 	# equip_slot: ItemData.EquipSlot.{PRIMARY,SECONDARY,MELEE,ARMOR,NONE}
 	#   — leave unset (defaults to NONE) for anything that can't be equipped.
 	# Ranged example fields: fire_mode, projectile_scene, fire_rate, projectile_speed
 	# Tool example fields: use_range, use_cooldown
-	# Armor example fields: armor_value
+	# Armor example fields: armor_value, body_texture
 	# Crafting materials: just "file", "name", "type" — nothing else needed.
 ]
 
@@ -110,6 +61,7 @@ func _run() -> void:
 
 		# Armor
 		item.armor_value = spec.get("armor_value", 0.0)
+		item.body_texture = spec.get("body_texture", null)
 
 		var path := "res://resources/items/%s.tres" % spec["file"]
 		var result := ResourceSaver.save(item, path)
