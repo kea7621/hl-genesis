@@ -2,19 +2,17 @@ extends Area2D
 class_name LootContainer
 
 ## The physical "table"/crate/body — drop one of these anywhere in your
-## level with a LootTable assigned. It rolls its contents once, and the
-## player walks up and presses E to open it. The actual UI lives in
-## LootUI.gd, found automatically via the "loot_ui" group — same
-## zero-per-instance-wiring pattern as IndoorZone/WorldDimmer elsewhere in
-## this project. You only need ONE LootUI in the scene, but as many
-## LootContainers as you want.
+## level with a LootTable assigned. Player walks up and presses E to open
+## it. LootUI.gd is the ONLY place that listens for the E key (see its
+## comments for why) — this script just registers itself as "nearby" via
+## the "loot_ui" group while the player is in range, so LootUI can decide
+## which container to actually open (the nearest one, if several overlap).
 
 @export var display_name: String = "Container"
 @export var loot_table: LootTable
 @export var roll_on_ready: bool = true  # false if you want to call roll() yourself later (e.g. respawning loot)
 
 var contents: Array[ItemData] = []
-var _player_in_range: bool = false
 
 signal contents_changed
 
@@ -47,13 +45,11 @@ func take_item(index: int) -> ItemData:
 
 
 func _on_body_entered(_body: Node) -> void:
-	_player_in_range = true
 	interact_hint.visible = true
 	get_tree().call_group("loot_ui", "register_nearby", self)
 
 
 func _on_body_exited(_body: Node) -> void:
-	_player_in_range = false
 	interact_hint.visible = false
 	get_tree().call_group("loot_ui", "unregister_nearby", self)
 	get_tree().call_group("loot_ui", "close_if_showing", self)

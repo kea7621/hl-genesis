@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://jgwq4s8fi2yi"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://bv427qr6xsvfp" path="res://scenes/RebarProjectile.tscn" id="1_itavs"]
+
+[resource]
+script = ExtResource("1")
+item_name = "Rebar Crossbow"
+equip_slot = 1
+muzzle_offset = Vector2(28, 0)
+projectile_scene = ExtResource("1_itavs")
+fire_rate = 1.1
+projectile_speed = 1500.0
+damage = 90.0
+max_stack = 1

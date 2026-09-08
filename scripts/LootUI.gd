@@ -1,25 +1,31 @@
 extends CanvasLayer
+class_name LootUI
 
-## The single shared loot screen. Set up ONE of these in your scene with
-## inventory_path pointing at the player's Inventory — every LootContainer
-## finds this automatically via the "loot_ui" group, no per-container
-## wiring needed.
+## The single shared loot screen — AND the single owner of the E key for
+## every walk-up-and-press-E interactable in the game (loot containers,
+## building doors, building exit doors). LootContainer used to check for
+## E itself and call open_for() directly, but since Godot delivers the
+## same input event to every node's _unhandled_input, that meant a single
+## press could hit BOTH LootContainer's "open" check and this script's own
+## "close if already open" check in the same frame — open immediately
+## followed by an invisible close. Centralizing it here avoids that
+## entirely, and as a bonus lets several nearby interactables (a table
+## right next to a door, say) resolve to "whichever's actually closest"
+## instead of "whichever fired last".
 ##
-## This is the ONLY place that listens for the E key. LootContainer used
-## to check for E itself and call open_for() directly, but since Godot
-## delivers the same input event to every node's _unhandled_input, that
-## meant a single press could hit BOTH LootContainer's "open" check and
-## this script's own "close if already open" check in the same frame —
-## open immediately followed by an invisible close. Centralizing it here
-## avoids that entirely, and as a bonus lets multiple nearby containers
-## resolve to "open the nearest one" instead of "whichever fired last".
+## LootContainer/BuildingDoor/ExitDoor all register themselves as
+## "nearby" via the "loot_ui" group while the player's in range, using
+## the register_nearby_*/unregister_nearby_* methods below — nobody else
+## needs a NodePath wired up.
 
 @export var inventory_path: NodePath
 
 var inventory: Inventory
-var player: Node2D
+var player: CharacterBody2D
 var current_container: LootContainer
 var nearby_containers: Array[LootContainer] = []
+var nearby_doors: Array[BuildingDoor] = []
+var nearby_exits: Array[ExitDoor] = []
 var is_open: bool = false
 
 @onready var panel: Panel = $Panel
@@ -48,26 +54,52 @@ func _unhandled_input(event: InputEvent) -> void:
 		if is_open:
 			close()
 		else:
-			_open_nearest()
+			_interact_nearest()
 
 
-func _open_nearest() -> void:
-	if nearby_containers.is_empty():
-		return
+## Resolves the single nearest interactable across ALL three "nearby"
+## lists (containers/doors/exits) and dispatches to whichever kind it
+## turned out to be.
+func _interact_nearest() -> void:
+	var nearest_dist: float = INF
+	var nearest_container: LootContainer = null
+	var nearest_door: BuildingDoor = null
+	var nearest_exit: ExitDoor = null
 
-	var nearest: LootContainer = nearby_containers[0]
-	var nearest_dist: float = player.global_position.distance_to(nearest.global_position)
 	for container in nearby_containers:
 		var dist: float = player.global_position.distance_to(container.global_position)
 		if dist < nearest_dist:
-			nearest = container
 			nearest_dist = dist
+			nearest_container = container
+			nearest_door = null
+			nearest_exit = null
 
-	open_for(nearest)
+	for door in nearby_doors:
+		var dist: float = player.global_position.distance_to(door.global_position)
+		if dist < nearest_dist:
+			nearest_dist = dist
+			nearest_door = door
+			nearest_container = null
+			nearest_exit = null
+
+	for exit_door in nearby_exits:
+		var dist: float = player.global_position.distance_to(exit_door.global_position)
+		if dist < nearest_dist:
+			nearest_dist = dist
+			nearest_exit = exit_door
+			nearest_container = null
+			nearest_door = null
+
+	if nearest_container != null:
+		open_for(nearest_container)
+	elif nearest_door != null:
+		nearest_door.enter(player)
+	elif nearest_exit != null:
+		nearest_exit.exit(player)
 
 
 ## Called by LootContainer on body_entered — tracks it as a candidate for
-## _open_nearest() without opening anything itself.
+## _interact_nearest() without opening anything itself.
 func register_nearby(container: LootContainer) -> void:
 	if not nearby_containers.has(container):
 		nearby_containers.append(container)
@@ -75,6 +107,28 @@ func register_nearby(container: LootContainer) -> void:
 
 func unregister_nearby(container: LootContainer) -> void:
 	nearby_containers.erase(container)
+
+
+## Called by BuildingDoor on body_entered — same "just a candidate" role
+## register_nearby() plays for containers, see above.
+func register_nearby_door(door: BuildingDoor) -> void:
+	if not nearby_doors.has(door):
+		nearby_doors.append(door)
+
+
+func unregister_nearby_door(door: BuildingDoor) -> void:
+	nearby_doors.erase(door)
+
+
+## Called by ExitDoor on body_entered — same role, for the door(s) leading
+## back outside from wherever the player currently is.
+func register_nearby_exit(exit_door: ExitDoor) -> void:
+	if not nearby_exits.has(exit_door):
+		nearby_exits.append(exit_door)
+
+
+func unregister_nearby_exit(exit_door: ExitDoor) -> void:
+	nearby_exits.erase(exit_door)
 
 
 func open_for(container: LootContainer) -> void:

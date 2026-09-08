@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="CraftingRecipe" format=3 uid="uid://can1ovs8w7mnq"]
+
+[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1"]
+[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="2"]
+[ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="3"]
+[ext_resource type="Resource" uid="uid://btj1h7lgkj0cy" path="res://resources/items/RustyNails.tres" id="4"]
+[ext_resource type="Resource" uid="uid://s58rwl1d41pf" path="res://resources/items/RubberTubing.tres" id="5"]
+[ext_resource type="Resource" uid="uid://o0872k00jbxx" path="res://resources/items/WireSpool.tres" id="6"]
+[ext_resource type="Resource" path="res://resources/items/NailGun.tres" id="7"]
+
+[sub_resource type="Resource" id="Resource_ng1"]
+script = ExtResource("1")
+item = ExtResource("4")
+count = 6
+
+[sub_resource type="Resource" id="Resource_ng2"]
+script = ExtResource("1")
+item = ExtResource("5")
+count = 2
+
+[sub_resource type="Resource" id="Resource_ng3"]
+script = ExtResource("1")
+item = ExtResource("2")
+count = 3
+
+[sub_resource type="Resource" id="Resource_ng4"]
+script = ExtResource("1")
+item = ExtResource("6")
+
+[resource]
+script = ExtResource("3")
+recipe_name = "Nail Gun"
+ingredients = Array[ExtResource("1")]([SubResource("Resource_ng1"), SubResource("Resource_ng2"), SubResource("Resource_ng3"), SubResource("Resource_ng4")])
+result_item = ExtResource("7")

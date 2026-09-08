@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://duk8y00c3118q"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1_kni4e"]
+[ext_resource type="Texture2D" uid="uid://cgypjpdwhskm4" path="res://assets/resources/weaponparts.png" id="1_tsv7y"]
+
+[resource]
+script = ExtResource("1_kni4e")
+item_name = "SMG Parts"
+item_type = 2
+icon = ExtResource("1_tsv7y")
+damage = 0.0

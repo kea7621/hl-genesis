@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://scripts/ItemData.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_name = "Fire Axe"
+item_type = 0
+equip_slot = 3
+muzzle_offset = Vector2(30, 0)
+melee_range = 46.0
+melee_cooldown = 0.55
+damage = 24.0

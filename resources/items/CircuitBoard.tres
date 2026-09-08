@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cidsohgptfrf1"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://cm7itbh6xcnll" path="res://assets/resources/circuit.png" id="1_t134v"]
+
+[resource]
+script = ExtResource("1")
+item_name = "Circuit Board"
+item_type = 2
+icon = ExtResource("1_t134v")
+damage = 0.0

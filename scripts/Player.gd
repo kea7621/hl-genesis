@@ -22,6 +22,7 @@ var _regen_timer: float = 0.0
 var is_sprinting: bool = false
 var _attack_cooldown: float = 0.0
 var is_dead: bool = false
+var _default_body_texture: Texture2D  # cached in _ready() so armor without body_texture can revert Body to normal
 
 @onready var body: Sprite2D = $Body
 @onready var pivot: Node2D = $Pivot
@@ -36,20 +37,47 @@ signal died
 func _ready() -> void:
 	stamina = max_stamina
 	health = max_health
+	_default_body_texture = body.texture  # so we can revert when armor with no body_texture is unequipped
 
-	inventory.equipped_changed.connect(_on_weapon_equipped)
-	# Inventory is a child node, so its _ready() (and initial equip()) runs
-	# BEFORE this _ready() in Godot's bottom-up ready order — meaning the
-	# very first equipped_changed signal fires before we've connected to it.
-	# Call the handler manually once, using whatever's already equipped.
-	_on_weapon_equipped(inventory.get_equipped())
+	inventory.active_weapon_changed.connect(_on_active_weapon_changed)
+	inventory.equip_slot_changed.connect(_on_equip_slot_changed)
+	# Inventory is a child node, so its _ready() runs BEFORE this one in
+	# Godot's bottom-up ready order — meaning if starting_items auto-equips
+	# a weapon/armor, that happens before we've connected to these signals
+	# here. Call both handlers manually once, using whatever's already
+	# equipped, so a starting loadout still shows up correctly.
+	_on_active_weapon_changed(inventory.get_active_weapon())
+	_on_equip_slot_changed("armor", inventory.get_armor())
 
 
-func _on_weapon_equipped(item: ItemData) -> void:
+func _on_active_weapon_changed(item: ItemData) -> void:
 	if item == null:
 		return
 	torso.texture = item.torso_texture
 	muzzle.position = item.muzzle_offset
+
+
+## Forces the player's Body sprite to a different look while armor with a
+## body_texture is equipped (a hazmat suit, plate armor, etc.), and puts
+## it back to whatever Body originally had once that armor comes off —
+## whether by unequipping (item == null) or swapping in armor that leaves
+## body_texture blank. Only reacts to the "armor" slot; primary/secondary/
+## melee equip changes are handled by _on_active_weapon_changed() instead.
+func _on_equip_slot_changed(slot_name: String, item: ItemData) -> void:
+	if slot_name != "armor":
+		return
+	body.texture = item.body_texture if item != null and item.body_texture != null else _default_body_texture
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_1:
+				inventory.set_active_weapon("primary")
+			KEY_2:
+				inventory.set_active_weapon("secondary")
+			KEY_3:
+				inventory.set_active_weapon("melee")
 
 
 func _physics_process(delta: float) -> void:
@@ -114,7 +142,7 @@ func _handle_attack(delta: float) -> void:
 	if _attack_cooldown > 0.0:
 		_attack_cooldown -= delta
 
-	var item: ItemData = inventory.get_equipped()
+	var item: ItemData = inventory.get_active_weapon()
 	if item == null:
 		return
 
@@ -131,9 +159,10 @@ func _handle_attack(delta: float) -> void:
 		ItemData.ItemType.TOOL:
 			_do_tool_use(item)
 			_attack_cooldown = item.use_cooldown
-		ItemData.ItemType.CRAFTING:
-			pass  # Inventory.equip() already blocks these from being equipped;
-				  # this case only exists so the match is exhaustive.
+		ItemData.ItemType.CRAFTING, ItemData.ItemType.ARMOR:
+			pass  # neither can ever be the active weapon in practice — Crafting
+				  # has no equip_slot, Armor isn't in WEAPON_SLOTS — this case
+				  # only exists so the match is exhaustive.
 
 
 ## Melee/Tool stay "hold to keep attacking" (gated by their own cooldowns
@@ -213,7 +242,11 @@ func _do_tool_use(item: ItemData) -> void:
 func take_damage(amount: float) -> void:
 	if is_dead:
 		return
-	health = max(health - amount, 0.0)
+
+	var armor: ItemData = inventory.get_armor()
+	var reduced_amount: float = max(amount - armor.armor_value, 0.0) if armor != null else amount
+
+	health = max(health - reduced_amount, 0.0)
 	health_changed.emit(health, max_health)
 	if health <= 0.0:
 		die()

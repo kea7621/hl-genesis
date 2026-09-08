@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="HL-Genesis"
-run/main_scene="res://scenes/Main.tscn"
+run/main_scene="uid://x4xt5cmud8kq"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 

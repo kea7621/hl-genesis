@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://kr2vui2qja2a"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://sf13djij55c5" path="res://assets/Weapons/USP.png" id="1_debrk"]
+[ext_resource type="PackedScene" uid="uid://y7qsbruhjbtq" path="res://scenes/Projectile.tscn" id="2"]
+
+[resource]
+script = ExtResource("1")
+item_name = "USP Match"
+icon = ExtResource("1_debrk")
+equip_slot = 2
+torso_texture = ExtResource("1_debrk")
+muzzle_offset = Vector2(22, 0)
+projectile_scene = ExtResource("2")
+fire_rate = 0.35
+projectile_speed = 900.0
+damage = 12.0

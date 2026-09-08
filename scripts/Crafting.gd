@@ -7,11 +7,10 @@ class_name Crafting
 ## CraftingUI.open()/close() when the player interacts with it; this node
 ## and the UI don't care what triggered that.
 ##
-## Note on quantities: Inventory has no per-slot stack counts — each slot
-## holds one ItemData reference. "3x Scrap Metal" means 3 separate slots
-## each holding that same resource. count_item() below counts matching
-## slots rather than reading a stack size. If you later add real stacking
-## to Inventory, this is the one place that needs to change.
+## Note on quantities: Inventory now stacks quantities of the same
+## stackable item into a single slot (see ItemStack/ItemData.is_stackable()),
+## so counting/consuming ingredients just delegates to Inventory's own
+## count_item()/remove_item_amount() rather than scanning slots by hand.
 
 @export var inventory_path: NodePath
 @export var recipes: Array[CraftingRecipe] = []
@@ -26,13 +25,7 @@ func _ready() -> void:
 
 
 func count_item(item: ItemData) -> int:
-	if item == null:
-		return 0
-	var count := 0
-	for slot_item in inventory.slots:
-		if slot_item == item:
-			count += 1
-	return count
+	return inventory.count_item(item)
 
 
 func can_craft(recipe: CraftingRecipe) -> bool:
@@ -47,7 +40,7 @@ func craft(recipe: CraftingRecipe) -> bool:
 		return false
 
 	for ingredient in recipe.ingredients:
-		_consume_item(ingredient.item, ingredient.count)
+		inventory.remove_item_amount(ingredient.item, ingredient.count)
 
 	for i in recipe.result_count:
 		if not inventory.add_item(recipe.result_item):
@@ -56,13 +49,3 @@ func craft(recipe: CraftingRecipe) -> bool:
 
 	crafted.emit(recipe)
 	return true
-
-
-func _consume_item(item: ItemData, amount: int) -> void:
-	var removed := 0
-	for i in inventory.slots.size():
-		if removed >= amount:
-			break
-		if inventory.slots[i] == item:
-			inventory.remove_item(i)
-			removed += 1

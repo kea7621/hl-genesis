@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cvc73fsce3esl"]
+
+[ext_resource type="Texture2D" uid="uid://bnbaap2n8spb2" path="res://assets/resources/screw.png" id="1_iuu8s"]
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1_plitu"]
+
+[resource]
+script = ExtResource("1_plitu")
+item_name = "Screws"
+item_type = 2
+icon = ExtResource("1_iuu8s")
+damage = 0.0
