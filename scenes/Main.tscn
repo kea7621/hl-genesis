@@ -137,9 +137,11 @@ tile_map_data = PackedByteArray("AADf//z/AAAFAAEAAADf//3/AAAEAAEAAADf//7/AAAEAAE
 tile_set = SubResource("TileSet_1nqs0")
 
 [node name="TileMapLayer3" type="TileMapLayer" parent="." unique_id=1600000002]
+tile_map_data = PackedByteArray("AAA9AOX/AAAEAAMAAAA+AOX/AAAEAAMAAAA/AOX/AAADAAMAAABAAOX/AAADAAMAAABBAOX/AAADAAMAAABCAOX/AAAEAAMAAABDAOX/AAADAAMAAABEAOX/AAAEAAMAAABFAOX/AAAEAAMAAABGAOX/AAAEAAMAAABHAOX/AAADAAMAAABIAOX/AAADAAMAAABJAOX/AAADAAMAAAAxAOf/AAADAAEAAAAyAOf/AAAFAAEAAAAyAOj/AAAEAAEAAAAzAOj/AAAEAAEAAAA0AOj/AAAEAAEAAAA1AOj/AAADAAEAAAA2AOj/AAAEAAEAAAA3AOj/AAAEAAEAAAA4AOj/AAADAAEAAAA5AOj/AAADAAEAAAA6AOj/AAAEAAEAAAA6AOf/AAADAAEAAAA7AOf/AAAFAAEAAAA7AOb/AAAEAAEAAAA8AOb/AAAFAAEAAAA8AOX/AAAEAAEAAAA8AOT/AAADAAEAAAA8AOP/AAADAAEAAAA8AOL/AAAFAAEAAAA7AOL/AAAEAAEAAAA6AOL/AAAEAAEAAAA5AOL/AAAEAAEAAAA4AOL/AAADAAEAAAA3AOL/AAAFAAEAAAA2AOL/AAAFAAEAAAA1AOL/AAAFAAEAAAA0AOL/AAADAAEAAAAzAOL/AAAEAAEAAAAzAOP/AAAFAAEAAAAyAOP/AAAFAAEAAAAyAOT/AAADAAEAAAAxAOT/AAAEAAEAAAAxAOX/AAAEAAEAAAAxAOb/AAAFAAEAAABJAOj/AAADAAEAAABJAOn/AAADAAEAAABKAOn/AAAFAAEAAABKAOr/AAAFAAEAAABLAOr/AAAEAAEAAABMAOr/AAAFAAEAAABNAOr/AAAFAAEAAABOAOr/AAADAAEAAABPAOr/AAADAAEAAABQAOr/AAAEAAEAAABRAOr/AAAEAAEAAABSAOr/AAADAAEAAABTAOr/AAAFAAEAAABTAOn/AAAFAAEAAABTAOj/AAAEAAEAAABTAOf/AAAEAAEAAABTAOb/AAAEAAEAAABTAOX/AAAEAAEAAABTAOT/AAADAAEAAABSAOT/AAAEAAEAAABSAOP/AAAFAAEAAABRAOP/AAAEAAEAAABQAOP/AAADAAEAAABPAOP/AAAEAAEAAABOAOP/AAAFAAEAAABOAOT/AAAEAAEAAABNAOT/AAAEAAEAAABMAOT/AAADAAEAAABMAOX/AAADAAEAAABLAOX/AAADAAEAAABKAOX/AAAEAAEAAABKAOb/AAAEAAEAAABKAOf/AAADAAEAAABJAOf/AAAEAAEAAAA=")
 tile_set = SubResource("TileSet_collision")
 
 [node name="Player" parent="." unique_id=2089452300 instance=ExtResource("1")]
+acceleration = 750.0
 
 [node name="BuildingDoor" parent="." unique_id=1600000001 instance=ExtResource("30_door")]
 position = Vector2(150, 100)
@@ -147,7 +149,6 @@ display_name = "Shack"
 loot_table = ExtResource("31_loot")
 
 [node name="InventoryUI" parent="." unique_id=724761577 instance=ExtResource("4")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")
 
 [node name="Crafting" type="Node" parent="." unique_id=1949253984]
@@ -156,18 +157,14 @@ inventory_path = NodePath("../Player/Inventory")
 recipes = Array[ExtResource("6_q8u5g")]([ExtResource("10_ft6cd"), ExtResource("11_bb450"), ExtResource("12_nfivy"), ExtResource("13_1iba3"), ExtResource("14_yxlcp"), ExtResource("15_ebg2g"), ExtResource("16_2ofn6"), ExtResource("17_rebar"), ExtResource("19_zipgun"), ExtResource("20_fireaxe"), ExtResource("21_nailgun"), ExtResource("22_sgparts"), ExtResource("23_shotgun"), ExtResource("24_revparts"), ExtResource("25_revolver"), ExtResource("26_crossbow"), ExtResource("27_autoshotgun")])
 
 [node name="CraftingUI" parent="." unique_id=1462574967 instance=ExtResource("7")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")
 crafting_path = NodePath("../Crafting")
 
 [node name="HUD" parent="." unique_id=123671991 instance=ExtResource("8")]
-visible = false
 player_path = NodePath("../Player")
 
 [node name="GameOverUI" parent="." unique_id=788747706 instance=ExtResource("11")]
-visible = false
 player_path = NodePath("../Player")
 
 [node name="LootUI" parent="." unique_id=53843274 instance=ExtResource("18_lootui")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")
