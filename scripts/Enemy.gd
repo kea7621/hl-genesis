@@ -31,6 +31,13 @@ enum State { IDLE, SUSPICIOUS, CHASE, ATTACK }
 @export_group("Ranged Weapon")
 @export var weapon: ItemData  # leave empty for melee (uses Combat group above instead)
 
+@export_group("Loot")
+@export var loot_table: LootTable  # leave empty for an enemy that drops nothing
+@export var corpse_name: String = "Corpse"
+
+const LOOT_CONTAINER_SCENE: PackedScene = preload("res://scenes/LootContainer.tscn")
+const CORPSE_COLOR := Color(0.35, 0.12, 0.12, 1)  # dark red — visually distinct from tables/crates
+
 var health: float
 var state: State = State.IDLE
 var target: Node2D = null
@@ -201,13 +208,35 @@ func die() -> void:
 	# melee + a projectile already in flight) could both bring health to 0
 	# before queue_free() actually removes the node — without this guard,
 	# die() ran twice, emitting `died` twice and double-firing anything
-	# hooked to it (future loot drops, kill counters, etc.), matching the
-	# same guard Player.gd already uses for take_damage()/die().
+	# hooked to it (kill counters, etc.), matching the same guard Player.gd
+	# already uses for take_damage()/die().
 	if is_dead:
 		return
 	is_dead = true
 	died.emit()
+	_drop_loot()
 	queue_free()
+
+
+## Spawns a LootContainer at the death position, re-using the exact same
+## walk-up-and-press-E system as every other loot table/crate/stash in the
+## game (see LootContainer.gd/LootUI.gd) — a corpse is just a
+## LootContainer with a different name/color and no roll_on_ready timing
+## concerns, since it's created fresh at the moment of death anyway.
+func _drop_loot() -> void:
+	if loot_table == null:
+		return
+
+	var container: LootContainer = LOOT_CONTAINER_SCENE.instantiate()
+	# Set every field BEFORE add_child() — add_child() runs the
+	# container's _ready() (and therefore its loot roll) synchronously,
+	# so anything assigned after that point would be too late. See the
+	# identical fix in BuildingInterior.gd's setup().
+	container.display_name = corpse_name
+	container.loot_table = loot_table
+	container.sprite_color = CORPSE_COLOR
+	get_parent().add_child(container)
+	container.global_position = global_position
 
 
 func _on_vision_entered(body: Node) -> void:

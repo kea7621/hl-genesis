@@ -14,8 +14,10 @@ extends CanvasLayer
 
 const EQUIP_SLOT_ORDER := ["primary", "secondary", "melee", "armor"]
 const EQUIP_SLOT_LABELS := {"primary": "Primary", "secondary": "Secondary", "melee": "Melee", "armor": "Armor"}
+const DROPPED_ITEM_SCENE: PackedScene = preload("res://scenes/LootContainer.tscn")
 
 var inventory: Inventory
+var player: CharacterBody2D
 var is_open: bool = false
 
 @onready var panel: Panel = $Panel
@@ -25,6 +27,7 @@ var is_open: bool = false
 
 func _ready() -> void:
 	inventory = get_node(inventory_path)
+	player = inventory.get_parent()  # Inventory is always a child of Player in this project
 	inventory.inventory_changed.connect(_refresh)
 	inventory.equip_slot_changed.connect(func(_slot: String, _item: ItemData) -> void: _refresh())
 	inventory.active_weapon_changed.connect(func(_item: ItemData) -> void: _refresh_equip_row())
@@ -137,6 +140,7 @@ func _refresh_grid() -> void:
 
 		var slot_index := i
 		btn.pressed.connect(func() -> void: _on_grid_slot_pressed(slot_index))
+		btn.gui_input.connect(func(event: InputEvent) -> void: _on_grid_slot_gui_input(event, slot_index))
 		grid.add_child(btn)
 
 
@@ -164,6 +168,37 @@ func _on_equip_slot_pressed(slot_name: String) -> void:
 func _on_grid_slot_pressed(index: int) -> void:
 	if inventory.slots[index] != null:
 		inventory.equip_item(index)
+
+
+func _on_grid_slot_gui_input(event: InputEvent, index: int) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		_drop_item(index)
+
+
+## Right-click on a backpack slot drops ONE unit of that stack onto the
+## ground near the player — as its own small LootContainer, so picking it
+## back up (or someone else grabbing it) uses the exact same walk-up-and-
+## press-E flow as every other container in the game, instead of a
+## separate "world item" system. See Enemy.gd's _drop_loot() for the same
+## pattern used for corpses.
+func _drop_item(index: int) -> void:
+	var stack: ItemStack = inventory.slots[index]
+	if stack == null:
+		return
+
+	var item: ItemData = stack.item
+	inventory.remove_item(index)
+
+	var container: LootContainer = DROPPED_ITEM_SCENE.instantiate()
+	# Set every field BEFORE add_child() — add_child() runs the
+	# container's _ready() synchronously, and roll_on_ready/contents need
+	# to already be set by the time that happens. Same rule as everywhere
+	# else a LootContainer gets spawned at runtime in this project.
+	container.display_name = item.item_name
+	container.roll_on_ready = false  # no loot_table to roll against — contents is set directly below
+	container.contents = [item]
+	get_parent().add_child(container)  # InventoryUI is a direct child of the level root, same as Player
+	container.global_position = player.global_position + Vector2(0, 24)  # just below the player's feet, not exactly on top of them
 
 
 func _build_tooltip(item: ItemData, quantity: int = 1) -> String:

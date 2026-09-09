@@ -11,18 +11,21 @@ class_name LootContainer
 @export var display_name: String = "Container"
 @export var loot_table: LootTable
 @export var roll_on_ready: bool = true  # false if you want to call roll() yourself later (e.g. respawning loot)
+@export var sprite_color: Color = Color(0.45, 0.32, 0.2, 1)  # matches this scene's original placeholder tint — override per-instance (e.g. Enemy.gd tints corpses differently)
 
 var contents: Array[ItemData] = []
 
 signal contents_changed
 
 @onready var interact_hint: Label = $InteractHint
+@onready var sprite: Sprite2D = $Sprite2D
 
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	interact_hint.visible = false
+	sprite.modulate = sprite_color
 	if roll_on_ready:
 		roll()
 
