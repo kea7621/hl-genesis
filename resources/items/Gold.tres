@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bntrtw80vf7yk"]
-
-[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1_uh2gh"]
-
-[resource]
-script = ExtResource("1_uh2gh")
-item_name = "Gold"
-item_type = 2
-damage = 0.0
