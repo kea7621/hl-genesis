@@ -1,8 +1,10 @@
 extends CanvasLayer
 
-## Toggleable crafting screen — press C to open/close for now (a future
-## CraftingStation object can call open()/close() directly instead, e.g.
-## when the player interacts with a workbench).
+## Crafting screen — gated behind a hacked CombineFabricator now, not a
+## free-standing "press C anywhere" panel. open()/close() are called by
+## CombineFabricator.interact() (see that script) when the player presses
+## E next to a fabricator they've already hacked with the Multitool; this
+## script no longer opens itself. C/ESC still close it once it's open.
 
 @export var inventory_path: NodePath
 @export var crafting_path: NodePath
@@ -24,18 +26,11 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not is_open:
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_C:
-			_toggle()
-		elif event.keycode == KEY_ESCAPE and is_open:
+		if event.keycode == KEY_C or event.keycode == KEY_ESCAPE:
 			close()
-
-
-func _toggle() -> void:
-	if is_open:
-		close()
-	else:
-		open()
 
 
 func open() -> void:

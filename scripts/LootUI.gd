@@ -13,10 +13,10 @@ class_name LootUI
 ## right next to a door, say) resolve to "whichever's actually closest"
 ## instead of "whichever fired last".
 ##
-## LootContainer/BuildingDoor/ExitDoor all register themselves as
-## "nearby" via the "loot_ui" group while the player's in range, using
-## the register_nearby_*/unregister_nearby_* methods below — nobody else
-## needs a NodePath wired up.
+## LootContainer/BuildingDoor/ExitDoor/CombineFabricator all register
+## themselves as "nearby" via the "loot_ui" group while the player's in
+## range, using the register_nearby_*/unregister_nearby_* methods below —
+## nobody else needs a NodePath wired up.
 
 @export var inventory_path: NodePath
 
@@ -26,6 +26,7 @@ var current_container: LootContainer
 var nearby_containers: Array[LootContainer] = []
 var nearby_doors: Array[BuildingDoor] = []
 var nearby_exits: Array[ExitDoor] = []
+var nearby_fabricators: Array[CombineFabricator] = []
 var is_open: bool = false
 
 @onready var panel: Panel = $Panel
@@ -57,14 +58,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			_interact_nearest()
 
 
-## Resolves the single nearest interactable across ALL three "nearby"
-## lists (containers/doors/exits) and dispatches to whichever kind it
-## turned out to be.
+## Resolves the single nearest interactable across ALL four "nearby"
+## lists (containers/doors/exits/fabricators) and dispatches to whichever
+## kind it turned out to be.
 func _interact_nearest() -> void:
 	var nearest_dist: float = INF
 	var nearest_container: LootContainer = null
 	var nearest_door: BuildingDoor = null
 	var nearest_exit: ExitDoor = null
+	var nearest_fabricator: CombineFabricator = null
 
 	for container in nearby_containers:
 		var dist: float = player.global_position.distance_to(container.global_position)
@@ -73,6 +75,7 @@ func _interact_nearest() -> void:
 			nearest_container = container
 			nearest_door = null
 			nearest_exit = null
+			nearest_fabricator = null
 
 	for door in nearby_doors:
 		var dist: float = player.global_position.distance_to(door.global_position)
@@ -81,6 +84,7 @@ func _interact_nearest() -> void:
 			nearest_door = door
 			nearest_container = null
 			nearest_exit = null
+			nearest_fabricator = null
 
 	for exit_door in nearby_exits:
 		var dist: float = player.global_position.distance_to(exit_door.global_position)
@@ -89,6 +93,16 @@ func _interact_nearest() -> void:
 			nearest_exit = exit_door
 			nearest_container = null
 			nearest_door = null
+			nearest_fabricator = null
+
+	for fabricator in nearby_fabricators:
+		var dist: float = player.global_position.distance_to(fabricator.global_position)
+		if dist < nearest_dist:
+			nearest_dist = dist
+			nearest_fabricator = fabricator
+			nearest_container = null
+			nearest_door = null
+			nearest_exit = null
 
 	if nearest_container != null:
 		open_for(nearest_container)
@@ -96,6 +110,8 @@ func _interact_nearest() -> void:
 		nearest_door.enter(player)
 	elif nearest_exit != null:
 		nearest_exit.exit(player)
+	elif nearest_fabricator != null:
+		nearest_fabricator.interact(player)
 
 
 ## Called by LootContainer on body_entered — tracks it as a candidate for
@@ -129,6 +145,17 @@ func register_nearby_exit(exit_door: ExitDoor) -> void:
 
 func unregister_nearby_exit(exit_door: ExitDoor) -> void:
 	nearby_exits.erase(exit_door)
+
+
+## Called by CombineFabricator on body_entered — same "just a candidate"
+## role register_nearby() plays for containers, see above.
+func register_nearby_fabricator(fabricator: CombineFabricator) -> void:
+	if not nearby_fabricators.has(fabricator):
+		nearby_fabricators.append(fabricator)
+
+
+func unregister_nearby_fabricator(fabricator: CombineFabricator) -> void:
+	nearby_fabricators.erase(fabricator)
 
 
 func open_for(container: LootContainer) -> void:

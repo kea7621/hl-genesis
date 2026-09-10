@@ -81,3 +81,9 @@ theme_override_font_sizes/font_size = 10
 text = "100 / 100"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ResinLabel" type="Label" parent="Control/VBoxContainer" unique_id=1558452977]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.25, 0.85, 0.95, 1)
+theme_override_font_sizes/font_size = 14
+text = "Resin: 0"

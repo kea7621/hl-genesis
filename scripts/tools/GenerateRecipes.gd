@@ -18,81 +18,36 @@ extends EditorScript
 ## Crafting node's `Recipes` array in your scene. That's left as an
 ## Inspector step on purpose rather than this script touching your live
 ## scene file directly.
+##
+## Every recipe here costs nothing but Resin — the single crafting
+## material in the game (HL: Alyx-style). Progression comes from how
+## much Resin a recipe costs, not from a chain of intermediate parts:
+## SMG is the affordable mid-game unlock, Shotgun is the expensive
+## end-game one. Keep it that way — don't reintroduce sub-ingredients.
 
 const RECIPES := [
 	{
-		"file": "CraftPipeWrench",  # -> resources/recipes/CraftPipeWrench.tres
-		"name": "Pipe Wrench",
+		"file": "CraftSMG",  # -> resources/recipes/CraftSMG.tres
+		"name": "MP7 (SMG)",
 		"ingredients": [
-			{"item": "res://resources/items/ScrapMetal.tres", "count": 2},
-		],
-		"result": "res://resources/items/PipeWrench.tres",
-		"result_count": 1,
-	},
-	{
-		"file": "CraftSMG",  # -> resources/recipes/CraftPipeWrench.tres
-		"name": "MP7",
-		"ingredients": [
-			{"item": "res://resources/items/SMGParts.tres", "count": 1},
-			{"item": "res://resources/items/BrokenSMG.tres", "count": 1},
-			{"item": "res://resources/items/Plastic.tres", "count": 6},
+			{"item": "res://resources/items/Resin.tres", "count": 30},
 		],
 		"result": "res://resources/items/SMG.tres",
 		"result_count": 1,
 	},
 	{
-		"file": "CraftUSP",  
-		"name": "USP",
+		"file": "CraftShotgun",  # -> resources/recipes/CraftShotgun.tres
+		"name": "Shotgun",
 		"ingredients": [
-			{"item": "res://resources/items/PistolParts.tres", "count": 1},
-			{"item": "res://resources/items/BrokenUSP.tres", "count": 1},
-			{"item": "res://resources/items/Plastic.tres", "count": 4},
+			{"item": "res://resources/items/Resin.tres", "count": 50},
 		],
-		"result": "res://resources/items/USPMatch.tres",
+		"result": "res://resources/items/Shotgun.tres",
 		"result_count": 1,
 	},
-	{
-		"file": "CraftPParts",  
-		"name": "Pistol Parts",
-		"ingredients": [
-			{"item": "res://resources/items/ScrapMetal.tres", "count": 5},
-			{"item": "res://resources/items/Springs.tres", "count": 4},
-			{"item": "res://resources/items/Screws.tres", "count": 6},
-		],
-		"result": "res://resources/items/PistolParts.tres",
-		"result_count": 1,
-	},
-	{
-		"file": "CraftSMParts",  
-		"name": "SMG Parts",
-		"ingredients": [
-			{"item": "res://resources/items/ScrapMetal.tres", "count": 8},
-			{"item": "res://resources/items/Springs.tres", "count": 6},
-			{"item": "res://resources/items/Screws.tres", "count": 6},
-		],
-		"result": "res://resources/items/SMGParts.tres",
-		"result_count": 1,
-	},
-	{
-		"file": "CraftSprings",  
-		"name": "Springs",
-		"ingredients": [
-			{"item": "res://resources/items/ScrapMetal.tres", "count": 1},
-		],
-		"result": "res://resources/items/Springs.tres",
-		"result_count": 2,
-	},
-	{
-		"file": "CraftScrews",  
-		"name": "Screws",
-		"ingredients": [
-			{"item": "res://resources/items/ScrapMetal.tres", "count": 1},
-		],
-		"result": "res://resources/items/Screws.tres",
-		"result_count": 2,
-	},
-	# Add more recipes here — copy the entry above and edit it.
-	# Multiple ingredients: just add more {"item": ..., "count": ...} entries.
+
+	# Add more recipes here — copy an entry above and edit it. Keep the
+	# ingredients list to just Resin at whatever count you want the item
+	# to cost.
 ]
 
 

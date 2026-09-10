@@ -2,6 +2,10 @@ extends CanvasLayer
 
 ## Always-on HUD. Reads Player's existing health_changed/stamina_changed
 ## signals — nothing needed on the Player side beyond what's already there.
+## Also reads Player's Inventory directly (public @onready var, see
+## Player.gd) to keep a running Resin count on screen, HL: Alyx-style.
+
+const RESIN: ItemData = preload("res://resources/items/Resin.tres")
 
 @export var player_path: NodePath
 
@@ -11,12 +15,14 @@ var player: CharacterBody2D
 @onready var health_label: Label = $Control/VBoxContainer/HealthBar/HealthLabel
 @onready var stamina_bar: ProgressBar = $Control/VBoxContainer/StaminaBar
 @onready var stamina_label: Label = $Control/VBoxContainer/StaminaBar/StaminaLabel
+@onready var resin_label: Label = $Control/VBoxContainer/ResinLabel
 
 
 func _ready() -> void:
 	player = get_node(player_path)
 	player.health_changed.connect(_on_health_changed)
 	player.stamina_changed.connect(_on_stamina_changed)
+	player.inventory.inventory_changed.connect(_on_inventory_changed)
 
 	# health_changed/stamina_changed only fire on take_damage()/movement —
 	# Player doesn't emit an initial value on _ready(). Set the bars from
@@ -24,6 +30,7 @@ func _ready() -> void:
 	# first signal (same reasoning as the weapon-equip timing elsewhere).
 	_on_health_changed(player.health, player.max_health)
 	_on_stamina_changed(player.stamina, player.max_stamina)
+	_on_inventory_changed()
 
 
 func _on_health_changed(current: float, max_value: float) -> void:
@@ -36,3 +43,7 @@ func _on_stamina_changed(current: float, max_value: float) -> void:
 	stamina_bar.max_value = max_value
 	stamina_bar.value = current
 	stamina_label.text = "%d / %d" % [current, max_value]
+
+
+func _on_inventory_changed() -> void:
+	resin_label.text = "Resin: %d" % player.inventory.count_item(RESIN)

@@ -11,17 +11,24 @@ extends EditorScript
 ##
 ## Re-running is safe and idempotent: existing files with matching names
 ## get overwritten with the new values, so this doubles as a bulk-retune
-## tool (e.g. change one damage number here, 
-## Only the fields relevant to `type` actually matter at runtime — the
-## rest are harmless to leave at their defaults.re-run, every listed item
+## tool (e.g. change one damage number here, re-run, every listed item
 ## updates at once instead of hand-editing each .tres).
 ##
+## Only the fields relevant to `type` actually matter at runtime — the
+## rest are harmless to leave at their defaults.
+##
+## Crafting is now a single-resource system (see GenerateRecipes.gd) —
+## Resin is the only crafting material in the game, HL: Alyx-style. Don't
+## add more material types here; tune what things COST via recipes
+## instead of adding new ingredients.
 
 const ITEMS := [
 	{
-		"file": "Gold",  # -> resources/items/AramidFiber.tres
-		"name": "Gold",
+		"file": "Resin",  # -> resources/items/Resin.tres
+		"name": "Resin",
 		"type": ItemData.ItemType.CRAFTING,
+		"icon": preload("res://assets/resources/resin.png"),
+		"max_stack": 999,
 	},
 
 	# Add more items here — copy the entry above and edit it.
@@ -30,7 +37,7 @@ const ITEMS := [
 	# Ranged example fields: fire_mode, projectile_scene, fire_rate, projectile_speed
 	# Tool example fields: use_range, use_cooldown
 	# Armor example fields: armor_value, body_texture
-	# Crafting materials: just "file", "name", "type" — nothing else needed.
+	# Crafting materials: just "file", "name", "type", "icon", "max_stack".
 ]
 
 
@@ -44,6 +51,7 @@ func _run() -> void:
 		item.muzzle_offset = spec.get("muzzle_offset", Vector2(20, 0))
 		item.torso_texture = spec.get("torso_texture", null)
 		item.icon = spec.get("icon", null)
+		item.max_stack = spec.get("max_stack", 99)
 
 		# Ranged
 		item.fire_mode = spec.get("fire_mode", ItemData.FireMode.SEMI_AUTO)

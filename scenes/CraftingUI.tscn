@@ -99,5 +99,5 @@ theme_override_constants/separation = 10
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.55, 0.58, 1)
 theme_override_font_sizes/font_size = 12
-text = "Press C to close"
+text = "Press C or ESC to close"
 horizontal_alignment = 1
