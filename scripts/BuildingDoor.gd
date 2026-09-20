@@ -51,7 +51,7 @@ func enter(player: CharacterBody2D) -> void:
 		_interior = INTERIOR_SCENE.instantiate()
 		get_parent().add_child(_interior)
 		_interior.global_position = global_position + PARK_OFFSET
-		_interior.setup(display_name, loot_table, floor_color, wall_color, self)
+		_interior.setup(display_name, loot_table, self)
 
 	player.global_position = _interior.global_position + Vector2(0, 140)  # just inside the doorway, not room-center
 	_snap_camera(player)

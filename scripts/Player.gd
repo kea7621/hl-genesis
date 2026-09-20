@@ -223,6 +223,8 @@ func _do_tool_use(item: ItemData) -> void:
 	query.transform = Transform2D(0.0, muzzle.global_position)
 	query.collision_mask = 4  # interactable layer — set this up when doors/forcefields exist
 	query.exclude = [self]
+	query.collide_with_bodies = false
+	query.collide_with_areas = true  # CombineFabricator (and other hackables) are Area2Ds, not bodies
 
 	var results := space_state.intersect_shape(query)
 	if results.is_empty():

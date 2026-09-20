@@ -12,21 +12,17 @@ const LOOT_CONTAINER_SCENE: PackedScene = preload("res://scenes/LootContainer.ts
 
 var origin_door: BuildingDoor
 
-@onready var floor_sprite: Sprite2D = $Floor
-@onready var wall_sprites: Array[Sprite2D] = [$Walls/North/Sprite2D, $Walls/SouthWest/Sprite2D, $Walls/SouthEast/Sprite2D, $Walls/East/Sprite2D, $Walls/West/Sprite2D]
 @onready var title_label: Label = $TitleLabel
 @onready var loot_spawn: Marker2D = $LootSpawn
 @onready var exit_door: ExitDoor = $ExitDoor
 
 
-func setup(display_name: String, loot_table: LootTable, floor_color: Color, wall_color: Color, door: BuildingDoor) -> void:
+func setup(display_name: String, loot_table: LootTable, door: BuildingDoor) -> void:
 	origin_door = door
 	exit_door.interior = self
 
 	title_label.text = display_name
-	floor_sprite.modulate = floor_color
-	for wall_sprite in wall_sprites:
-		wall_sprite.modulate = wall_color
+
 
 	if loot_table != null:
 		var container: LootContainer = LOOT_CONTAINER_SCENE.instantiate()

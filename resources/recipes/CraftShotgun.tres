@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CraftingRecipe" format=3]
+[gd_resource type="Resource" script_class="CraftingRecipe" format=3 uid="uid://wskxsokuldcy"]
 
 [ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="1"]
 [ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="2"]
@@ -15,4 +15,3 @@ script = ExtResource("1")
 recipe_name = "Shotgun"
 ingredients = Array[ExtResource("2")]([SubResource("RecipeIngredient_resin")])
 result_item = ExtResource("4_shotgun")
-result_count = 1
