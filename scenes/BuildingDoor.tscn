@@ -1,32 +1,29 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://bmkdrf5qwyup"]
 
-[ext_resource type="Script" path="res://scripts/BuildingDoor.gd" id="1"]
+[ext_resource type="Script" uid="uid://r6d64cvhps2" path="res://scripts/BuildingDoor.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://dp3mslgitp6ip" path="res://assets/door.png" id="2_ac8pl"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(40, 24)
 
-[sub_resource type="PlaceholderTexture2D" id="2"]
-size = Vector2(40, 24)
-
-[node name="BuildingDoor" type="Area2D"]
+[node name="BuildingDoor" type="Area2D" unique_id=914721245]
 collision_layer = 0
-collision_mask = 1
 script = ExtResource("1")
-display_name = "Building"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=358012869]
 shape = SubResource("1")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(0.35, 0.25, 0.15, 1)
-texture = SubResource("2")
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1770353391]
+position = Vector2(0, -9)
+scale = Vector2(1, 0.875)
+texture = ExtResource("2_ac8pl")
 
-[node name="InteractHint" type="Label" parent="."]
+[node name="InteractHint" type="Label" parent="." unique_id=1650165236]
+modulate = Color(1, 1, 0.6, 0.9)
 offset_left = -50.0
 offset_top = -34.0
 offset_right = 50.0
 offset_bottom = -16.0
 theme_override_font_sizes/font_size = 11
-horizontal_alignment = 1
 text = "[E] Enter"
-modulate = Color(1, 1, 0.6, 0.9)
+horizontal_alignment = 1

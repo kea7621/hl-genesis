@@ -15,10 +15,6 @@ run/main_scene="uid://x4xt5cmud8kq"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 
-[display]
-
-window/size/mode=3
-
 [dotnet]
 
 project/assembly_name="HL-Genesis"
