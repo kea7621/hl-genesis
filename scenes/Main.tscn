@@ -14,7 +14,7 @@
 [ext_resource type="Resource" uid="uid://wskxsokuldcy" path="res://resources/recipes/CraftShotgun.tres" id="23_shotgun"]
 [ext_resource type="PackedScene" uid="uid://bmkdrf5qwyup" path="res://scenes/BuildingDoor.tscn" id="30_door"]
 [ext_resource type="Resource" uid="uid://fhe27ht7wwav" path="res://resources/loot/TableLootBasic.tres" id="31_loot"]
-[ext_resource type="PackedScene" path="res://scenes/CombineFabricator.tscn" id="32_fabricator"]
+[ext_resource type="PackedScene" uid="uid://dkg40fygaeuwo" path="res://scenes/CombineFabricator.tscn" id="32_fabricator"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nfivy"]
 texture = ExtResource("2_fs0b5")
@@ -139,12 +139,12 @@ tile_set = SubResource("TileSet_collision")
 acceleration = 750.0
 
 [node name="BuildingDoor" parent="." unique_id=1600000001 instance=ExtResource("30_door")]
-position = Vector2(553, 94)
+position = Vector2(556, 96)
+rotation = -0.0021456182
 display_name = "Shack"
 loot_table = ExtResource("31_loot")
 
 [node name="InventoryUI" parent="." unique_id=724761577 instance=ExtResource("4")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")
 
 [node name="Crafting" type="Node" parent="." unique_id=1949253984]
@@ -153,22 +153,20 @@ inventory_path = NodePath("../Player/Inventory")
 recipes = Array[ExtResource("6_q8u5g")]([ExtResource("10_ft6cd"), ExtResource("23_shotgun")])
 
 [node name="CraftingUI" parent="." unique_id=1462574967 instance=ExtResource("7")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")
 crafting_path = NodePath("../Crafting")
 
 [node name="HUD" parent="." unique_id=123671991 instance=ExtResource("8")]
-visible = false
 player_path = NodePath("../Player")
 
 [node name="GameOverUI" parent="." unique_id=788747706 instance=ExtResource("11")]
-visible = false
 player_path = NodePath("../Player")
 
 [node name="LootUI" parent="." unique_id=53843274 instance=ExtResource("18_lootui")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")
 
 [node name="CombineFabricator" parent="." unique_id=1600000003 instance=ExtResource("32_fabricator")]
 position = Vector2(-150, 100)
 crafting_ui_path = NodePath("../CraftingUI")
+locked_color = Color(1, 1, 1, 1)
+unlocked_color = Color(1, 1, 1, 1)

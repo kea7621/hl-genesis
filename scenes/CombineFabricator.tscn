@@ -1,31 +1,27 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://dkg40fygaeuwo"]
 
-[ext_resource type="Script" path="res://scripts/CombineFabricator.gd" id="1"]
+[ext_resource type="Script" uid="uid://o5t13g8temm1" path="res://scripts/CombineFabricator.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://d3v0bmqupcasy" path="res://assets/terminal.png" id="2_h8g2h"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(56, 64)
 
-[sub_resource type="PlaceholderTexture2D" id="2"]
-size = Vector2(56, 64)
-
-[node name="CombineFabricator" type="Area2D"]
+[node name="CombineFabricator" type="Area2D" unique_id=967799498]
 collision_layer = 4
-collision_mask = 1
 script = ExtResource("1")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1349876078]
 shape = SubResource("1")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(0.6, 0.15, 0.15, 1)
-texture = SubResource("2")
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=865888642]
+texture = ExtResource("2_h8g2h")
 
-[node name="InteractHint" type="Label" parent="."]
+[node name="InteractHint" type="Label" parent="." unique_id=578613903]
+modulate = Color(1, 0.4, 0.4, 0.9)
 offset_left = -80.0
 offset_top = -50.0
 offset_right = 80.0
 offset_bottom = -32.0
 theme_override_font_sizes/font_size = 11
-horizontal_alignment = 1
 text = "Locked — hack with Multitool"
-modulate = Color(1, 0.4, 0.4, 0.9)
+horizontal_alignment = 1
