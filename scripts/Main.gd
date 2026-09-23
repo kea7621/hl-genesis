@@ -20,6 +20,7 @@ const NOTIFICATION_TEXT := "Loot has respawned"
 var _notify_panel: PanelContainer
 var _notify_label: Label
 var _notify_tween: Tween
+var _tracked_boss: Node = null  # whatever's currently in the "boss_enemy" group, if anything — see _check_for_boss()
 
 
 func _ready() -> void:
@@ -35,6 +36,52 @@ func _ready() -> void:
 	loot_timer.autostart = true
 	loot_timer.timeout.connect(_on_loot_respawn_timeout)
 	add_child(loot_timer)
+
+	# Polls rather than requiring whoever spawns a boss to call back in —
+	# works whether the boss is already sitting in the scene at load time
+	# or gets add_child()'d later (a door trigger, a scripted encounter,
+	# etc.), with no extra wiring needed at the spawn site.
+	var boss_watch_timer := Timer.new()
+	boss_watch_timer.wait_time = 0.5
+	boss_watch_timer.one_shot = false
+	boss_watch_timer.autostart = true
+	boss_watch_timer.timeout.connect(_check_for_boss)
+	add_child(boss_watch_timer)
+	_check_for_boss()
+
+
+## --- Boss bar wiring ---
+## Any enemy in the "boss_enemy" group (Wallhammer.gd is the one that
+## exists so far) is expected to expose `boss_display_name: String` plus
+## the same `health`/`max_health`/`health_changed`/`died` contract every
+## Enemy already has — that's all that's needed to drive HUD's boss bar
+## with no HUD-side or boss-side knowledge of each other.
+
+func _check_for_boss() -> void:
+	if _tracked_boss != null and is_instance_valid(_tracked_boss):
+		return  # already tracking a live one
+
+	var bosses := get_tree().get_nodes_in_group("boss_enemy")
+	if bosses.is_empty():
+		if _tracked_boss != null:
+			_tracked_boss = null
+			get_tree().call_group("hud", "hide_boss_bar")
+		return
+
+	var boss: Node = bosses[0]
+	_tracked_boss = boss
+	get_tree().call_group("hud", "show_boss_bar", boss.boss_display_name, boss.health, boss.max_health)
+	boss.health_changed.connect(_on_boss_health_changed)
+	boss.died.connect(_on_boss_died)
+
+
+func _on_boss_health_changed(current: float, max_value: float) -> void:
+	get_tree().call_group("hud", "update_boss_bar", current, max_value)
+
+
+func _on_boss_died() -> void:
+	_tracked_boss = null
+	get_tree().call_group("hud", "hide_boss_bar")
 
 
 func _on_player_stamina_changed(current: float, max_value: float) -> void:

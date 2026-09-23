@@ -30,9 +30,15 @@ var _low_health_tween: Tween
 @onready var weapon_icon: TextureRect = $Control/WeaponPanel/WeaponRow/WeaponIcon
 @onready var weapon_name_label: Label = $Control/WeaponPanel/WeaponRow/WeaponInfo/WeaponNameLabel
 @onready var damage_flash: ColorRect = $Control/DamageFlash
+@onready var boss_bar: PanelContainer = $Control/BossBar
+@onready var boss_name_label: Label = $Control/BossBar/BossVBox/BossNameLabel
+@onready var boss_health_bar: ProgressBar = $Control/BossBar/BossVBox/BossHealthBar
 
 
 func _ready() -> void:
+	add_to_group("hud")  # so Main.gd (or anything else) can reach this HUD via get_tree().call_group() without a direct reference
+	boss_bar.visible = false
+
 	player = get_node(player_path)
 	player.health_changed.connect(_on_health_changed)
 	player.stamina_changed.connect(_on_stamina_changed)
@@ -114,3 +120,22 @@ func _on_active_weapon_changed(item: ItemData) -> void:
 	weapon_icon.visible = item.icon != null
 	weapon_icon.texture = item.icon
 	weapon_name_label.text = item.item_name
+
+
+## --- Boss bar --- (see Main.gd, which finds anything in the "boss_enemy"
+## group and drives these three via get_tree().call_group("hud", ...))
+
+func show_boss_bar(display_name: String, current: float, max_value: float) -> void:
+	boss_name_label.text = display_name
+	boss_health_bar.max_value = max_value
+	boss_health_bar.value = current
+	boss_bar.visible = true
+
+
+func update_boss_bar(current: float, max_value: float) -> void:
+	boss_health_bar.max_value = max_value
+	boss_health_bar.value = current
+
+
+func hide_boss_bar() -> void:
+	boss_bar.visible = false

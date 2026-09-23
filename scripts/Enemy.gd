@@ -300,12 +300,19 @@ func _fire_at_target(item: ItemData) -> void:
 ## that only pass amount still work) but when given, an IDLE/SUSPICIOUS
 ## enemy that gets hit immediately snaps to full awareness of whoever shot
 ## it instead of only reacting once its own vision cone happens to catch
-## them — being shot is a much stronger signal than a glimpse.
+## them — being shot is a much stronger signal than a glimpse. `attacker`
+## is also how a nearby boss shield (see _apply_shield_protection) knows
+## which direction the hit came from, to decide whether this enemy was
+## standing in its protected cone.
 func take_damage(amount: float, attacker: Node2D = null) -> void:
 	if is_dead:
 		return
 
-	health = max(health - amount, 0.0)
+	var final_amount: float = amount
+	if attacker != null:
+		final_amount = _apply_shield_protection(amount, attacker.global_position)
+
+	health = max(health - final_amount, 0.0)
 	health_changed.emit(health, max_health)
 	if health <= 0.0:
 		die()
@@ -350,6 +357,22 @@ func receive_alert(alert_target: Node2D, alert_position: Vector2) -> void:
 	last_known_position = alert_position
 	state = State.SUSPICIOUS
 	_suspicion_timer = suspicion_time
+
+
+## Reduces incoming damage if a shield-bearing boss is standing between
+## this enemy and whoever's attacking it. Generic on purpose — any enemy
+## script can opt in as a shield-bearer just by joining the "boss_enemy"
+## group and implementing covers_position(ally_position, attacker_position)
+## plus a shield_damage_reduction float; see Wallhammer.gd for the one
+## that currently exists. A plain Enemy with no boss nearby just gets the
+## loop below finding nothing and returning `amount` unchanged.
+func _apply_shield_protection(amount: float, attacker_position: Vector2) -> float:
+	for boss in get_tree().get_nodes_in_group("boss_enemy"):
+		if boss == self or not is_instance_valid(boss) or boss.is_dead:
+			continue
+		if boss.has_method("covers_position") and boss.covers_position(global_position, attacker_position):
+			return amount * (1.0 - boss.shield_damage_reduction)
+	return amount
 
 
 func die() -> void:
