@@ -76,10 +76,12 @@ func _build_equip_slot_button(slot_name: String) -> Control:
 	column.alignment = BoxContainer.ALIGNMENT_CENTER
 
 	var btn := Button.new()
+	btn.theme_type_variation = &"SlotButton"
 	btn.custom_minimum_size = Vector2(64, 64)
 	btn.clip_text = true  # keep the slot fixed at 64x64 even for long names like "Salvaged Revolver" — see _refresh_grid()
 	btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	btn.add_theme_font_size_override("font_size", 10)
+	btn.expand_icon = true
+	btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 	if item != null:
 		btn.tooltip_text = _build_tooltip(item)
@@ -88,10 +90,10 @@ func _build_equip_slot_button(slot_name: String) -> Control:
 		else:
 			btn.text = item.item_name
 		var is_active: bool = slot_name in Inventory.WEAPON_SLOTS and inventory.active_weapon_slot == slot_name
-		btn.modulate = Color(1.0, 0.55, 0.1, 1) if is_active else Color(1, 1, 1, 1)
+		if is_active:
+			btn.add_theme_stylebox_override("normal", _active_slot_style())
 	else:
 		btn.disabled = true
-		btn.modulate = Color(1, 1, 1, 0.35)
 
 	btn.pressed.connect(func() -> void: _on_equip_slot_pressed(slot_name))
 	column.add_child(btn)
@@ -118,10 +120,12 @@ func _refresh_grid() -> void:
 	for i in inventory.slots.size():
 		var stack: ItemStack = inventory.slots[i]
 		var btn := Button.new()
+		btn.theme_type_variation = &"SlotButton"
 		btn.custom_minimum_size = Vector2(64, 64)
 		btn.clip_text = true
 		btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		btn.add_theme_font_size_override("font_size", 10)
+		btn.expand_icon = true
+		btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 		if stack != null:
 			var item: ItemData = stack.item
@@ -159,6 +163,27 @@ func _build_quantity_badge(quantity: int) -> Label:
 	badge.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	badge.position = Vector2(-22, -18)
 	return badge
+
+
+## Orange-accented slot border for whichever equip-slot button currently
+## holds the ACTIVE weapon (see Inventory.active_weapon_slot) — a persistent
+## highlight rather than the SlotButton theme's hover-only glow, so "what am
+## I holding right now" reads at a glance without moving the mouse.
+func _active_slot_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.14, 0.22, 0.24, 1)
+	style.border_width_left = 2
+	style.border_width_top = 2
+	style.border_width_right = 2
+	style.border_width_bottom = 2
+	style.border_color = Color(1, 0.65, 0.2, 1)
+	style.corner_radius_top_left = 6
+	style.corner_radius_top_right = 6
+	style.corner_radius_bottom_right = 6
+	style.corner_radius_bottom_left = 6
+	style.shadow_color = Color(1, 0.55, 0.1, 0.35)
+	style.shadow_size = 6
+	return style
 
 
 func _on_equip_slot_pressed(slot_name: String) -> void:

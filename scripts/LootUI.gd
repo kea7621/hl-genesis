@@ -199,24 +199,52 @@ func _refresh() -> void:
 		item_list.add_child(_build_item_row(i))
 
 
+## Same RowPanel card treatment as CraftingUI's recipe rows — an icon (when
+## the item has one) plus name/type on the left, a Take button on the
+## right, instead of a bare label-and-button line.
 func _build_item_row(index: int) -> Control:
 	var item: ItemData = current_container.contents[index]
 
+	var card := PanelContainer.new()
+	card.theme_type_variation = &"RowPanel"
+
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
+	card.add_child(row)
+
+	if item.icon != null:
+		var icon := TextureRect.new()
+		icon.texture = item.icon
+		icon.custom_minimum_size = Vector2(32, 32)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(icon)
+
+	var info := VBoxContainer.new()
+	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	info.add_theme_constant_override("separation", 0)
+	row.add_child(info)
 
 	var name_label := Label.new()
 	name_label.text = item.item_name
-	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(name_label)
+	info.add_child(name_label)
+
+	var type_label := Label.new()
+	type_label.text = item.get_type_label()
+	type_label.add_theme_font_size_override("font_size", 11)
+	type_label.add_theme_color_override("font_color", Color(0.5, 0.6, 0.62, 1))
+	info.add_child(type_label)
 
 	var take_btn := Button.new()
 	take_btn.text = "Take"
 	take_btn.custom_minimum_size = Vector2(70, 32)
+	take_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	take_btn.pressed.connect(func() -> void: _on_take_pressed(index))
 	row.add_child(take_btn)
 
-	return row
+	return card
 
 
 func _on_take_pressed(index: int) -> void:

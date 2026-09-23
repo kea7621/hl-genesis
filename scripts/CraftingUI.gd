@@ -54,35 +54,73 @@ func _refresh() -> void:
 		recipe_list.add_child(_build_recipe_row(recipe))
 
 
+## Each recipe gets its own RowPanel card (rounded, bordered — see
+## GameTheme.tres) rather than a bare HBoxContainer, so the scrolling list
+## reads as distinct entries instead of a wall of text. Every ingredient is
+## color-coded green/red per-item (have enough / don't) instead of one
+## flat gray "Needs:" line, so what's actually missing jumps out instantly.
 func _build_recipe_row(recipe: CraftingRecipe) -> Control:
+	var can_craft: bool = crafting.can_craft(recipe)
+
+	var card := PanelContainer.new()
+	card.theme_type_variation = &"RowPanel"
+
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
+	card.add_child(row)
+
+	if recipe.result_item != null and recipe.result_item.icon != null:
+		var icon := TextureRect.new()
+		icon.texture = recipe.result_item.icon
+		icon.custom_minimum_size = Vector2(40, 40)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(icon)
 
 	var info := VBoxContainer.new()
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(info)
 
 	var name_label := Label.new()
 	name_label.text = recipe.recipe_name
+	if recipe.result_count > 1:
+		name_label.text += " x%d" % recipe.result_count
+	name_label.add_theme_font_size_override("font_size", 15)
 	info.add_child(name_label)
 
-	var req_label := Label.new()
-	req_label.add_theme_font_size_override("font_size", 12)
-	req_label.modulate = Color(0.75, 0.75, 0.75, 1)
+	var req_row := HBoxContainer.new()
+	req_row.add_theme_constant_override("separation", 10)
+	info.add_child(req_row)
 
-	var parts: Array[String] = []
+	var needs_tag := Label.new()
+	needs_tag.text = "Needs:"
+	needs_tag.add_theme_font_size_override("font_size", 12)
+	needs_tag.add_theme_color_override("font_color", Color(0.5, 0.6, 0.62, 1))
+	req_row.add_child(needs_tag)
+
 	for ingredient in recipe.ingredients:
 		var have := crafting.count_item(ingredient.item)
-		parts.append("%s %d/%d" % [ingredient.item.item_name, have, ingredient.count])
-	req_label.text = "Needs: " + ", ".join(parts)
-	info.add_child(req_label)
-
-	row.add_child(info)
+		var has_enough := have >= ingredient.count
+		var part := Label.new()
+		part.text = "%s %d/%d" % [ingredient.item.item_name, have, ingredient.count]
+		part.add_theme_font_size_override("font_size", 12)
+		part.add_theme_color_override(
+			"font_color",
+			Color(0.45, 0.85, 0.5, 1) if has_enough else Color(0.9, 0.4, 0.35, 1)
+		)
+		req_row.add_child(part)
 
 	var craft_btn := Button.new()
 	craft_btn.text = "Craft"
-	craft_btn.custom_minimum_size = Vector2(80, 32)
-	craft_btn.disabled = not crafting.can_craft(recipe)
+	craft_btn.custom_minimum_size = Vector2(80, 36)
+	craft_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	craft_btn.disabled = not can_craft
 	craft_btn.pressed.connect(func() -> void: crafting.craft(recipe))
 	row.add_child(craft_btn)
 
-	return row
+	if not can_craft:
+		card.modulate = Color(1, 1, 1, 0.8)
+
+	return card

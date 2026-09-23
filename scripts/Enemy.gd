@@ -48,6 +48,10 @@ var is_dead: bool = false  # guards against die() firing twice — see take_dama
 
 @onready var vision_area: Area2D = $VisionArea
 @onready var vision_shape: CollisionShape2D = $VisionArea/CollisionShape2D
+@onready var sprite: Sprite2D = $Sprite2D
+@onready var pivot: Node2D = $Pivot
+@onready var weapon_sprite: Sprite2D = $Pivot/WeaponSprite
+@onready var muzzle: Marker2D = $Pivot/Muzzle
 
 signal died
 signal health_changed(current: float, max_value: float)
@@ -65,8 +69,22 @@ func _ready() -> void:
 	vision_area.body_entered.connect(_on_vision_entered)
 	vision_area.body_exited.connect(_on_vision_exited)
 
+	# Same trick as Player's Pivot/Torso: the "weapon sprite" IS the gun
+	# art (USP.png/mp7.png/etc, same torso_texture used on the player),
+	# parented under a Pivot that rotates freely to aim while the base
+	# body sprite stays upright. Melee enemies (weapon == null) just never
+	# show it.
+	if weapon != null:
+		weapon_sprite.texture = weapon.torso_texture
+		muzzle.position = weapon.muzzle_offset
+	weapon_sprite.visible = weapon != null
+
 
 func _physics_process(delta: float) -> void:
+	# Aim before acting on state, so that if _do_attack() fires this same
+	# frame (from _process_attack() below), the Pivot/Muzzle are already
+	# rotated toward the target rather than lagging a frame behind.
+	_handle_weapon_aim()
 	match state:
 		State.IDLE:
 			velocity = Vector2.ZERO
@@ -77,6 +95,31 @@ func _physics_process(delta: float) -> void:
 		State.ATTACK:
 			_process_attack(delta)
 	move_and_slide()
+
+
+## Mirrors Player._handle_aim(): rotate the weapon Pivot to track whatever
+## the enemy is currently aiming at, and flip both the body sprite and the
+## Pivot vertically when facing left so the gun art doesn't render
+## upside-down (the same Gungeon/Nuclear Throne trick Player.gd uses).
+## Aims at the target while chasing/attacking; otherwise just faces the
+## direction it's currently walking so it doesn't stand there aiming
+## backwards. Holds its last facing while fully idle/stationary.
+func _handle_weapon_aim() -> void:
+	if weapon == null:
+		return
+
+	var aim_point: Vector2
+	if target != null and (state == State.CHASE or state == State.ATTACK):
+		aim_point = target.global_position
+	elif velocity.length() > 1.0:
+		aim_point = global_position + velocity
+	else:
+		return
+
+	var facing_left: bool = aim_point.x < global_position.x
+	sprite.scale.x = -abs(sprite.scale.x) if facing_left else abs(sprite.scale.x)
+	pivot.look_at(aim_point)
+	pivot.scale.y = -1.0 if facing_left else 1.0
 
 
 func _process_suspicious(delta: float) -> void:
@@ -175,12 +218,14 @@ func _fire_at_target(item: ItemData) -> void:
 		push_warning("Enemy: weapon '%s' has no projectile_scene assigned." % item.item_name)
 		return
 
-	var direction: Vector2 = (target.global_position - global_position).normalized()
-
+	# Pivot is already aimed at the target (see _handle_weapon_aim(), which
+	# runs every physics frame the enemy is CHASE/ATTACK) — fire from the
+	# same Muzzle marker the weapon sprite hangs off, exactly like
+	# Player._fire_ranged() does with its own Pivot/Muzzle.
 	var proj := item.projectile_scene.instantiate()
 	get_tree().current_scene.add_child(proj)
-	proj.global_position = global_position + direction * item.muzzle_offset.x
-	proj.rotation = direction.angle()
+	proj.global_position = muzzle.global_position
+	proj.rotation = pivot.global_rotation
 	# The shared Projectile scene defaults to collision_mask = 2 (enemies
 	# only) since that's correct for the player firing it. An enemy firing
 	# the same scene needs the opposite — hit the player (layer 1), not

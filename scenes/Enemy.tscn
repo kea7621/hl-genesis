@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://2qakbhgsew00" path="res://scripts/Enemy.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/EnemyVitalsLabel.gd" id="2"]
+[ext_resource type="Resource" uid="uid://fhe27ht7wwav" path="res://resources/loot/TableLootBasic.tres" id="3_loot"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v6fml"]
 size = Vector2(40, 50)
@@ -15,10 +16,19 @@ radius = 250.0
 [node name="Enemy" type="CharacterBody2D" unique_id=624923832]
 collision_layer = 2
 script = ExtResource("1")
+loot_table = ExtResource("3_loot")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=887714199]
 modulate = Color(0.8, 0.2, 0.2, 1)
 texture = SubResource("PlaceholderTexture2D_v6fml")
+
+[node name="Pivot" type="Node2D" parent="."]
+
+[node name="WeaponSprite" type="Sprite2D" parent="Pivot"]
+offset = Vector2(9, 3)
+
+[node name="Muzzle" type="Marker2D" parent="Pivot"]
+position = Vector2(20, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1680795637]
 shape = SubResource("1")

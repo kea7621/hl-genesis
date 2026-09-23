@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://tbbxwkm4oqjg" path="res://scripts/EnemyVitalsLabel.gd" id="2"]
 [ext_resource type="Resource" uid="uid://kr2vui2qja2a" path="res://resources/items/USPMatch.tres" id="3"]
 [ext_resource type="Texture2D" uid="uid://m28fom2js04c" path="res://assets/enemies/civpro/civpro.png" id="3_3k407"]
+[ext_resource type="Resource" uid="uid://balsrc8i36jgm" path="res://resources/loot/TableLootScavenger.tres" id="4_loot"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 16.0
@@ -18,9 +19,18 @@ vision_radius = 260.0
 attack_range = 220.0
 max_health = 100.0
 weapon = ExtResource("3")
+loot_table = ExtResource("4_loot")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=609735890]
 texture = ExtResource("3_3k407")
+
+[node name="Pivot" type="Node2D" parent="."]
+
+[node name="WeaponSprite" type="Sprite2D" parent="Pivot"]
+offset = Vector2(9, 3)
+
+[node name="Muzzle" type="Marker2D" parent="Pivot"]
+position = Vector2(20, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1915807580]
 shape = SubResource("1")
