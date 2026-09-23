@@ -7,6 +7,7 @@ extends Area2D
 
 var speed: float = 700.0
 var damage: float = 10.0
+var shooter: Node2D = null  # who fired this — passed through to take_damage() so a hit target knows who to react to
 var _direction: Vector2 = Vector2.RIGHT
 
 
@@ -21,9 +22,12 @@ func _ready() -> void:
 
 
 ## Called by whoever spawns this (see Player._fire_ranged / Enemy._fire_at_target).
-func launch(new_speed: float, new_damage: float) -> void:
+## new_shooter is optional so any old call site that only passes speed/damage
+## still works — the hit target just won't get an attacker reference.
+func launch(new_speed: float, new_damage: float, new_shooter: Node2D = null) -> void:
 	speed = new_speed
 	damage = new_damage
+	shooter = new_shooter
 	_direction = Vector2.RIGHT.rotated(rotation)
 
 
@@ -35,7 +39,7 @@ func _on_body_entered(body: Node) -> void:
 	if is_queued_for_deletion():
 		return
 	if body.has_method("take_damage"):
-		body.take_damage(damage)
+		body.take_damage(damage, shooter)
 	queue_free()
 
 

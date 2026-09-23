@@ -11,9 +11,19 @@ extends CharacterBody2D
 ## investigating the last known position, hasn't confirmed a target) ->
 ## CHASE (confirmed sighting, closing distance) -> ATTACK (in range with a
 ## clear shot). Losing line-of-sight while chasing/attacking drops back to
-## SUSPICIOUS rather than instantly forgetting the player exists.
+## SUSPICIOUS rather than instantly forgetting the player exists. FLEE is a
+## separate branch entered directly from any state once health drops below
+## flee_health_ratio (see Combat group below) — it overrides everything
+## else until the enemy either breaks vision or dies.
+##
+## Squad awareness: confirming a sighting (entering CHASE) or taking a hit
+## from an unnoticed attacker calls _alert_nearby_enemies(), which nudges
+## every other enemy in the "enemies" group within alert_radius into
+## SUSPICIOUS about the same target — so getting shot by one enemy in a
+## group tends to bring its neighbors in too, instead of each one only
+## ever reacting to its own vision cone.
 
-enum State { IDLE, SUSPICIOUS, CHASE, ATTACK }
+enum State { IDLE, SUSPICIOUS, CHASE, ATTACK, FLEE }
 
 @export_group("Movement")
 @export var move_speed: float = 120.0
@@ -21,15 +31,20 @@ enum State { IDLE, SUSPICIOUS, CHASE, ATTACK }
 
 @export_group("Detection")
 @export var suspicion_time: float = 1.5  # how long they'll investigate before giving up
+@export var alert_radius: float = 300.0  # how far a confirmed sighting/hit alerts nearby enemies
 
 @export_group("Combat")
 @export var attack_range: float = 40.0
 @export var attack_cooldown: float = 1.3
 @export var attack_damage: float = 7.0
 @export var max_health: float = 50.0
+@export var flee_health_ratio: float = 0.0  # 0 disables fleeing; e.g. 0.25 = flee below 25% health
+@export var flee_speed_multiplier: float = 1.4
 
 @export_group("Ranged Weapon")
 @export var weapon: ItemData  # leave empty for melee (uses Combat group above instead)
+@export var aim_spread_degrees: float = 5.0  # random inaccuracy per shot; 0 = laser-perfect aim
+@export var strafe_speed: float = 60.0  # sideways drift while in ATTACK range; 0 disables strafing
 
 @export_group("Loot")
 @export var loot_table: LootTable  # leave empty for an enemy that drops nothing
@@ -45,6 +60,8 @@ var last_known_position: Vector2 = Vector2.ZERO
 var _suspicion_timer: float = 0.0
 var _attack_timer: float = 0.0
 var is_dead: bool = false  # guards against die() firing twice — see take_damage()
+var _strafe_direction: float = 1.0  # +1/-1, flipped occasionally so ATTACK isn't a static circle-orbit
+var _strafe_flip_timer: float = 0.0
 
 @onready var vision_area: Area2D = $VisionArea
 @onready var vision_shape: CollisionShape2D = $VisionArea/CollisionShape2D
@@ -58,6 +75,7 @@ signal health_changed(current: float, max_value: float)
 
 
 func _ready() -> void:
+	add_to_group("enemies")  # so other enemies' _alert_nearby_enemies() can find this one
 	health = max_health
 	# VitalsLabel is a child, so its _ready() (where it connects to this
 	# signal) runs BEFORE this one — opposite of the Player/Inventory
@@ -94,6 +112,8 @@ func _physics_process(delta: float) -> void:
 			_process_chase()
 		State.ATTACK:
 			_process_attack(delta)
+		State.FLEE:
+			_process_flee(delta)
 	move_and_slide()
 
 
@@ -127,6 +147,7 @@ func _process_suspicious(delta: float) -> void:
 	# finish walking to the last known position if we can already see them.
 	if target != null and _has_line_of_sight(target):
 		state = State.CHASE
+		_alert_nearby_enemies()
 		return
 
 	_suspicion_timer -= delta
@@ -170,7 +191,20 @@ func _process_attack(delta: float) -> void:
 		state = State.CHASE
 		return
 
-	velocity = Vector2.ZERO
+	# Ranged enemies drift sideways instead of standing bolt upright at
+	# point-blank range — makes them a slightly harder target and reads as
+	# more deliberate than a stationary turret. Melee enemies still plant
+	# their feet, since they need to be in attack_range to land a hit.
+	if _is_ranged() and strafe_speed > 0.0:
+		_strafe_flip_timer -= delta
+		if _strafe_flip_timer <= 0.0:
+			_strafe_direction *= -1.0
+			_strafe_flip_timer = randf_range(0.8, 1.8)
+		var to_target: Vector2 = (target.global_position - global_position).normalized()
+		var perpendicular: Vector2 = to_target.orthogonal()
+		velocity = perpendicular * strafe_speed * _strafe_direction
+	else:
+		velocity = Vector2.ZERO
 
 	if _attack_timer > 0.0:
 		_attack_timer -= delta
@@ -183,6 +217,26 @@ func _process_attack(delta: float) -> void:
 			_attack_timer = weapon.fire_rate
 		else:
 			_attack_timer = attack_cooldown
+
+
+## Runs directly away from whatever's currently `target`, ignoring line of
+## sight (getting shot is reason enough to run even from behind cover).
+## Breaks off back to IDLE once far enough away that vision would have lost
+## them anyway, rather than fleeing forever.
+func _process_flee(_delta: float) -> void:
+	if target == null:
+		state = State.IDLE
+		return
+
+	var distance: float = global_position.distance_to(target.global_position)
+	if distance > vision_radius * 1.5:
+		state = State.IDLE
+		target = null
+		velocity = Vector2.ZERO
+		return
+
+	var away: Vector2 = (global_position - target.global_position).normalized()
+	velocity = away * move_speed * flee_speed_multiplier
 
 
 func _is_ranged() -> bool:
@@ -210,7 +264,7 @@ func _do_attack() -> void:
 	if _is_ranged():
 		_fire_at_target(weapon)
 	elif target.has_method("take_damage"):
-		target.take_damage(attack_damage)
+		target.take_damage(attack_damage, self)
 
 
 func _fire_at_target(item: ItemData) -> void:
@@ -225,7 +279,12 @@ func _fire_at_target(item: ItemData) -> void:
 	var proj := item.projectile_scene.instantiate()
 	get_tree().current_scene.add_child(proj)
 	proj.global_position = muzzle.global_position
-	proj.rotation = pivot.global_rotation
+	# Random inaccuracy (aim_spread_degrees) so ranged enemies aren't
+	# perfect hitscan-with-travel-time — the player has a real chance to
+	# juke shots at range instead of every bullet being a guaranteed hit
+	# whenever the angle lines up.
+	var spread: float = deg_to_rad(randf_range(-aim_spread_degrees, aim_spread_degrees) * 0.5)
+	proj.rotation = pivot.global_rotation + spread
 	# The shared Projectile scene defaults to collision_mask = 2 (enemies
 	# only) since that's correct for the player firing it. An enemy firing
 	# the same scene needs the opposite — hit the player (layer 1), not
@@ -233,12 +292,16 @@ func _fire_at_target(item: ItemData) -> void:
 	# duplicate projectile scene just for enemy shots.
 	proj.collision_mask = 1
 	if proj.has_method("launch"):
-		proj.launch(item.projectile_speed, item.damage)
+		proj.launch(item.projectile_speed, item.damage, self)
 
 
 ## Called by anything that hits this enemy — the Projectile already checks
-## for this method automatically.
-func take_damage(amount: float) -> void:
+## for this method automatically. `attacker` is optional (older call sites
+## that only pass amount still work) but when given, an IDLE/SUSPICIOUS
+## enemy that gets hit immediately snaps to full awareness of whoever shot
+## it instead of only reacting once its own vision cone happens to catch
+## them — being shot is a much stronger signal than a glimpse.
+func take_damage(amount: float, attacker: Node2D = null) -> void:
 	if is_dead:
 		return
 
@@ -246,6 +309,47 @@ func take_damage(amount: float) -> void:
 	health_changed.emit(health, max_health)
 	if health <= 0.0:
 		die()
+		return
+
+	if flee_health_ratio > 0.0 and health / max_health <= flee_health_ratio:
+		if state != State.FLEE:
+			target = attacker if attacker != null else target
+			state = State.FLEE
+		return
+
+	if attacker != null and (state == State.IDLE or state == State.SUSPICIOUS):
+		target = attacker
+		last_known_position = attacker.global_position
+		state = State.CHASE
+		_alert_nearby_enemies()
+
+
+## Notifies every other living enemy in the "enemies" group within
+## alert_radius that this one has confirmed a target, nudging them into
+## SUSPICIOUS about the same last-known position (see receive_alert()).
+## Called on confirming a sighting (_process_suspicious) and on taking an
+## unseen hit (take_damage) — the two moments an enemy actually "knows"
+## where the threat is.
+func _alert_nearby_enemies() -> void:
+	if target == null:
+		return
+	for other in get_tree().get_nodes_in_group("enemies"):
+		if other == self or not is_instance_valid(other) or other.is_dead:
+			continue
+		if global_position.distance_to(other.global_position) <= alert_radius:
+			other.receive_alert(target, last_known_position)
+
+
+## Called by a nearby enemy's _alert_nearby_enemies(). Doesn't override an
+## enemy that's already actively engaged (CHASE/ATTACK/FLEE) with its own
+## situation — only pulls IDLE/SUSPICIOUS enemies in.
+func receive_alert(alert_target: Node2D, alert_position: Vector2) -> void:
+	if is_dead or state == State.CHASE or state == State.ATTACK or state == State.FLEE:
+		return
+	target = alert_target
+	last_known_position = alert_position
+	state = State.SUSPICIOUS
+	_suspicion_timer = suspicion_time
 
 
 func die() -> void:

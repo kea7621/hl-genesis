@@ -23,6 +23,7 @@ var is_sprinting: bool = false
 var _attack_cooldown: float = 0.0
 var is_dead: bool = false
 var _default_body_texture: Texture2D  # cached in _ready() so armor without body_texture can revert Body to normal
+var last_attacker: Node2D = null  # last thing to hit take_damage() — not used yet, but here for a future hit-direction indicator/aggro logic
 
 @onready var body: Sprite2D = $Body
 @onready var pivot: Node2D = $Pivot
@@ -187,7 +188,7 @@ func _fire_ranged(item: ItemData) -> void:
 	proj.global_position = muzzle.global_position
 	proj.rotation = pivot.global_rotation
 	if proj.has_method("launch"):
-		proj.launch(item.projectile_speed, item.damage)
+		proj.launch(item.projectile_speed, item.damage, self)
 
 
 func _do_melee(item: ItemData) -> void:
@@ -207,7 +208,7 @@ func _do_melee(item: ItemData) -> void:
 	for result in space_state.intersect_shape(query):
 		var body: Node = result.collider
 		if body.has_method("take_damage"):
-			body.take_damage(item.damage)
+			body.take_damage(item.damage, self)
 
 
 func _do_tool_use(item: ItemData) -> void:
@@ -241,9 +242,13 @@ func _do_tool_use(item: ItemData) -> void:
 
 ## Called by enemies (and projectiles, if you later add enemy weapons) —
 ## keeps the same duck-typed contract the Projectile script already uses.
-func take_damage(amount: float) -> void:
+## `attacker` is optional and currently only recorded, not acted on.
+func take_damage(amount: float, attacker: Node2D = null) -> void:
 	if is_dead:
 		return
+
+	if attacker != null:
+		last_attacker = attacker
 
 	var armor: ItemData = inventory.get_armor()
 	var reduced_amount: float = max(amount - armor.armor_value, 0.0) if armor != null else amount

@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://d3b015djtl7vt" path="res://scenes/HUD.tscn" id="8"]
 [ext_resource type="Resource" uid="uid://dnpajml7o063x" path="res://resources/recipes/CraftSMG.tres" id="10_ft6cd"]
 [ext_resource type="PackedScene" uid="uid://se0bva8df6qw" path="res://scenes/GameOverUI.tscn" id="11"]
+[ext_resource type="PackedScene" uid="uid://4sp8h8jr2kp3" path="res://scenes/EnemyPistol.tscn" id="16_cvmbd"]
 [ext_resource type="PackedScene" uid="uid://dst420agwis6v" path="res://scenes/LootUI.tscn" id="18_lootui"]
 [ext_resource type="Resource" uid="uid://wskxsokuldcy" path="res://resources/recipes/CraftShotgun.tres" id="23_shotgun"]
 [ext_resource type="PackedScene" uid="uid://bmkdrf5qwyup" path="res://scenes/BuildingDoor.tscn" id="30_door"]
@@ -170,3 +171,6 @@ position = Vector2(-150, 100)
 crafting_ui_path = NodePath("../CraftingUI")
 locked_color = Color(1, 1, 1, 1)
 unlocked_color = Color(1, 1, 1, 1)
+
+[node name="EnemyPistol" parent="." unique_id=1948577594 instance=ExtResource("16_cvmbd")]
+position = Vector2(931, -214)
