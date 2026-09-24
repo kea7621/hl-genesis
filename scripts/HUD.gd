@@ -29,6 +29,7 @@ var _low_health_tween: Tween
 @onready var resin_label: Label = $Control/VBoxContainer/ResinLabel
 @onready var weapon_icon: TextureRect = $Control/WeaponPanel/WeaponRow/WeaponIcon
 @onready var weapon_name_label: Label = $Control/WeaponPanel/WeaponRow/WeaponInfo/WeaponNameLabel
+@onready var ammo_label: Label = $Control/WeaponPanel/WeaponRow/WeaponInfo/AmmoLabel
 @onready var damage_flash: ColorRect = $Control/DamageFlash
 @onready var boss_bar: PanelContainer = $Control/BossBar
 @onready var boss_name_label: Label = $Control/BossBar/BossVBox/BossNameLabel
@@ -44,6 +45,9 @@ func _ready() -> void:
 	player.stamina_changed.connect(_on_stamina_changed)
 	player.inventory.inventory_changed.connect(_on_inventory_changed)
 	player.inventory.active_weapon_changed.connect(_on_active_weapon_changed)
+	player.ammo_changed.connect(_on_ammo_changed)
+	player.reload_started.connect(_on_reload_started)
+	player.reload_finished.connect(_on_reload_finished)
 
 	# health_changed/stamina_changed only fire on take_damage()/movement —
 	# Player doesn't emit an initial value on _ready(). Set the bars from
@@ -109,17 +113,44 @@ func _on_stamina_changed(current: float, max_value: float) -> void:
 func _on_inventory_changed() -> void:
 	resin_label.text = "Resin: %d" % player.inventory.count_item(RESIN)
 
+	# Ammo reserve can change independently of firing/reloading (crafting
+	# more, looting some) — keep the readout in sync immediately instead
+	# of waiting for the next shot to trigger ammo_changed.
+	var item: ItemData = player.inventory.get_active_weapon()
+	if item != null and item.uses_ammo():
+		_on_ammo_changed(item, player.get_current_ammo(item), item.magazine_size, player.inventory.count_item(item.ammo_item))
+
 
 func _on_active_weapon_changed(item: ItemData) -> void:
 	if item == null:
 		weapon_icon.texture = null
 		weapon_icon.visible = false
 		weapon_name_label.text = "Unarmed"
+		ammo_label.text = ""
 		return
 
 	weapon_icon.visible = item.icon != null
 	weapon_icon.texture = item.icon
 	weapon_name_label.text = item.item_name
+	if not item.uses_ammo():
+		ammo_label.text = ""  # melee/tool/infinite-ammo ranged — Player.ammo_changed(-1,-1,-1) will also fire, this just avoids a stale readout in the meantime
+
+
+## --- Ammo / reload --- (see Player.gd, which owns all the actual state)
+
+func _on_ammo_changed(_item: ItemData, current: int, magazine_size: int, reserve: int) -> void:
+	if current < 0:
+		ammo_label.text = ""
+		return
+	ammo_label.text = "%d / %d  ·  %d in reserve" % [current, magazine_size, reserve]
+
+
+func _on_reload_started(_item: ItemData, _reload_time: float) -> void:
+	ammo_label.text = "Reloading…"
+
+
+func _on_reload_finished(_item: ItemData) -> void:
+	pass  # Player._set_ammo() already re-emits ammo_changed right after this, which refreshes the label
 
 
 ## --- Boss bar --- (see Main.gd, which finds anything in the "boss_enemy"

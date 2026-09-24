@@ -159,7 +159,7 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -216.0
-offset_top = -76.0
+offset_top = -94.0
 offset_right = -20.0
 offset_bottom = -20.0
 grow_horizontal = 0
@@ -196,6 +196,12 @@ theme_override_font_sizes/font_size = 14
 text = "Unarmed"
 clip_text = true
 text_overrun_behavior = 3
+
+[node name="AmmoLabel" type="Label" parent="Control/WeaponPanel/WeaponRow/WeaponInfo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 12
+text = ""
 
 [node name="BossBar" type="PanelContainer" parent="Control"]
 visible = false

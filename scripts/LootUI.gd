@@ -195,15 +195,28 @@ func _refresh() -> void:
 		item_list.add_child(empty_label)
 		return
 
-	for i in current_container.contents.size():
-		item_list.add_child(_build_item_row(i))
+	# Group duplicate stackable items (see LootEntry.roll_count() /
+	# LootTable.roll(), which can now drop several units of the same
+	# stackable item into one container) into a single "5x Resin" row
+	# instead of five identical ones. Non-stackable items (weapons/tools/
+	# armor) are never grouped, even if two happened to land in the same
+	# container — each is still its own distinct pickup.
+	var seen_stackable: Dictionary = {}  # ItemData -> true, once its row has been added
+	for item in current_container.contents:
+		if item.is_stackable() and seen_stackable.has(item):
+			continue
+		if item.is_stackable():
+			seen_stackable[item] = true
+		item_list.add_child(_build_item_row(item))
 
 
 ## Same RowPanel card treatment as CraftingUI's recipe rows — an icon (when
 ## the item has one) plus name/type on the left, a Take button on the
-## right, instead of a bare label-and-button line.
-func _build_item_row(index: int) -> Control:
-	var item: ItemData = current_container.contents[index]
+## right, instead of a bare label-and-button line. `item` (not an index)
+## since a row can now represent every matching copy of a stacked item at
+## once — see _refresh()/_count_in_contents().
+func _build_item_row(item: ItemData) -> Control:
+	var count: int = _count_in_contents(item)
 
 	var card := PanelContainer.new()
 	card.theme_type_variation = &"RowPanel"
@@ -228,7 +241,7 @@ func _build_item_row(index: int) -> Control:
 	row.add_child(info)
 
 	var name_label := Label.new()
-	name_label.text = item.item_name
+	name_label.text = "%s  x%d" % [item.item_name, count] if count > 1 else item.item_name
 	info.add_child(name_label)
 
 	var type_label := Label.new()
@@ -238,24 +251,41 @@ func _build_item_row(index: int) -> Control:
 	info.add_child(type_label)
 
 	var take_btn := Button.new()
-	take_btn.text = "Take"
+	take_btn.text = "Take All" if count > 1 else "Take"
 	take_btn.custom_minimum_size = Vector2(70, 32)
 	take_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	take_btn.pressed.connect(func() -> void: _on_take_pressed(index))
+	take_btn.pressed.connect(func() -> void: _on_take_group_pressed(item))
 	row.add_child(take_btn)
 
 	return card
 
 
-func _on_take_pressed(index: int) -> void:
-	var item: ItemData = current_container.take_item(index)
-	if item == null:
-		return
-	if not inventory.add_item(item):
-		push_warning("LootUI: inventory full, couldn't take %s" % item.item_name)
-		current_container.contents.insert(index, item)  # put it back, don't lose it
-		return
-	_refresh()
+func _count_in_contents(item: ItemData) -> int:
+	var count := 0
+	for entry in current_container.contents:
+		if entry == item:
+			count += 1
+	return count
+
+
+## Takes every copy of `item` currently in the container in one go (the
+## whole "5x Resin" stack a grouped row represents), stopping early —
+## rather than losing anything — if the inventory fills up partway
+## through.
+func _on_take_group_pressed(item: ItemData) -> void:
+	var taken_any := false
+	while true:
+		var index: int = current_container.contents.find(item)
+		if index == -1:
+			break
+		var taken: ItemData = current_container.take_item(index)
+		if not inventory.add_item(taken):
+			current_container.contents.insert(index, taken)  # put it back, don't lose it
+			push_warning("LootUI: inventory full, stopping.")
+			break
+		taken_any = true
+	if taken_any:
+		_refresh()
 
 
 func _on_take_all_pressed() -> void:

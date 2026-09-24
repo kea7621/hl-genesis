@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://pifsavv2p4wt" path="res://scripts/LootEntry.gd" id="2_entry"]
 [ext_resource type="Resource" path="res://resources/items/Resin.tres" id="item_resin"]
 [ext_resource type="Resource" uid="uid://kr2vui2qja2a" path="res://resources/items/USPMatch.tres" id="item_usp"]
+[ext_resource type="Resource" path="res://resources/items/Ammo.tres" id="item_ammo"]
 
 [sub_resource type="Resource" id="LootEntry_0"]
 script = ExtResource("2_entry")
@@ -25,6 +26,11 @@ script = ExtResource("2_entry")
 item = ExtResource("item_usp")
 chance = 15.0
 
+[sub_resource type="Resource" id="LootEntry_ammo"]
+script = ExtResource("2_entry")
+item = ExtResource("item_ammo")
+chance = 45.0
+
 [resource]
 script = ExtResource("1_table")
-entries = Array[ExtResource("2_entry")]([SubResource("LootEntry_0"), SubResource("LootEntry_1"), SubResource("LootEntry_2"), SubResource("LootEntry_3")])
+entries = Array[ExtResource("2_entry")]([SubResource("LootEntry_0"), SubResource("LootEntry_1"), SubResource("LootEntry_2"), SubResource("LootEntry_3"), SubResource("LootEntry_ammo")])

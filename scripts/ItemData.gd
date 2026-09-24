@@ -38,6 +38,12 @@ enum EquipSlot { NONE, PRIMARY, SECONDARY, MELEE, ARMOR }
 @export var projectile_scene: PackedScene
 @export var fire_rate: float = 0.25       # seconds between shots
 @export var projectile_speed: float = 700.0
+@export var spread_degrees: float = 0.0   # random inaccuracy added per shot while moving (see Player._fire_ranged) — 0 keeps this weapon laser-accurate
+
+@export_subgroup("Ammo")
+@export var magazine_size: int = 0        # rounds held before a reload is needed. 0 = infinite ammo (old behavior) — every weapon defaults to this until you opt in
+@export var reload_time: float = 1.5      # seconds a reload takes (see Player._start_reload/_finish_reload)
+@export var ammo_item: ItemData           # what's drawn from the inventory's reserve on reload; ignored if magazine_size is 0
 
 @export_group("Melee")
 @export var melee_range: float = 40.0
@@ -74,6 +80,14 @@ enum EquipSlot { NONE, PRIMARY, SECONDARY, MELEE, ARMOR }
 ## you crank max_stack up.
 func is_stackable() -> bool:
 	return item_type == ItemType.CRAFTING
+
+
+## Whether this ranged weapon actually uses the ammo/reload system (see
+## Player._get_ammo()/_start_reload()) rather than firing forever. Kept as
+## a method rather than inlining `magazine_size > 0` everywhere so the
+## rule only has to change in one place if it ever grows conditions.
+func uses_ammo() -> bool:
+	return item_type == ItemType.RANGED and magazine_size > 0
 
 
 func get_type_label() -> String:

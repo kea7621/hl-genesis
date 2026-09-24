@@ -3,27 +3,17 @@
 [ext_resource type="Script" uid="uid://dfn4s6losuybw" path="res://scripts/LootTable.gd" id="1_table"]
 [ext_resource type="Script" uid="uid://pifsavv2p4wt" path="res://scripts/LootEntry.gd" id="2_entry"]
 [ext_resource type="Resource" path="res://resources/items/Resin.tres" id="item_resin"]
-[ext_resource type="Resource" path="res://resources/items/PulseSMG.tres" id="item_pulsesmg"]
 
 [sub_resource type="Resource" id="LootEntry_0"]
 script = ExtResource("2_entry")
 item = ExtResource("item_resin")
-chance = 90.0
-min_count = 1
-max_count = 2
+chance = 40.0
 
 [sub_resource type="Resource" id="LootEntry_1"]
 script = ExtResource("2_entry")
 item = ExtResource("item_resin")
-chance = 40.0
-min_count = 2
-max_count = 5
-
-[sub_resource type="Resource" id="LootEntry_3"]
-script = ExtResource("2_entry")
-item = ExtResource("item_pulsesmg")
-chance = 25.0
+chance = 15.0
 
 [resource]
 script = ExtResource("1_table")
-entries = Array[ExtResource("2_entry")]([SubResource("LootEntry_0"), SubResource("LootEntry_1"), SubResource("LootEntry_3")])
+entries = Array[ExtResource("2_entry")]([SubResource("LootEntry_0"), SubResource("LootEntry_1")])

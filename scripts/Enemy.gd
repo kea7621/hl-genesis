@@ -32,6 +32,7 @@ enum State { IDLE, SUSPICIOUS, CHASE, ATTACK, FLEE }
 @export_group("Detection")
 @export var suspicion_time: float = 1.5  # how long they'll investigate before giving up
 @export var alert_radius: float = 300.0  # how far a confirmed sighting/hit alerts nearby enemies
+@export var reaction_time: float = 0.35  # minimum time spent in SUSPICIOUS before a clear sighting is allowed to escalate to CHASE — stops a "spotted this frame, already sprinting at you" robotic instant-chase
 
 @export_group("Combat")
 @export var attack_range: float = 40.0
@@ -58,6 +59,7 @@ var state: State = State.IDLE
 var target: Node2D = null
 var last_known_position: Vector2 = Vector2.ZERO
 var _suspicion_timer: float = 0.0
+var _time_in_suspicion: float = 0.0  # counts up from 0 each time SUSPICIOUS is (re)entered; gates the reaction_time delay below
 var _attack_timer: float = 0.0
 var is_dead: bool = false  # guards against die() firing twice — see take_damage()
 var _strafe_direction: float = 1.0  # +1/-1, flipped occasionally so ATTACK isn't a static circle-orbit
@@ -143,9 +145,13 @@ func _handle_weapon_aim() -> void:
 
 
 func _process_suspicious(delta: float) -> void:
-	# A confirmed, unobstructed sighting escalates immediately — no need to
-	# finish walking to the last known position if we can already see them.
-	if target != null and _has_line_of_sight(target):
+	_time_in_suspicion += delta
+
+	# A confirmed, unobstructed sighting escalates — but only once
+	# reaction_time has passed since first noticing something, so there's a
+	# brief "wait, what was that" beat rather than a 0-frame instant chase
+	# the moment vision or an alert first fires.
+	if target != null and _time_in_suspicion >= reaction_time and _has_line_of_sight(target):
 		state = State.CHASE
 		_alert_nearby_enemies()
 		return
@@ -357,6 +363,7 @@ func receive_alert(alert_target: Node2D, alert_position: Vector2) -> void:
 	last_known_position = alert_position
 	state = State.SUSPICIOUS
 	_suspicion_timer = suspicion_time
+	_time_in_suspicion = 0.0
 
 
 ## Reduces incoming damage if a shield-bearing boss is standing between
@@ -423,6 +430,7 @@ func _on_vision_entered(body: Node) -> void:
 		state = State.SUSPICIOUS
 		last_known_position = body.global_position
 		_suspicion_timer = suspicion_time
+		_time_in_suspicion = 0.0
 
 
 func _on_vision_exited(body: Node) -> void:
@@ -436,5 +444,6 @@ func _on_vision_exited(body: Node) -> void:
 		state = State.SUSPICIOUS
 		last_known_position = body.global_position
 		_suspicion_timer = suspicion_time
+		_time_in_suspicion = 0.0
 
 	target = null

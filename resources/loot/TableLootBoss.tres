@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dfn4s6losuybw" path="res://scripts/LootTable.gd" id="1_table"]
 [ext_resource type="Script" uid="uid://pifsavv2p4wt" path="res://scripts/LootEntry.gd" id="2_entry"]
-[ext_resource type="Resource" path="res://resources/items/PulseSMG.tres" id="item_pulsesmg"]
 [ext_resource type="Resource" path="res://resources/items/Resin.tres" id="item_resin"]
+[ext_resource type="Resource" path="res://resources/items/PulseSMG.tres" id="item_pulsesmg"]
 
 [sub_resource type="Resource" id="LootEntry_pulsesmg"]
 script = ExtResource("2_entry")

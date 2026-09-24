@@ -2,19 +2,14 @@
 
 [ext_resource type="Script" uid="uid://dgtgev42waux0" path="res://scripts/Player.gd" id="1"]
 [ext_resource type="Script" uid="uid://db72yyyescxaj" path="res://scripts/Inventory.gd" id="2"]
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="8_itemdata"]
+[ext_resource type="Resource" uid="uid://cugiun4a68fp4" path="res://resources/items/Multitool.tres" id="9_multitool"]
 [ext_resource type="Texture2D" uid="uid://bxdrc154ufwdl" path="res://assets/player/gregidle_0001.png" id="2_0rnld"]
 [ext_resource type="Texture2D" uid="uid://2eijqa1b5mf5" path="res://assets/player/gregidle_0002.png" id="3_srp4u"]
 [ext_resource type="Texture2D" uid="uid://cw58i1bpr68q3" path="res://assets/player/gregidle_0003.png" id="4_jfpux"]
 [ext_resource type="Texture2D" uid="uid://bokty2drsb1c4" path="res://assets/player/gregidle_0004.png" id="5_61ith"]
 [ext_resource type="Texture2D" uid="uid://dum22blw6f32o" path="res://assets/player/gregidle_0005.png" id="6_ebwui"]
 [ext_resource type="Texture2D" uid="uid://dypk6qo04qumq" path="res://assets/player/gregidle_0006.png" id="7_sfy4j"]
-[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="8_itemdata"]
-[ext_resource type="Resource" uid="uid://cugiun4a68fp4" path="res://resources/items/Multitool.tres" id="9_multitool"]
-[ext_resource type="Resource" uid="uid://kr2vui2qja2a" path="res://resources/items/USPMatch.tres" id="11_d3wef"]
-[ext_resource type="Resource" path="res://resources/items/Shotgun.tres" id="12_lkdrv"]
-[ext_resource type="Resource" path="res://resources/items/PulseSMG.tres" id="12_o4126"]
-[ext_resource type="Resource" uid="uid://461uk7m3raf8" path="res://resources/items/GodPistol.tres" id="13_lkdrv"]
-[ext_resource type="Resource" uid="uid://b7q7ufe3dd5al" path="res://resources/items/SMG.tres" id="14_0rnld"]
 
 [sub_resource type="AnimatedTexture" id="AnimatedTexture_gv3ic"]
 frames = 6
@@ -60,4 +55,4 @@ position_smoothing_speed = 8.0
 
 [node name="Inventory" type="Node" parent="." unique_id=1795019051]
 script = ExtResource("2")
-starting_items = Array[ExtResource("8_itemdata")]([ExtResource("9_multitool"), ExtResource("11_d3wef"), ExtResource("12_lkdrv"), ExtResource("13_lkdrv"), ExtResource("14_0rnld"), ExtResource("12_o4126")])
+starting_items = Array[ExtResource("8_itemdata")]([ExtResource("9_multitool")])

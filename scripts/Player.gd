@@ -25,6 +25,16 @@ var is_dead: bool = false
 var _default_body_texture: Texture2D  # cached in _ready() so armor without body_texture can revert Body to normal
 var last_attacker: Node2D = null  # last thing to hit take_damage() — not used yet, but here for a future hit-direction indicator/aggro logic
 
+## --- Ammo/reload ---
+var _weapon_ammo: Dictionary = {}  # ItemData -> int, rounds currently loaded. Lazily seeded to magazine_size the first time a given weapon is touched (see _get_ammo()) rather than up front, so weapons that never fire never need an entry.
+var is_reloading: bool = false
+var _reload_timer: float = 0.0
+var _reloading_item: ItemData = null
+
+signal ammo_changed(item: ItemData, current: int, magazine_size: int, reserve: int)  # current/magazine_size/reserve are all -1 for melee/tool/infinite-ammo ranged weapons — HUD treats that as "no ammo counter to show"
+signal reload_started(item: ItemData, reload_time: float)
+signal reload_finished(item: ItemData)
+
 @onready var body: Sprite2D = $Body
 @onready var pivot: Node2D = $Pivot
 @onready var torso: Sprite2D = $Pivot/Torso
@@ -52,10 +62,23 @@ func _ready() -> void:
 
 
 func _on_active_weapon_changed(item: ItemData) -> void:
+	# Swapping weapons mid-reload cancels it — you can't keep stuffing
+	# rounds into a gun you've just put away. The new weapon starts with
+	# whatever it already had loaded (or a fresh full magazine the first
+	# time it's touched — see _get_ammo()).
+	if is_reloading and item != _reloading_item:
+		is_reloading = false
+		_reloading_item = null
+
 	if item == null:
 		return
 	torso.texture = item.torso_texture
 	muzzle.position = item.muzzle_offset
+
+	if item.uses_ammo():
+		ammo_changed.emit(item, _get_ammo(item), item.magazine_size, _reserve_count(item))
+	else:
+		ammo_changed.emit(item, -1, -1, -1)
 
 
 ## Forces the player's Body sprite to a different look while armor with a
@@ -143,8 +166,18 @@ func _handle_attack(delta: float) -> void:
 	if _attack_cooldown > 0.0:
 		_attack_cooldown -= delta
 
+	if is_reloading:
+		_reload_timer -= delta
+		if _reload_timer <= 0.0:
+			_finish_reload()
+		return  # can't fire/melee/tool-use mid-reload
+
 	var item: ItemData = inventory.get_active_weapon()
 	if item == null:
+		return
+
+	if Input.is_action_just_pressed("reload"):
+		_try_start_reload(item)
 		return
 
 	if not _wants_to_attack(item) or _attack_cooldown > 0.0:
@@ -152,7 +185,19 @@ func _handle_attack(delta: float) -> void:
 
 	match item.item_type:
 		ItemData.ItemType.RANGED:
+			if item.uses_ammo() and _get_ammo(item) <= 0:
+				# Empty magazine: auto-start a reload rather than making the
+				# player release the trigger and press R themselves (does
+				# nothing if there's no reserve ammo either — see
+				# _try_start_reload). Cooldown here is just a dry-fire
+				# rate-limit so holding the trigger doesn't retry every
+				# single physics frame.
+				_try_start_reload(item)
+				_attack_cooldown = 0.2
+				return
 			_fire_ranged(item)
+			if item.uses_ammo():
+				_set_ammo(item, _get_ammo(item) - 1)
 			_attack_cooldown = item.fire_rate
 		ItemData.ItemType.MELEE:
 			_do_melee(item)
@@ -186,9 +231,79 @@ func _fire_ranged(item: ItemData) -> void:
 	var proj := item.projectile_scene.instantiate()
 	get_tree().current_scene.add_child(proj)
 	proj.global_position = muzzle.global_position
-	proj.rotation = pivot.global_rotation
+
+	# Standing still fires dead-on; moving or sprinting adds the weapon's
+	# own spread_degrees as randomized inaccuracy, rewarding a moment of
+	# stillness for a precise shot rather than every weapon being equally
+	# accurate at a full sprint. spread_degrees == 0.0 (the default) keeps
+	# a weapon laser-accurate regardless of movement.
+	var spread: float = 0.0
+	if velocity.length() > 10.0 and item.spread_degrees > 0.0:
+		spread = deg_to_rad(randf_range(-item.spread_degrees, item.spread_degrees) * 0.5)
+	proj.rotation = pivot.global_rotation + spread
+
 	if proj.has_method("launch"):
 		proj.launch(item.projectile_speed, item.damage, self)
+
+
+## --- Ammo / reload ---
+## Deliberately per-Player state (this dictionary), not stored on the
+## ItemData resource itself — every weapon of the same type (e.g. all
+## MP7s, including the one an Enemy might carry) shares the exact same
+## ItemData instance, so a mutable "current ammo" field ON the resource
+## would leak between every holder of that weapon. Keeping it here means
+## it's naturally scoped to this one Player.
+
+func _get_ammo(item: ItemData) -> int:
+	if not _weapon_ammo.has(item):
+		_weapon_ammo[item] = item.magazine_size
+	return _weapon_ammo[item]
+
+
+## Public wrapper so HUD (or anything else) can read current ammo without
+## reaching into the underscore-prefixed dictionary directly.
+func get_current_ammo(item: ItemData) -> int:
+	return _get_ammo(item)
+
+
+func _set_ammo(item: ItemData, value: int) -> void:
+	_weapon_ammo[item] = max(value, 0)
+	if item == inventory.get_active_weapon():
+		ammo_changed.emit(item, _weapon_ammo[item], item.magazine_size, _reserve_count(item))
+
+
+func _reserve_count(item: ItemData) -> int:
+	return inventory.count_item(item.ammo_item) if item.ammo_item != null else 0
+
+
+func _try_start_reload(item: ItemData) -> void:
+	if item == null or item.item_type != ItemData.ItemType.RANGED or not item.uses_ammo():
+		return
+	if is_reloading or _get_ammo(item) >= item.magazine_size:
+		return
+	if _reserve_count(item) <= 0:
+		return  # nothing to load it with
+
+	is_reloading = true
+	_reloading_item = item
+	_reload_timer = item.reload_time
+	reload_started.emit(item, item.reload_time)
+
+
+func _finish_reload() -> void:
+	var item: ItemData = _reloading_item
+	is_reloading = false
+	_reloading_item = null
+	if item == null:
+		return
+
+	var needed: int = item.magazine_size - _get_ammo(item)
+	var to_load: int = min(needed, _reserve_count(item))
+	if to_load > 0:
+		if item.ammo_item != null:
+			inventory.remove_item_amount(item.ammo_item, to_load)
+		_set_ammo(item, _get_ammo(item) + to_load)
+	reload_finished.emit(item)
 
 
 func _do_melee(item: ItemData) -> void:

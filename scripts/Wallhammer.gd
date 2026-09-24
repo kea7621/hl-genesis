@@ -39,10 +39,21 @@ var shield_active: bool = true
 var _shield_down_timer: float = 0.0
 var _facing_direction: Vector2 = Vector2.RIGHT
 
+const SHIELD_COLOR := Color(0.4, 0.8, 1.0, 0.6)
+const SHIELD_DOWN_COLOR := Color(0.6, 0.6, 0.65, 0.25)
+const SHIELD_VISUAL_RADIUS := 44.0
+
 
 func _ready() -> void:
 	super._ready()
 	add_to_group("boss_enemy")
+	# Without this, _attack_timer's default of 0.0 means the very first
+	# _process_attack() tick (the instant the boss closes to melee range)
+	# fires _do_attack() immediately — which also drops the shield. That
+	# made the shield look broken from the player's perspective, since it
+	# vanished right as the fight actually started, during the exact
+	# opening exchange a player is most likely to be unloading damage in.
+	_attack_timer = attack_cooldown
 
 
 func _physics_process(delta: float) -> void:
@@ -59,6 +70,24 @@ func _physics_process(delta: float) -> void:
 		_facing_direction = velocity.normalized()
 	elif target != null:
 		_facing_direction = (target.global_position - global_position).normalized()
+
+	queue_redraw()  # facing/shield_active may have changed this frame — see _draw()
+
+
+## Purely visual: draws the shield as an arc in front of the boss so its
+## state is actually readable in play — bright and solid while it's up,
+## a faint dim outline while it's down (the "punish window" after a
+## swing), rather than an invisible damage-reduction number nobody can
+## see happening. No new art asset; this is procedural Node2D drawing.
+func _draw() -> void:
+	if is_dead:
+		return
+	var facing_angle: float = _facing_direction.angle()
+	var half_arc: float = deg_to_rad(shield_arc_degrees * 0.5)
+	if shield_active:
+		draw_arc(Vector2.ZERO, SHIELD_VISUAL_RADIUS, facing_angle - half_arc, facing_angle + half_arc, 28, SHIELD_COLOR, 7.0, true)
+	else:
+		draw_arc(Vector2.ZERO, SHIELD_VISUAL_RADIUS, facing_angle - half_arc, facing_angle + half_arc, 28, SHIELD_DOWN_COLOR, 3.0, true)
 
 
 ## Overrides Enemy._do_attack(): identical melee hit (still goes through

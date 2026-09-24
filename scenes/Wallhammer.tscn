@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://dxikrv5viisne"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://dbhmu2fp1xv1e" path="res://scripts/Wallhammer.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://dfvcrlf18j0gk" path="res://assets/enemies/SF/wallhammer.png" id="3_2jdht"]
+[ext_resource type="Script" path="res://scripts/Wallhammer.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://m28fom2js04c" path="res://assets/enemies/civpro/civpro.png" id="2_sprite"]
 [ext_resource type="Resource" uid="uid://bt5j1l1qvs3fo" path="res://resources/loot/TableLootBoss.tres" id="3_loot"]
 
 [sub_resource type="CircleShape2D" id="1"]
@@ -10,7 +10,7 @@ radius = 30.0
 [sub_resource type="CircleShape2D" id="2"]
 radius = 380.0
 
-[node name="Wallhammer" type="CharacterBody2D" unique_id=688458152]
+[node name="Wallhammer" type="CharacterBody2D"]
 collision_layer = 2
 script = ExtResource("1")
 move_speed = 70.0
@@ -21,26 +21,33 @@ attack_range = 110.0
 attack_cooldown = 2.6
 attack_damage = 40.0
 max_health = 900.0
+flee_health_ratio = 0.0
 loot_table = ExtResource("3_loot")
 corpse_name = "Wallhammer's Remains"
+shield_arc_degrees = 150.0
+shield_damage_reduction = 0.85
+shield_protect_radius = 240.0
+shield_down_duration = 1.1
+boss_display_name = "Wallhammer"
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1010706980]
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.3, 0.32, 0.4, 1)
 scale = Vector2(2.2, 2.2)
-texture = ExtResource("3_2jdht")
+texture = ExtResource("2_sprite")
 
-[node name="Pivot" type="Node2D" parent="." unique_id=475722021]
+[node name="Pivot" type="Node2D" parent="."]
 
-[node name="WeaponSprite" type="Sprite2D" parent="Pivot" unique_id=621866384]
+[node name="WeaponSprite" type="Sprite2D" parent="Pivot"]
 offset = Vector2(9, 3)
 
-[node name="Muzzle" type="Marker2D" parent="Pivot" unique_id=1343692469]
+[node name="Muzzle" type="Marker2D" parent="Pivot"]
 position = Vector2(20, 0)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=51238485]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("1")
 
-[node name="VisionArea" type="Area2D" parent="." unique_id=1533826596]
+[node name="VisionArea" type="Area2D" parent="."]
 collision_layer = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="VisionArea" unique_id=605025470]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="VisionArea"]
 shape = SubResource("2")

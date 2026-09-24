@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CraftingRecipe" format=3]
+
+[ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="1"]
+[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="2"]
+[ext_resource type="Resource" path="res://resources/items/Resin.tres" id="3_resin"]
+[ext_resource type="Resource" path="res://resources/items/Ammo.tres" id="4_ammo"]
+
+[sub_resource type="Resource" id="RecipeIngredient_resin"]
+script = ExtResource("2")
+item = ExtResource("3_resin")
+count = 5
+
+[resource]
+script = ExtResource("1")
+recipe_name = "Ammo"
+ingredients = Array[ExtResource("2")]([SubResource("RecipeIngredient_resin")])
+result_item = ExtResource("4_ammo")
+result_count = 20

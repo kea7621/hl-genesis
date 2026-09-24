@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://sf13djij55c5" path="res://assets/Weapons/USP.png" id="1_debrk"]
 [ext_resource type="PackedScene" uid="uid://y7qsbruhjbtq" path="res://scenes/Projectile.tscn" id="2"]
+[ext_resource type="Resource" path="res://resources/items/Ammo.tres" id="3_ammo"]
 
 [resource]
 script = ExtResource("1")
@@ -14,4 +15,8 @@ muzzle_offset = Vector2(22, 0)
 projectile_scene = ExtResource("2")
 fire_rate = 0.35
 projectile_speed = 900.0
+spread_degrees = 1.5
+magazine_size = 12
+reload_time = 1.3
+ammo_item = ExtResource("3_ammo")
 damage = 12.0
