@@ -10,12 +10,16 @@
 [ext_resource type="PackedScene" uid="uid://d3b015djtl7vt" path="res://scenes/HUD.tscn" id="8"]
 [ext_resource type="Resource" uid="uid://dnpajml7o063x" path="res://resources/recipes/CraftSMG.tres" id="10_ft6cd"]
 [ext_resource type="PackedScene" uid="uid://se0bva8df6qw" path="res://scenes/GameOverUI.tscn" id="11"]
+[ext_resource type="PackedScene" path="res://scenes/LootContainer.tscn" id="17_1nqs0"]
+[ext_resource type="Resource" uid="uid://pqmiacfmhthq" path="res://resources/loot/TableLootHighTier.tres" id="18_1iba3"]
 [ext_resource type="PackedScene" uid="uid://dst420agwis6v" path="res://scenes/LootUI.tscn" id="18_lootui"]
+[ext_resource type="Resource" uid="uid://chn2noehawqqy" path="res://resources/loot/TableLootGrunt.tres" id="19_yxlcp"]
+[ext_resource type="Resource" uid="uid://bfx1xfbdurr6h" path="res://resources/loot/TableLootMilitary.tres" id="20_ebg2g"]
 [ext_resource type="Resource" uid="uid://wskxsokuldcy" path="res://resources/recipes/CraftShotgun.tres" id="23_shotgun"]
 [ext_resource type="PackedScene" uid="uid://bmkdrf5qwyup" path="res://scenes/BuildingDoor.tscn" id="30_door"]
 [ext_resource type="Resource" uid="uid://fhe27ht7wwav" path="res://resources/loot/TableLootBasic.tres" id="31_loot"]
 [ext_resource type="PackedScene" uid="uid://dkg40fygaeuwo" path="res://scenes/CombineFabricator.tscn" id="32_fabricator"]
-[ext_resource type="Resource" path="res://resources/recipes/CraftAmmo.tres" id="33_ammo_recipe"]
+[ext_resource type="Resource" uid="uid://bunjk851t4irt" path="res://resources/recipes/CraftAmmo.tres" id="33_ammo_recipe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nfivy"]
 texture = ExtResource("2_fs0b5")
@@ -171,3 +175,15 @@ position = Vector2(-150, 100)
 crafting_ui_path = NodePath("../CraftingUI")
 locked_color = Color(1, 1, 1, 1)
 unlocked_color = Color(1, 1, 1, 1)
+
+[node name="LootContainer" parent="." unique_id=68047495 instance=ExtResource("17_1nqs0")]
+position = Vector2(-453, -21)
+loot_table = ExtResource("18_1iba3")
+
+[node name="LootContainer2" parent="." unique_id=379764528 instance=ExtResource("17_1nqs0")]
+position = Vector2(-361, -16)
+loot_table = ExtResource("19_yxlcp")
+
+[node name="LootContainer3" parent="." unique_id=1287710881 instance=ExtResource("17_1nqs0")]
+position = Vector2(-488, 57)
+loot_table = ExtResource("20_ebg2g")

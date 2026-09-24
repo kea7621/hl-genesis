@@ -1,11 +1,11 @@
-[gd_resource type="Resource" script_class="ItemData" format=3]
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://8mte3ag6je8y"]
 
 [ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://bwv5u5802ycbh" path="res://assets/resources/resin.png" id="1_icon"]
+[ext_resource type="Texture2D" uid="uid://bfmwcoksu0r0d" path="res://assets/ammo.png" id="1_me7di"]
 
 [resource]
 script = ExtResource("1")
 item_name = "Ammo"
 item_type = 2
-icon = ExtResource("1_icon")
+icon = ExtResource("1_me7di")
 max_stack = 120
