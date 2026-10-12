@@ -8,4 +8,5 @@ script = ExtResource("1")
 item_name = "Ammo"
 item_type = 2
 icon = ExtResource("1_me7di")
+magazine_size = 60
 max_stack = 120
