@@ -1,0 +1,59 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://2qakbhgsew00" path="res://scripts/Enemy.gd" id="1"]
+[ext_resource type="Script" uid="uid://tbbxwkm4oqjg" path="res://scripts/EnemyVitalsLabel.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://m28fom2js04c" path="res://assets/enemies/civpro/civpro.png" id="3_zombie"]
+[ext_resource type="Resource" path="res://resources/loot/TableLootTutorialDummy.tres" id="4_loot"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="2"]
+radius = 40.0
+
+[node name="TrainingDummy" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1")
+move_speed = 0.0
+vision_radius = 40.0
+suspicion_time = 0.5
+alert_radius = 0.0
+reaction_time = 0.6
+attack_range = 0.0
+attack_cooldown = 1.1
+attack_damage = 0.0
+max_health = 60.0
+flee_health_ratio = 0.0
+loot_table = ExtResource("4_loot")
+corpse_name = "Dummy Remains"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.95, 0.62, 0.25, 1)
+texture = ExtResource("3_zombie")
+
+[node name="Pivot" type="Node2D" parent="."]
+
+[node name="WeaponSprite" type="Sprite2D" parent="Pivot"]
+offset = Vector2(9, 3)
+
+[node name="Muzzle" type="Marker2D" parent="Pivot"]
+position = Vector2(20, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1")
+
+[node name="VisionArea" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="VisionArea"]
+shape = SubResource("2")
+
+[node name="VitalsLabel" type="Label" parent="."]
+offset_left = -50.0
+offset_top = -46.0
+offset_right = 50.0
+offset_bottom = -28.0
+theme_override_font_sizes/font_size = 11
+text = "Full Vitals"
+horizontal_alignment = 1
+script = ExtResource("2")

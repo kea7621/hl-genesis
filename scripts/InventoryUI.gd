@@ -139,12 +139,20 @@ func _refresh_grid() -> void:
 			if stack.quantity > 1:
 				btn.add_child(_build_quantity_badge(stack.quantity))
 		else:
-			btn.disabled = true
+			# Not disabled: an empty slot has to stay a valid drag-and-drop
+			# target. Clicking it does nothing anyway (_on_grid_slot_pressed
+			# checks for an empty slot).
 			btn.modulate = Color(1, 1, 1, 0.35)
 
 		var slot_index := i
 		btn.pressed.connect(func() -> void: _on_grid_slot_pressed(slot_index))
 		btn.gui_input.connect(func(event: InputEvent) -> void: _on_grid_slot_gui_input(event, slot_index))
+		# Drag a stack onto another slot to move it, merge it into a matching
+		# stack, or swap — see Inventory.move_slot().
+		btn.set_drag_forwarding(
+			func(_at: Vector2) -> Variant: return _make_drag_data(slot_index, btn),
+			func(_at: Vector2, data: Variant) -> bool: return _can_drop_on_slot(data, slot_index),
+			func(_at: Vector2, data: Variant) -> void: _drop_on_slot(data, slot_index))
 		grid.add_child(btn)
 
 
@@ -186,6 +194,30 @@ func _active_slot_style() -> StyleBoxFlat:
 	return style
 
 
+## --- Drag and drop (backpack slots) ---
+
+func _make_drag_data(index: int, source: Control) -> Variant:
+	var stack: ItemStack = inventory.slots[index]
+	if stack == null:
+		return null  # nothing to drag from an empty slot
+
+	var preview := Label.new()
+	preview.text = "%s  x%d" % [stack.item.item_name, stack.quantity] if stack.quantity > 1 else stack.item.item_name
+	preview.add_theme_color_override("font_color", Color(1, 0.75, 0.35, 1))
+	preview.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	preview.add_theme_constant_override("outline_size", 4)
+	source.set_drag_preview(preview)
+	return {"type": "inventory_slot", "index": index}
+
+
+func _can_drop_on_slot(data: Variant, target_index: int) -> bool:
+	return data is Dictionary and data.get("type", "") == "inventory_slot" and data.get("index", -1) != target_index
+
+
+func _drop_on_slot(data: Variant, target_index: int) -> void:
+	inventory.move_slot(int(data["index"]), target_index)
+
+
 func _on_equip_slot_pressed(slot_name: String) -> void:
 	inventory.unequip_slot(slot_name)
 
@@ -197,22 +229,29 @@ func _on_grid_slot_pressed(index: int) -> void:
 
 func _on_grid_slot_gui_input(event: InputEvent, index: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-		_drop_item(index)
+		_drop_item(index, Input.is_key_pressed(KEY_SHIFT))
 
 
 ## Right-click on a backpack slot drops ONE unit of that stack onto the
-## ground near the player — as its own small LootContainer, so picking it
-## back up (or someone else grabbing it) uses the exact same walk-up-and-
-## press-E flow as every other container in the game, instead of a
-## separate "world item" system. See Enemy.gd's _drop_loot() for the same
-## pattern used for corpses.
-func _drop_item(index: int) -> void:
+## ground near the player; Shift + right-click drops the WHOLE stack. Either
+## way it lands as its own small LootContainer, so picking it back up uses
+## the exact same walk-up-and-press-E flow as every other container in the
+## game (and a dropped stack comes back as a stack — see LootUI's Take All /
+## Inventory.add_stack()), instead of a separate "world item" system. See
+## Enemy.gd's _drop_loot() for the same pattern used for corpses.
+func _drop_item(index: int, whole_stack: bool = false) -> void:
 	var stack: ItemStack = inventory.slots[index]
 	if stack == null:
 		return
 
 	var item: ItemData = stack.item
-	inventory.remove_item(index)
+	var amount: int = inventory.remove_from_slot(index, stack.quantity if whole_stack else 1)
+	if amount <= 0:
+		return
+
+	var dropped: Array[ItemData] = []
+	for i in amount:
+		dropped.append(item)
 
 	var container: LootContainer = DROPPED_ITEM_SCENE.instantiate()
 	# Set every field BEFORE add_child() — add_child() runs the
@@ -221,7 +260,7 @@ func _drop_item(index: int) -> void:
 	# else a LootContainer gets spawned at runtime in this project.
 	container.display_name = item.item_name
 	container.roll_on_ready = false  # no loot_table to roll against — contents is set directly below
-	container.contents = [item]
+	container.contents = dropped
 	get_parent().add_child(container)  # InventoryUI is a direct child of the level root, same as Player
 	container.global_position = player.global_position + Vector2(0, 24)  # just below the player's feet, not exactly on top of them
 

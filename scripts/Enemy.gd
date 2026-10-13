@@ -108,6 +108,7 @@ func _physics_process(delta: float) -> void:
 	match state:
 		State.IDLE:
 			velocity = Vector2.ZERO
+			_scan_for_player()
 		State.SUSPICIOUS:
 			_process_suspicious(delta)
 		State.CHASE:
@@ -151,14 +152,21 @@ func _process_suspicious(delta: float) -> void:
 	# reaction_time has passed since first noticing something, so there's a
 	# brief "wait, what was that" beat rather than a 0-frame instant chase
 	# the moment vision or an alert first fires.
-	if target != null and _time_in_suspicion >= reaction_time and _has_line_of_sight(target):
+	if target != null and _time_in_suspicion >= reaction_time and _can_see(target):
 		state = State.CHASE
 		_alert_nearby_enemies()
 		return
 
+	# Alerted by a friend (see receive_alert()) we only know WHERE to look,
+	# not who — so keep watching for the player to actually walk into our
+	# own vision range while we investigate.
+	if target == null:
+		_scan_for_player()
+
 	_suspicion_timer -= delta
 	if _suspicion_timer <= 0.0:
 		state = State.IDLE
+		target = null  # gave up — IDLE's scan will pick the player back up if they're still in range
 		velocity = Vector2.ZERO
 		return
 
@@ -176,6 +184,18 @@ func _process_chase() -> void:
 		return
 
 	var distance: float = global_position.distance_to(target.global_position)
+
+	# Leash: if the target has somehow gotten well outside vision range
+	# (e.g. we were shot from a distance), stop chasing and just go to
+	# where we last saw them, instead of following across the whole map.
+	if distance > vision_radius * 1.5:
+		state = State.SUSPICIOUS
+		last_known_position = target.global_position
+		_suspicion_timer = suspicion_time
+		_time_in_suspicion = 0.0
+		target = null
+		return
+
 	if distance <= attack_range and _has_line_of_sight(target):
 		state = State.ATTACK
 		velocity = Vector2.ZERO
@@ -254,6 +274,28 @@ func _is_ranged() -> bool:
 ## that layer yet since there's no level geometry — add a TileMap or
 ## StaticBody2D walls on layer 4 and this starts blocking shots/sightings
 ## automatically, no further code changes needed.
+## Whether `to_target` is genuinely visible right now: inside this enemy's
+## own vision_radius AND not blocked by anything on the obstacle layer.
+## _has_line_of_sight() alone only checks for walls — with no walls in the
+## way it said "yes" from any distance, which is how enemies locked on from
+## outside their range.
+func _can_see(to_target: Node2D) -> bool:
+	if global_position.distance_to(to_target.global_position) > vision_radius:
+		return false
+	return _has_line_of_sight(to_target)
+
+
+## body_entered only fires once, at the moment something walks in. If the
+## player is already standing inside the vision area when an enemy stops
+## being suspicious (or was never alerted), nothing would re-trigger it, so
+## check who's currently inside instead.
+func _scan_for_player() -> void:
+	for body in vision_area.get_overlapping_bodies():
+		if body.is_in_group("player"):
+			_on_vision_entered(body)
+			return
+
+
 func _has_line_of_sight(to_target: Node2D) -> bool:
 	var space_state := get_world_2d().direct_space_state
 	var query := PhysicsRayQueryParameters2D.create(global_position, to_target.global_position)
@@ -350,16 +392,20 @@ func _alert_nearby_enemies() -> void:
 		if other == self or not is_instance_valid(other) or other.is_dead:
 			continue
 		if global_position.distance_to(other.global_position) <= alert_radius:
-			other.receive_alert(target, last_known_position)
+			other.receive_alert(target, target.global_position)
 
 
 ## Called by a nearby enemy's _alert_nearby_enemies(). Doesn't override an
 ## enemy that's already actively engaged (CHASE/ATTACK/FLEE) with its own
 ## situation — only pulls IDLE/SUSPICIOUS enemies in.
-func receive_alert(alert_target: Node2D, alert_position: Vector2) -> void:
+func receive_alert(_alert_target: Node2D, alert_position: Vector2) -> void:
 	if is_dead or state == State.CHASE or state == State.ATTACK or state == State.FLEE:
 		return
-	target = alert_target
+	# Only learn WHERE the trouble is — deliberately NOT adopting the
+	# friend's target. Handing the player over directly meant an alerted
+	# enemy could chase them from anywhere (and re-alert its own neighbours
+	# in turn, chaining across the map). Now it walks to the spot and only
+	# commits to a chase if the player enters ITS OWN vision range.
 	last_known_position = alert_position
 	state = State.SUSPICIOUS
 	_suspicion_timer = suspicion_time
@@ -419,9 +465,14 @@ func _drop_loot() -> void:
 
 
 func _on_vision_entered(body: Node) -> void:
-	# VisionArea's collision_mask is set to only detect layer 1 (player),
-	# so anything that enters here is assumed to be the player. Entering
-	# vision doesn't jump straight to CHASE anymore — it becomes SUSPICIOUS,
+	if not body.is_in_group("player"):
+		return
+	# VisionArea detects physics layer 1 — but the wall tiles are on layer 1
+	# too, so "anything that enters" is NOT always the player (a wall tile
+	# entering range used to become this enemy's target, which made enemies
+	# lock on and alert their friends before the player was anywhere near).
+	# Only accept the actual player. Entering vision doesn't jump straight
+	# to CHASE — it becomes SUSPICIOUS,
 	# and only escalates once _process_suspicious() confirms a clear
 	# line-of-sight. Refresh (rather than ignore) if already SUSPICIOUS, so
 	# repeatedly glimpsing the player resets the investigate timer.

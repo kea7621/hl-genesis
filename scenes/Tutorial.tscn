@@ -1,0 +1,163 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="player"]
+[ext_resource type="Script" path="res://scripts/Tutorial.gd" id="script_tutorial"]
+[ext_resource type="Script" path="res://scripts/TutorialHint.gd" id="script_hint"]
+[ext_resource type="Script" path="res://scripts/TutorialUI.gd" id="script_ui"]
+[ext_resource type="Script" path="res://scripts/LevelExit.gd" id="script_exit"]
+[ext_resource type="Script" path="res://scripts/Crafting.gd" id="script_crafting"]
+[ext_resource type="Script" path="res://scripts/CraftingRecipe.gd" id="script_recipe"]
+[ext_resource type="Resource" path="res://resources/recipes/CraftSMG.tres" id="recipe_smg"]
+[ext_resource type="Resource" path="res://resources/recipes/CraftShotgun.tres" id="recipe_shotgun"]
+[ext_resource type="Resource" path="res://resources/recipes/CraftAmmo.tres" id="recipe_ammo"]
+[ext_resource type="PackedScene" path="res://scenes/InventoryUI.tscn" id="inventory_ui"]
+[ext_resource type="PackedScene" path="res://scenes/CraftingUI.tscn" id="crafting_ui"]
+[ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="hud"]
+[ext_resource type="PackedScene" path="res://scenes/GameOverUI.tscn" id="game_over"]
+[ext_resource type="PackedScene" path="res://scenes/LootUI.tscn" id="loot_ui"]
+[ext_resource type="PackedScene" path="res://scenes/LootContainer.tscn" id="loot_container"]
+[ext_resource type="PackedScene" path="res://scenes/CombineFabricator.tscn" id="fabricator"]
+[ext_resource type="PackedScene" path="res://scenes/TrainingDummy.tscn" id="dummy"]
+[ext_resource type="PackedScene" path="res://scenes/EnemyZombie.tscn" id="zombie"]
+[ext_resource type="Resource" path="res://resources/loot/TableLootTutorialGear.tres" id="table_gear"]
+[ext_resource type="Resource" path="res://resources/loot/TableLootTutorialResin.tres" id="table_resin"]
+
+[node name="Tutorial" type="Node2D"]
+script = ExtResource("script_tutorial")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+
+[node name="Walls" type="TileMapLayer" parent="."]
+
+[node name="Hints" type="Node2D" parent="."]
+
+[node name="Hint_Welcome" type="Area2D" parent="Hints"]
+position = Vector2(0, 0)
+script = ExtResource("script_hint")
+title = "Welcome"
+body = "Move with W A S D (or the arrow keys) and aim with the mouse.\nWalk right to keep going."
+trigger_size = Vector2(280, 220)
+
+[node name="Hint_Sprinting" type="Area2D" parent="Hints"]
+position = Vector2(300, 0)
+script = ExtResource("script_hint")
+title = "Sprinting"
+body = "Hold Shift to sprint. It drains your stamina bar (under your health, top-left), so use it in bursts. Stamina refills a moment after you stop."
+trigger_size = Vector2(260, 220)
+
+[node name="Hint_LootContainers" type="Area2D" parent="Hints"]
+position = Vector2(640, 0)
+script = ExtResource("script_hint")
+title = "Loot containers"
+body = "Walk up to a container and press E to open it. Click Take (or Take All) to move items into your backpack.\nGrab everything from the supply crate."
+trigger_size = Vector2(300, 220)
+
+[node name="Hint_Inventory" type="Area2D" parent="Hints"]
+position = Vector2(920, 0)
+script = ExtResource("script_hint")
+title = "Your inventory"
+body = "Press Tab or I to open it. Click the USP Match to equip it.\nDrag items to move or stack them. Right-click drops one; Shift + right-click drops the whole stack. Press Tab again to close."
+trigger_size = Vector2(260, 220)
+
+[node name="Hint_Shooting" type="Area2D" parent="Hints"]
+position = Vector2(1200, 0)
+script = ExtResource("script_hint")
+title = "Shooting"
+body = "Left-click (or press Enter) to fire. Moving makes your shots less accurate, so stop to line up a shot.\nKeys 1 / 2 / 3 switch between your primary, secondary and melee slots."
+trigger_size = Vector2(280, 260)
+
+[node name="Hint_Practice" type="Area2D" parent="Hints"]
+position = Vector2(1440, 0)
+script = ExtResource("script_hint")
+title = "Reloading and looting"
+body = "Press R to reload. Your magazine and spare ammo are shown in the bottom-right panel.\nShoot the practice dummies. Defeated enemies leave a body - press E on it to loot (these drop ammo)."
+trigger_size = Vector2(260, 260)
+
+[node name="Hint_Resin" type="Area2D" parent="Hints"]
+position = Vector2(1740, 0)
+script = ExtResource("script_hint")
+title = "Crafting materials"
+body = "Resin is what you craft with. Take it all from the stash - you will use it at the Fabricator just ahead."
+trigger_size = Vector2(280, 220)
+
+[node name="Hint_Fabricator" type="Area2D" parent="Hints"]
+position = Vector2(2040, 0)
+script = ExtResource("script_hint")
+title = "The Fabricator"
+body = "It starts locked. Press 2 to select your Multitool, stand next to the Fabricator and left-click to hack it.\nOnce it lights up, press E to open crafting. Try the MP7 (30 Resin) or Ammo (5 Resin)."
+trigger_size = Vector2(300, 260)
+
+[node name="Hint_Combat" type="Area2D" parent="Hints"]
+position = Vector2(2340, 0)
+script = ExtResource("script_hint")
+title = "Combat"
+body = "Enemies notice you when you come within their range, then chase you. Zombies are slow - back away and shoot.\nWatch your health bar. Defeat every zombie ahead to unlock the exit door."
+trigger_size = Vector2(300, 260)
+
+[node name="SupplyCrate" parent="." instance=ExtResource("loot_container")]
+position = Vector2(640, -48)
+display_name = "Supply Crate"
+loot_table = ExtResource("table_gear")
+
+[node name="ResinStash" parent="." instance=ExtResource("loot_container")]
+position = Vector2(1740, -48)
+display_name = "Resin Stash"
+loot_table = ExtResource("table_resin")
+
+[node name="CombineFabricator" parent="." instance=ExtResource("fabricator")]
+position = Vector2(2040, 0)
+crafting_ui_path = NodePath("../CraftingUI")
+locked_color = Color(1, 1, 1, 1)
+unlocked_color = Color(1, 1, 1, 1)
+
+[node name="PracticeDummies" type="Node2D" parent="."]
+
+[node name="Dummy1" parent="PracticeDummies" instance=ExtResource("dummy")]
+position = Vector2(1440, -60)
+
+[node name="Dummy2" parent="PracticeDummies" instance=ExtResource("dummy")]
+position = Vector2(1440, 0)
+
+[node name="Dummy3" parent="PracticeDummies" instance=ExtResource("dummy")]
+position = Vector2(1440, 60)
+
+[node name="RequiredEnemies" type="Node2D" parent="."]
+
+[node name="Zombie1" parent="RequiredEnemies" instance=ExtResource("zombie")]
+position = Vector2(2700, -40)
+
+[node name="Zombie2" parent="RequiredEnemies" instance=ExtResource("zombie")]
+position = Vector2(2760, 50)
+
+[node name="LevelExit" type="Area2D" parent="."]
+position = Vector2(3060, 0)
+script = ExtResource("script_exit")
+next_scene_path = "res://scenes/Main.tscn"
+
+[node name="Player" parent="." instance=ExtResource("player")]
+position = Vector2(0, 0)
+acceleration = 750.0
+
+[node name="InventoryUI" parent="." instance=ExtResource("inventory_ui")]
+inventory_path = NodePath("../Player/Inventory")
+
+[node name="Crafting" type="Node" parent="."]
+script = ExtResource("script_crafting")
+inventory_path = NodePath("../Player/Inventory")
+recipes = Array[ExtResource("script_recipe")]([ExtResource("recipe_smg"), ExtResource("recipe_shotgun"), ExtResource("recipe_ammo")])
+
+[node name="CraftingUI" parent="." instance=ExtResource("crafting_ui")]
+inventory_path = NodePath("../Player/Inventory")
+crafting_path = NodePath("../Crafting")
+
+[node name="HUD" parent="." instance=ExtResource("hud")]
+player_path = NodePath("../Player")
+
+[node name="GameOverUI" parent="." instance=ExtResource("game_over")]
+player_path = NodePath("../Player")
+
+[node name="LootUI" parent="." instance=ExtResource("loot_ui")]
+inventory_path = NodePath("../Player/Inventory")
+
+[node name="TutorialUI" type="CanvasLayer" parent="."]
+script = ExtResource("script_ui")

@@ -118,7 +118,7 @@ func _on_inventory_changed() -> void:
 	# of waiting for the next shot to trigger ammo_changed.
 	var item: ItemData = player.inventory.get_active_weapon()
 	if item != null and item.uses_ammo():
-		_on_ammo_changed(item, player.get_current_ammo(item), item.magazine_size, player.inventory.count_item(item.ammo_item))
+		_on_ammo_changed(item, player.get_current_ammo(item), item.magazine_size, player.get_reserve_rounds(item))
 
 
 func _on_active_weapon_changed(item: ItemData) -> void:

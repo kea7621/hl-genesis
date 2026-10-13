@@ -10,28 +10,26 @@
 radius = 16.0
 
 [sub_resource type="CircleShape2D" id="2"]
-radius = 161.69725
+radius = 260.0
 
 [node name="EnemyPistol" type="CharacterBody2D" unique_id=1948577594]
 collision_layer = 2
 script = ExtResource("1")
 vision_radius = 260.0
-alert_radius = 260.0
 attack_range = 220.0
 max_health = 100.0
-flee_health_ratio = 2.0
 weapon = ExtResource("3")
 loot_table = ExtResource("4_loot")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=609735890]
 texture = ExtResource("3_3k407")
 
-[node name="Pivot" type="Node2D" parent="." unique_id=1754774355]
+[node name="Pivot" type="Node2D" parent="."]
 
-[node name="WeaponSprite" type="Sprite2D" parent="Pivot" unique_id=1219906030]
+[node name="WeaponSprite" type="Sprite2D" parent="Pivot"]
 offset = Vector2(9, 3)
 
-[node name="Muzzle" type="Marker2D" parent="Pivot" unique_id=1667312394]
+[node name="Muzzle" type="Marker2D" parent="Pivot"]
 position = Vector2(20, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1915807580]

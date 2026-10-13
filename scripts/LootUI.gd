@@ -269,30 +269,37 @@ func _count_in_contents(item: ItemData) -> int:
 
 
 ## Takes every copy of `item` currently in the container in one go (the
-## whole "5x Resin" stack a grouped row represents), stopping early —
-## rather than losing anything — if the inventory fills up partway
-## through.
-func _on_take_group_pressed(item: ItemData) -> void:
-	var taken_any := false
-	while true:
+## whole "5x Resin" stack a grouped row represents) using Inventory.add_stack(),
+## so it fills existing partial stacks first and only spends new slots for
+## the rest. Anything that doesn't fit stays in the container instead of
+## being lost. Returns true if everything was taken.
+func _take_all_of(item: ItemData) -> bool:
+	var count: int = _count_in_contents(item)
+	if count <= 0:
+		return true
+	var leftover: int = inventory.add_stack(item, count)
+	var taken: int = count - leftover
+	for i in taken:
 		var index: int = current_container.contents.find(item)
 		if index == -1:
 			break
-		var taken: ItemData = current_container.take_item(index)
-		if not inventory.add_item(taken):
-			current_container.contents.insert(index, taken)  # put it back, don't lose it
-			push_warning("LootUI: inventory full, stopping.")
-			break
-		taken_any = true
-	if taken_any:
-		_refresh()
+		current_container.take_item(index)
+	if leftover > 0:
+		push_warning("LootUI: inventory full, couldn't take %d x %s" % [leftover, item.item_name])
+	return leftover == 0
+
+
+func _on_take_group_pressed(item: ItemData) -> void:
+	_take_all_of(item)
+	_refresh()
 
 
 func _on_take_all_pressed() -> void:
-	while current_container.contents.size() > 0:
-		var item: ItemData = current_container.contents[0]
-		if not inventory.add_item(item):
-			push_warning("LootUI: inventory full, stopping Take All.")
-			break
-		current_container.take_item(0)
+	var unique_items: Array[ItemData] = []
+	for entry in current_container.contents:
+		if not unique_items.has(entry):
+			unique_items.append(entry)
+	for item in unique_items:
+		if not _take_all_of(item):
+			break  # inventory's full — stop rather than skipping ahead
 	_refresh()

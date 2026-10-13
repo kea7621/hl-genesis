@@ -71,6 +71,7 @@ enum EquipSlot { NONE, PRIMARY, SECONDARY, MELEE, ARMOR }
 @export_group("Shared")
 @export var damage: float = 10.0  # unused by Crafting/Tool/Armor items
 @export var max_stack: int = 99  # only relevant when is_stackable() is true
+@export var rounds_per_item: int = 1  # only for ammo items: how many rounds ONE item (a "box") is worth. 1 = each item is a single round (old behaviour)
 
 
 ## Whether multiple units of this item can share one inventory slot (see

@@ -1,9 +1,10 @@
 extends Control
 
 ## The game's actual entry point (set as the project's Main Scene in
-## Project Settings). Main.tscn is only ever loaded from here, via Play.
+## Project Settings). Play starts the tutorial (level 1); the tutorial's
+## LevelExit then loads Main.tscn (level 2).
 
-@export var gameplay_scene_path: String = "res://scenes/Main.tscn"
+@export var gameplay_scene_path: String = "res://scenes/Tutorial.tscn"
 
 @onready var play_button: Button = $VBoxContainer/PlayButton
 @onready var quit_button: Button = $VBoxContainer/QuitButton

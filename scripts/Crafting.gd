@@ -42,10 +42,9 @@ func craft(recipe: CraftingRecipe) -> bool:
 	for ingredient in recipe.ingredients:
 		inventory.remove_item_amount(ingredient.item, ingredient.count)
 
-	for i in recipe.result_count:
-		if not inventory.add_item(recipe.result_item):
-			push_warning("Crafting: inventory full — couldn't add all of %s" % recipe.result_item.item_name)
-			break
+	var leftover: int = inventory.add_stack(recipe.result_item, recipe.result_count)
+	if leftover > 0:
+		push_warning("Crafting: inventory full — couldn't add %d of %s" % [leftover, recipe.result_item.item_name])
 
 	crafted.emit(recipe)
 	return true

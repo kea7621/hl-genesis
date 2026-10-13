@@ -6,6 +6,6 @@
 script = ExtResource("1")
 item_name = "Multitool"
 item_type = 3
-equip_slot = 3
+equip_slot = 2
 muzzle_offset = Vector2(18, 0)
 metadata/_custom_type_script = "uid://c56x3t3npnhhk"

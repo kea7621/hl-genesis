@@ -136,28 +136,98 @@ func get_armor() -> ItemData:
 	return equipped.get("armor")
 
 
-## Adds one unit of `item`. If it's stackable (ItemData.is_stackable()) and
-## an existing slot already holds that same item with room under its
-## max_stack, this tops that stack up instead of spending a new slot.
-## Otherwise — including for every weapon/tool/armor, which never
-## stack — it falls back to the first empty slot as its own new stack of
-## quantity 1. Returns false only if neither option is available (no
-## stack with room, no empty slot). Never auto-equips, even if the item is
-## equippable, so picking things up doesn't silently swap your gear.
-func add_item(item: ItemData) -> bool:
+## Adds `quantity` units of `item` in one go and returns how many did NOT
+## fit (0 = everything was added). Stackable items first top up any
+## existing stacks of the same item that have room under max_stack, then
+## spill into empty slots (each new stack holds up to max_stack). Anything
+## non-stackable (weapons/tools/armor) takes one slot per unit. This is
+## what lets a whole already-stacked pile (a loot container's "Resin x5", a
+## dropped stack) go into the backpack at once instead of one unit at a
+## time, and lets the caller keep whatever didn't fit. Never auto-equips,
+## even if the item is equippable, so picking things up doesn't silently
+## swap your gear.
+func add_stack(item: ItemData, quantity: int) -> int:
+	if item == null or quantity <= 0:
+		return max(quantity, 0)
+
+	var remaining: int = quantity
+
 	if item.is_stackable():
 		for stack in slots:
+			if remaining <= 0:
+				break
 			if stack != null and stack.item == item and stack.quantity < item.max_stack:
-				stack.quantity += 1
-				inventory_changed.emit()
-				return true
+				var room: int = item.max_stack - stack.quantity
+				var moved: int = min(room, remaining)
+				stack.quantity += moved
+				remaining -= moved
 
+	var per_slot: int = item.max_stack if item.is_stackable() else 1
 	for i in slots.size():
+		if remaining <= 0:
+			break
 		if slots[i] == null:
-			slots[i] = ItemStack.new(item, 1)
-			inventory_changed.emit()
-			return true
-	return false
+			var moved: int = min(per_slot, remaining)
+			slots[i] = ItemStack.new(item, moved)
+			remaining -= moved
+
+	if remaining < quantity:
+		inventory_changed.emit()
+	return remaining
+
+
+## Adds one unit of `item` (see add_stack() for the stacking rules).
+## Returns false only if there was no room at all.
+func add_item(item: ItemData) -> bool:
+	return add_stack(item, 1) == 0
+
+
+## Drag-and-drop behaviour for the backpack grid: moves the stack in
+## `from_index` onto `to_index`.
+##  - Empty target: the stack just moves there.
+##  - Same stackable item: merges into the target up to max_stack; any
+##    remainder stays in the source slot.
+##  - Anything else (different item, or the target stack is already full):
+##    the two stacks swap places, so nothing is ever lost.
+## Returns false if the indexes are invalid or the source slot is empty.
+func move_slot(from_index: int, to_index: int) -> bool:
+	if from_index == to_index:
+		return false
+	if from_index < 0 or from_index >= slots.size() or to_index < 0 or to_index >= slots.size():
+		return false
+	var src: ItemStack = slots[from_index]
+	if src == null:
+		return false
+	var dst: ItemStack = slots[to_index]
+
+	if dst == null:
+		slots[to_index] = src
+		slots[from_index] = null
+	elif src.item == dst.item and src.item.is_stackable() and dst.quantity < src.item.max_stack:
+		var moved: int = min(src.item.max_stack - dst.quantity, src.quantity)
+		dst.quantity += moved
+		src.quantity -= moved
+		if src.quantity <= 0:
+			slots[from_index] = null
+	else:
+		slots[to_index] = src
+		slots[from_index] = dst
+
+	inventory_changed.emit()
+	return true
+
+
+## Removes up to `amount` units from the stack at `index` (clearing the
+## slot if it empties) and returns how many were actually removed.
+func remove_from_slot(index: int, amount: int) -> int:
+	if index < 0 or index >= slots.size() or slots[index] == null or amount <= 0:
+		return 0
+	var removed: int = min(amount, slots[index].quantity)
+	slots[index].quantity -= removed
+	if slots[index].quantity <= 0:
+		slots[index] = null
+	inventory_changed.emit()
+	return removed
 
 
 ## Removes one unit from the stack at `index`, clearing the slot entirely

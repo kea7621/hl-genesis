@@ -30,6 +30,7 @@ var _weapon_ammo: Dictionary = {}  # ItemData -> int, rounds currently loaded. L
 var is_reloading: bool = false
 var _reload_timer: float = 0.0
 var _reloading_item: ItemData = null
+var _loose_rounds: Dictionary = {}  # ammo ItemData -> int, rounds left over from a partly-used box (see _take_reserve_rounds())
 
 signal ammo_changed(item: ItemData, current: int, magazine_size: int, reserve: int)  # current/magazine_size/reserve are all -1 for melee/tool/infinite-ammo ranged weapons — HUD treats that as "no ammo counter to show"
 signal reload_started(item: ItemData, reload_time: float)
@@ -46,6 +47,7 @@ signal health_changed(current: float, max_value: float)
 signal died
 
 func _ready() -> void:
+	add_to_group("player")  # Enemy.gd identifies the player by this group — walls/tiles share its physics layer, so layer alone can't tell them apart
 	stamina = max_stamina
 	health = max_health
 	_default_body_texture = body.texture  # so we can revert when armor with no body_texture is unequipped
@@ -272,8 +274,38 @@ func _set_ammo(item: ItemData, value: int) -> void:
 		ammo_changed.emit(item, _weapon_ammo[item], item.magazine_size, _reserve_count(item))
 
 
+## Reserve ammo in ROUNDS (not items): every box in the backpack is worth
+## ammo_item.rounds_per_item rounds, plus any loose rounds left over from a
+## box that was only partly used up by an earlier reload.
 func _reserve_count(item: ItemData) -> int:
-	return inventory.count_item(item.ammo_item) if item.ammo_item != null else 0
+	var ammo: ItemData = item.ammo_item
+	if ammo == null:
+		return 0
+	return inventory.count_item(ammo) * max(ammo.rounds_per_item, 1) + _loose_rounds.get(ammo, 0)
+
+
+## Public wrapper so HUD can show the same reserve number the reload uses.
+func get_reserve_rounds(item: ItemData) -> int:
+	return _reserve_count(item)
+
+
+## Takes `rounds` out of reserve: loose rounds first, then just enough
+## whole boxes to cover the rest. Whatever's left of the last box opened
+## becomes loose rounds, so a reload never swallows more boxes than needed.
+func _take_reserve_rounds(item: ItemData, rounds: int) -> void:
+	var ammo: ItemData = item.ammo_item
+	if ammo == null or rounds <= 0:
+		return
+	var per_box: int = max(ammo.rounds_per_item, 1)
+	var loose: int = _loose_rounds.get(ammo, 0)
+	var from_loose: int = min(loose, rounds)
+	loose -= from_loose
+	var remaining: int = rounds - from_loose
+	if remaining > 0:
+		var boxes: int = ceili(float(remaining) / per_box)
+		inventory.remove_item_amount(ammo, boxes)
+		loose += boxes * per_box - remaining
+	_loose_rounds[ammo] = loose
 
 
 func _try_start_reload(item: ItemData) -> void:
@@ -300,8 +332,7 @@ func _finish_reload() -> void:
 	var needed: int = item.magazine_size - _get_ammo(item)
 	var to_load: int = min(needed, _reserve_count(item))
 	if to_load > 0:
-		if item.ammo_item != null:
-			inventory.remove_item_amount(item.ammo_item, to_load)
+		_take_reserve_rounds(item, to_load)
 		_set_ammo(item, _get_ammo(item) + to_load)
 	reload_finished.emit(item)
 
