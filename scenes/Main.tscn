@@ -15,7 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://bmkdrf5qwyup" path="res://scenes/BuildingDoor.tscn" id="30_door"]
 [ext_resource type="Resource" uid="uid://fhe27ht7wwav" path="res://resources/loot/TableLootBasic.tres" id="31_loot"]
 [ext_resource type="PackedScene" uid="uid://dkg40fygaeuwo" path="res://scenes/CombineFabricator.tscn" id="32_fabricator"]
-[ext_resource type="Resource" path="res://resources/recipes/CraftAmmo.tres" id="33_ammo_recipe"]
+[ext_resource type="Resource" uid="uid://d12hhxnlvr4rw" path="res://resources/recipes/CraftAmmo.tres" id="33_ammo_recipe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nfivy"]
 texture = ExtResource("2_fs0b5")
@@ -56,7 +56,7 @@ texture = ExtResource("2_fs0b5")
 [sub_resource type="TileSet" id="TileSet_1nqs0"]
 sources/0 = SubResource("TileSetAtlasSource_nfivy")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3p2gp"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cvmbd"]
 texture = ExtResource("2_fs0b5")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
@@ -120,9 +120,9 @@ texture = ExtResource("2_fs0b5")
 4:5/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_collision"]
-physics_layer_0/collision_layer = 1
+physics_layer_0/collision_layer = 7
 physics_layer_0/collision_mask = 0
-sources/0 = SubResource("TileSetAtlasSource_3p2gp")
+sources/0 = SubResource("TileSetAtlasSource_cvmbd")
 
 [node name="Main" type="Node2D" unique_id=512461581]
 script = ExtResource("2")

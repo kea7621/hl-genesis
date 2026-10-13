@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="LootTable" format=3]
+[gd_resource type="Resource" script_class="LootTable" format=3 uid="uid://dop07o3hqlwex"]
 
 [ext_resource type="Script" uid="uid://dfn4s6losuybw" path="res://scripts/LootTable.gd" id="1_table"]
 [ext_resource type="Script" uid="uid://pifsavv2p4wt" path="res://scripts/LootEntry.gd" id="2_entry"]
@@ -8,8 +8,6 @@
 script = ExtResource("2_entry")
 item = ExtResource("item_ammo")
 chance = 100.0
-min_count = 1
-max_count = 1
 
 [resource]
 script = ExtResource("1_table")
