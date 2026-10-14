@@ -313,7 +313,6 @@ script = ExtResource("script_exit")
 acceleration = 750.0
 
 [node name="InventoryUI" parent="." unique_id=312095175 instance=ExtResource("inventory_ui")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")
 
 [node name="Crafting" type="Node" parent="." unique_id=1725002210]
@@ -322,20 +321,16 @@ inventory_path = NodePath("../Player/Inventory")
 recipes = Array[ExtResource("script_recipe")]([ExtResource("recipe_smg"), ExtResource("recipe_shotgun"), ExtResource("recipe_ammo")])
 
 [node name="CraftingUI" parent="." unique_id=778377508 instance=ExtResource("crafting_ui")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")
 crafting_path = NodePath("../Crafting")
 
 [node name="HUD" parent="." unique_id=859175950 instance=ExtResource("hud")]
-visible = false
 player_path = NodePath("../Player")
 
 [node name="GameOverUI" parent="." unique_id=627029835 instance=ExtResource("game_over")]
-visible = false
 player_path = NodePath("../Player")
 
 [node name="LootUI" parent="." unique_id=1554751947 instance=ExtResource("loot_ui")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")
 
 [node name="TutorialUI" type="CanvasLayer" parent="." unique_id=2016764200]
