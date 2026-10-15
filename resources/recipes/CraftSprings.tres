@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CraftingRecipe" format=3 uid="uid://bk1t44kc8rrmj"]
+
+[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1_wj2mu"]
+[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="2_02quy"]
+[ext_resource type="Resource" uid="uid://b3crdynse51aa" path="res://resources/items/Springs.tres" id="3_4w7vm"]
+[ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="4_2j1rs"]
+
+[sub_resource type="Resource" id="Resource_5ph0d"]
+script = ExtResource("1_wj2mu")
+item = ExtResource("2_02quy")
+
+[resource]
+script = ExtResource("4_2j1rs")
+recipe_name = "Springs"
+ingredients = Array[ExtResource("1_wj2mu")]([SubResource("Resource_5ph0d")])
+result_item = ExtResource("3_4w7vm")
+result_count = 2

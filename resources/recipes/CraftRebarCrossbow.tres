@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="CraftingRecipe" format=3 uid="uid://ixa8sfm0rsaw"]
+
+[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1"]
+[ext_resource type="Resource" uid="uid://clqlrbjlnahrg" path="res://resources/items/SharpenedRebar.tres" id="2"]
+[ext_resource type="Resource" uid="uid://s58rwl1d41pf" path="res://resources/items/RubberTubing.tres" id="3"]
+[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="4"]
+[ext_resource type="Resource" uid="uid://o0872k00jbxx" path="res://resources/items/WireSpool.tres" id="5"]
+[ext_resource type="Resource" uid="uid://cidsohgptfrf1" path="res://resources/items/CircuitBoard.tres" id="6"]
+[ext_resource type="Resource" uid="uid://jgwq4s8fi2yi" path="res://resources/items/RebarCrossbow.tres" id="7"]
+[ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="8"]
+
+[sub_resource type="Resource" id="Resource_cb1"]
+script = ExtResource("1")
+item = ExtResource("2")
+count = 3
+
+[sub_resource type="Resource" id="Resource_cb2"]
+script = ExtResource("1")
+item = ExtResource("3")
+count = 4
+
+[sub_resource type="Resource" id="Resource_cb3"]
+script = ExtResource("1")
+item = ExtResource("4")
+count = 5
+
+[sub_resource type="Resource" id="Resource_cb4"]
+script = ExtResource("1")
+item = ExtResource("5")
+count = 3
+
+[sub_resource type="Resource" id="Resource_cb5"]
+script = ExtResource("1")
+item = ExtResource("6")
+
+[resource]
+script = ExtResource("8")
+recipe_name = "Rebar Crossbow"
+ingredients = Array[ExtResource("1")]([SubResource("Resource_cb1"), SubResource("Resource_cb2"), SubResource("Resource_cb3"), SubResource("Resource_cb4"), SubResource("Resource_cb5")])
+result_item = ExtResource("7")

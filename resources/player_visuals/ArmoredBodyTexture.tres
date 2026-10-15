@@ -1,0 +1,22 @@
+[gd_resource type="AnimatedTexture" load_steps=7 format=3]
+
+[ext_resource type="Texture2D" uid="uid://x86wgwt68w1f" path="res://assets/player/armored_greg_0001.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://dfoqjgbyg28ka" path="res://assets/player/armored_greg_0002.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://crpepopxttqtr" path="res://assets/player/armored_greg_0003.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dfp5o03ex5pe3" path="res://assets/player/armored_greg_0004.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://foqb2bpx8i" path="res://assets/player/armored_greg_0005.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://caspw23bnibxd" path="res://assets/player/armored_greg_0006.png" id="6"]
+
+[resource]
+frames = 6
+frame_0/texture = ExtResource("1")
+frame_1/texture = ExtResource("2")
+frame_1/duration = 1.0
+frame_2/texture = ExtResource("3")
+frame_2/duration = 1.0
+frame_3/texture = ExtResource("4")
+frame_3/duration = 1.0
+frame_4/texture = ExtResource("5")
+frame_4/duration = 1.0
+frame_5/texture = ExtResource("6")
+frame_5/duration = 1.0

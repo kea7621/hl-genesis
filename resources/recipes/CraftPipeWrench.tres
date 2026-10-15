@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CraftingRecipe" format=3 uid="uid://dgff6kqbj83bc"]
+
+[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1_k41el"]
+[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="2_14x4g"]
+[ext_resource type="Resource" uid="uid://d0t7uvvqbe86g" path="res://resources/items/PipeWrench.tres" id="3_spqk7"]
+[ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="4_8lf6o"]
+
+[sub_resource type="Resource" id="Resource_k41el"]
+script = ExtResource("1_k41el")
+item = ExtResource("2_14x4g")
+count = 2
+
+[resource]
+script = ExtResource("4_8lf6o")
+recipe_name = "Pipe Wrench"
+ingredients = Array[ExtResource("1_k41el")]([SubResource("Resource_k41el")])
+result_item = ExtResource("3_spqk7")

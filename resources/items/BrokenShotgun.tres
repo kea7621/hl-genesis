@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://dgxco16i2uhjb"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1_ts5m2"]
+
+[resource]
+script = ExtResource("1_ts5m2")
+item_name = "Broken M870"
+item_type = 2
+damage = 0.0

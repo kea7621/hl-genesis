@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://7xclar2xp55f"]
+
+[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1_75355"]
+[ext_resource type="Texture2D" uid="uid://bbpvqeqnbjuhq" path="res://assets/resources/plastic(pink) _0001.png" id="1_uhy6k"]
+
+[resource]
+script = ExtResource("1_75355")
+item_name = "Plastic"
+item_type = 2
+icon = ExtResource("1_uhy6k")
+damage = 0.0
