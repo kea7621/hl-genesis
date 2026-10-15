@@ -12,12 +12,13 @@ config_version=5
 
 config/name="HL-Genesis"
 run/main_scene="uid://x4xt5cmud8kq"
-config/features=PackedStringArray("4.6", "Mobile")
+config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
 
 SaveManager="*res://scripts/SaveManager.gd"
+PauseMenu="*res://scripts/PauseMenu.gd"
 
 [dotnet]
 

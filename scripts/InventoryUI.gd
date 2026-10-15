@@ -261,6 +261,7 @@ func _drop_item(index: int, whole_stack: bool = false) -> void:
 	container.display_name = item.item_name
 	container.roll_on_ready = false  # no loot_table to roll against — contents is set directly below
 	container.contents = dropped
+	container.add_to_group("dynamic_loot")  # see Enemy._drop_loot(): saved/recreated by SaveManager
 	get_parent().add_child(container)  # InventoryUI is a direct child of the level root, same as Player
 	container.global_position = player.global_position + Vector2(0, 24)  # just below the player's feet, not exactly on top of them
 

@@ -32,9 +32,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -150.0
-offset_top = -60.0
+offset_top = -95.0
 offset_right = 150.0
-offset_bottom = 60.0
+offset_bottom = 95.0
 theme_override_constants/separation = 16
 
 [node name="TitleLabel" type="Label" parent="Panel/VBoxContainer" unique_id=1142274305]

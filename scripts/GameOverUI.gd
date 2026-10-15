@@ -15,6 +15,8 @@ var player: CharacterBody2D
 @onready var respawn_button: Button = $Panel/VBoxContainer/RespawnButton
 @onready var main_menu_button: Button = $Panel/VBoxContainer/MainMenuButton
 
+var load_save_button: Button  # created in _ready(); only shown when a save file exists
+
 
 func _ready() -> void:
 	# Must keep processing/receiving input while the tree is paused, or the
@@ -25,11 +27,23 @@ func _ready() -> void:
 	player.died.connect(_on_player_died)
 	respawn_button.pressed.connect(_on_respawn_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
+
+	# "Respawn" restarts the level from scratch; this loads your newest save
+	# instead (autosave, quicksave or a manual slot — whichever is latest).
+	load_save_button = Button.new()
+	load_save_button.text = "Load Last Save"
+	load_save_button.custom_minimum_size = respawn_button.custom_minimum_size
+	load_save_button.pressed.connect(func() -> void: SaveManager.load_latest())
+	vbox.add_child(load_save_button)
+	vbox.move_child(load_save_button, respawn_button.get_index() + 1)
+	load_save_button.visible = false
+
 	panel.visible = false
 	panel.modulate.a = 0.0
 
 
 func _on_player_died() -> void:
+	load_save_button.visible = SaveManager.has_any_save()
 	panel.visible = true
 	get_tree().paused = true
 

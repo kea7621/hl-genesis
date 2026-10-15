@@ -268,6 +268,39 @@ func get_current_ammo(item: ItemData) -> int:
 	return _get_ammo(item)
 
 
+## --- Save/load support (see SaveManager.gd) ---
+## Magazines and loose rounds are keyed by weapon/ammo resource path, since
+## the ItemData resources themselves can't be written into a JSON file.
+
+func get_ammo_save_data() -> Dictionary:
+	var magazines := {}
+	for item in _weapon_ammo:
+		if item != null and item.resource_path != "":
+			magazines[item.resource_path] = _weapon_ammo[item]
+	var loose := {}
+	for ammo in _loose_rounds:
+		if ammo != null and ammo.resource_path != "":
+			loose[ammo.resource_path] = _loose_rounds[ammo]
+	return {"magazines": magazines, "loose": loose}
+
+
+func load_ammo_save_data(data: Dictionary) -> void:
+	_weapon_ammo.clear()
+	_loose_rounds.clear()
+	is_reloading = false
+	_reloading_item = null
+	var magazines: Dictionary = data.get("magazines", {})
+	for path in magazines:
+		var item := load(str(path)) as ItemData
+		if item != null:
+			_weapon_ammo[item] = int(magazines[path])
+	var loose: Dictionary = data.get("loose", {})
+	for path in loose:
+		var ammo := load(str(path)) as ItemData
+		if ammo != null:
+			_loose_rounds[ammo] = int(loose[path])
+
+
 func _set_ammo(item: ItemData, value: int) -> void:
 	_weapon_ammo[item] = max(value, 0)
 	if item == inventory.get_active_weapon():

@@ -47,14 +47,26 @@ func _on_body_exited(_body: Node) -> void:
 
 ## Called by LootUI's shared E-key dispatcher — never call this directly.
 func enter(player: CharacterBody2D) -> void:
-	if _interior == null:
-		_interior = INTERIOR_SCENE.instantiate()
-		get_parent().add_child(_interior)
-		_interior.global_position = global_position + PARK_OFFSET
-		_interior.setup(display_name, loot_table, self)
-
+	ensure_interior()
 	player.global_position = _interior.global_position + Vector2(0, 140)  # just inside the doorway, not room-center
 	_snap_camera(player)
+
+
+## Builds this door's interior if it doesn't exist yet (without moving
+## anyone into it). Split out of enter() so SaveManager can recreate a
+## building the player had already visited when a save is loaded.
+func ensure_interior() -> void:
+	if _interior != null:
+		return
+	_interior = INTERIOR_SCENE.instantiate()
+	get_parent().add_child(_interior)
+	_interior.global_position = global_position + PARK_OFFSET
+	_interior.setup(display_name, loot_table, self)
+
+
+## The interior if it's been created, else null (used by SaveManager).
+func get_interior() -> BuildingInterior:
+	return _interior
 
 
 ## The teleport is a big jump (PARK_OFFSET is thousands of pixels) and

@@ -70,6 +70,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if _is_locked() or next_scene_path == "":
 			return
 		get_viewport().set_input_as_handled()
+		SaveManager.autosave_on_level_start = true  # the next level autosaves as soon as it's ready — a checkpoint for "Continue"
 		get_tree().change_scene_to_file(next_scene_path)
 
 

@@ -460,6 +460,7 @@ func _drop_loot() -> void:
 	container.display_name = corpse_name
 	container.loot_table = loot_table
 	container.sprite_color = CORPSE_COLOR
+	container.add_to_group("dynamic_loot")  # SaveManager recreates these from the save file instead of treating them as level-placed containers
 	get_parent().add_child(container)
 	container.global_position = global_position
 

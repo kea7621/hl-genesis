@@ -49,6 +49,8 @@ func _ready() -> void:
 	add_child(boss_watch_timer)
 	_check_for_boss()
 
+	SaveManager.on_level_ready()  # makes the level-start autosave when we arrived via a LevelExit / new game
+
 
 ## --- Boss bar wiring ---
 ## Any enemy in the "boss_enemy" group (Wallhammer.gd is the one that
