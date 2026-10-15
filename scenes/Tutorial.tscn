@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://se0bva8df6qw" path="res://scenes/GameOverUI.tscn" id="game_over"]
 [ext_resource type="PackedScene" uid="uid://d3b015djtl7vt" path="res://scenes/HUD.tscn" id="hud"]
 [ext_resource type="PackedScene" uid="uid://cf8uyna52yxi2" path="res://scenes/InventoryUI.tscn" id="inventory_ui"]
-[ext_resource type="PackedScene" path="res://scenes/LootContainer.tscn" id="loot_container"]
+[ext_resource type="PackedScene" uid="uid://bfokfdcs88bas" path="res://scenes/LootContainer.tscn" id="loot_container"]
 [ext_resource type="PackedScene" uid="uid://dst420agwis6v" path="res://scenes/LootUI.tscn" id="loot_ui"]
 [ext_resource type="PackedScene" uid="uid://ilekdo1660hc" path="res://scenes/Player.tscn" id="player"]
 [ext_resource type="Resource" uid="uid://d12hhxnlvr4rw" path="res://resources/recipes/CraftAmmo.tres" id="recipe_ammo"]

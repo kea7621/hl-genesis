@@ -145,7 +145,6 @@ display_name = "Shack"
 loot_table = ExtResource("31_loot")
 
 [node name="InventoryUI" parent="." unique_id=724761577 instance=ExtResource("4")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")
 
 [node name="Crafting" type="Node" parent="." unique_id=1949253984]
@@ -159,13 +158,10 @@ inventory_path = NodePath("../Player/Inventory")
 crafting_path = NodePath("../Crafting")
 
 [node name="HUD" parent="." unique_id=123671991 instance=ExtResource("8")]
-visible = false
 player_path = NodePath("../Player")
 
 [node name="GameOverUI" parent="." unique_id=788747706 instance=ExtResource("11")]
-visible = false
 player_path = NodePath("../Player")
 
 [node name="LootUI" parent="." unique_id=53843274 instance=ExtResource("18_lootui")]
-visible = false
 inventory_path = NodePath("../Player/Inventory")

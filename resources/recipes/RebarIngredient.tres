@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="RecipeIngredient" format=3 uid="uid://e0o2ymc81njr"]
-
-[ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="1"]
-[ext_resource type="Resource" uid="uid://15oxnrblxwgp" path="res://resources/items/ScrapMetal.tres" id="2"]
-
-[resource]
-script = ExtResource("1")
-item = ExtResource("2")

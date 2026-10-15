@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://q1ob46lynvhp"]
-
-[ext_resource type="Script" uid="uid://c56x3t3npnhhk" path="res://scripts/ItemData.gd" id="1_pqlyi"]
-
-[resource]
-script = ExtResource("1_pqlyi")
-item_name = "Aramid Fiber"
-item_type = 2
-damage = 0.0

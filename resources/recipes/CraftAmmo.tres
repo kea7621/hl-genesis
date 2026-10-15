@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cp53plqwqd3ln" path="res://scripts/CraftingRecipe.gd" id="1"]
 [ext_resource type="Script" uid="uid://c0ulx6watdghh" path="res://scripts/RecipeIngredient.gd" id="2"]
 [ext_resource type="Resource" path="res://resources/items/Resin.tres" id="3_resin"]
-[ext_resource type="Resource" path="res://resources/items/Ammo.tres" id="4_ammo"]
+[ext_resource type="Resource" uid="uid://dud6c4lor58b3" path="res://resources/items/Ammo.tres" id="4_ammo"]
 
 [sub_resource type="Resource" id="RecipeIngredient_resin"]
 script = ExtResource("2")
