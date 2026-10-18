@@ -1,9 +1,9 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://c2lgyhmccvn02"]
 
 [ext_resource type="Script" uid="uid://2qakbhgsew00" path="res://scripts/Enemy.gd" id="1"]
 [ext_resource type="Script" uid="uid://tbbxwkm4oqjg" path="res://scripts/EnemyVitalsLabel.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://m28fom2js04c" path="res://assets/enemies/civpro/civpro.png" id="3_zombie"]
-[ext_resource type="Resource" path="res://resources/loot/TableLootZombie.tres" id="4_loot"]
+[ext_resource type="Resource" uid="uid://bm85c4385ars2" path="res://resources/loot/TableLootZombie.tres" id="4_loot"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 16.0
@@ -11,7 +11,7 @@ radius = 16.0
 [sub_resource type="CircleShape2D" id="2"]
 radius = 220.0
 
-[node name="EnemyZombie" type="CharacterBody2D"]
+[node name="EnemyZombie" type="CharacterBody2D" unique_id=1981233930]
 collision_layer = 2
 script = ExtResource("1")
 move_speed = 55.0
@@ -23,32 +23,31 @@ attack_range = 45.0
 attack_cooldown = 1.1
 attack_damage = 16.0
 max_health = 70.0
-flee_health_ratio = 0.0
 loot_table = ExtResource("4_loot")
 corpse_name = "Zombie Corpse"
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1585038597]
 modulate = Color(0.42, 0.55, 0.32, 1)
 texture = ExtResource("3_zombie")
 
-[node name="Pivot" type="Node2D" parent="."]
+[node name="Pivot" type="Node2D" parent="." unique_id=2105494694]
 
-[node name="WeaponSprite" type="Sprite2D" parent="Pivot"]
+[node name="WeaponSprite" type="Sprite2D" parent="Pivot" unique_id=23990929]
 offset = Vector2(9, 3)
 
-[node name="Muzzle" type="Marker2D" parent="Pivot"]
+[node name="Muzzle" type="Marker2D" parent="Pivot" unique_id=1850941703]
 position = Vector2(20, 0)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1461388885]
 shape = SubResource("1")
 
-[node name="VisionArea" type="Area2D" parent="."]
+[node name="VisionArea" type="Area2D" parent="." unique_id=1274042280]
 collision_layer = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="VisionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="VisionArea" unique_id=1838951743]
 shape = SubResource("2")
 
-[node name="VitalsLabel" type="Label" parent="."]
+[node name="VitalsLabel" type="Label" parent="." unique_id=692430305]
 offset_left = -50.0
 offset_top = -46.0
 offset_right = 50.0

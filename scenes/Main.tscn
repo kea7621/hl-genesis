@@ -13,12 +13,12 @@
 [ext_resource type="PackedScene" uid="uid://4sp8h8jr2kp3" path="res://scenes/EnemyPistol.tscn" id="17_nfivy"]
 [ext_resource type="PackedScene" uid="uid://bcx3hhu6l8mis" path="res://scenes/Enemy.tscn" id="18_1nqs0"]
 [ext_resource type="PackedScene" uid="uid://dst420agwis6v" path="res://scenes/LootUI.tscn" id="18_lootui"]
-[ext_resource type="PackedScene" path="res://scenes/EnemyZombie.tscn" id="19_1iba3"]
+[ext_resource type="PackedScene" uid="uid://c2lgyhmccvn02" path="res://scenes/EnemyZombie.tscn" id="19_1iba3"]
+[ext_resource type="PackedScene" uid="uid://bfokfdcs88bas" path="res://scenes/LootContainer.tscn" id="20_1iba3"]
+[ext_resource type="Resource" uid="uid://bumqbhq0vnoh6" path="res://resources/loot/TableLootTutorialGear.tres" id="21_yxlcp"]
 [ext_resource type="Resource" uid="uid://wskxsokuldcy" path="res://resources/recipes/CraftShotgun.tres" id="23_shotgun"]
-[ext_resource type="PackedScene" uid="uid://bmkdrf5qwyup" path="res://scenes/BuildingDoor.tscn" id="30_door"]
-[ext_resource type="Resource" uid="uid://fhe27ht7wwav" path="res://resources/loot/TableLootBasic.tres" id="31_loot"]
 [ext_resource type="PackedScene" uid="uid://dkg40fygaeuwo" path="res://scenes/CombineFabricator.tscn" id="32_fabricator"]
-[ext_resource type="Resource" uid="uid://bunjk851t4irt" path="res://resources/recipes/CraftAmmo.tres" id="33_ammo_recipe"]
+[ext_resource type="Resource" uid="uid://d12hhxnlvr4rw" path="res://resources/recipes/CraftAmmo.tres" id="33_ammo_recipe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nfivy"]
 texture = ExtResource("2_fs0b5")
@@ -127,7 +127,7 @@ physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_3p2gp")
 
-[node name="Main" type="Node2D" unique_id=512461581]
+[node name="ss" type="Node2D" unique_id=512461581]
 script = ExtResource("2")
 
 [node name="TileMapLayer2" type="TileMapLayer" parent="." unique_id=2064716793]
@@ -146,12 +146,6 @@ tile_set = SubResource("TileSet_collision")
 
 [node name="Player" parent="." unique_id=2089452300 instance=ExtResource("1")]
 acceleration = 750.0
-
-[node name="BuildingDoor" parent="." unique_id=1600000001 instance=ExtResource("30_door")]
-position = Vector2(556, 96)
-rotation = -0.0021456182
-display_name = "Shack"
-loot_table = ExtResource("31_loot")
 
 [node name="InventoryUI" parent="." unique_id=724761577 instance=ExtResource("4")]
 inventory_path = NodePath("../Player/Inventory")
@@ -175,7 +169,7 @@ player_path = NodePath("../Player")
 inventory_path = NodePath("../Player/Inventory")
 
 [node name="CombineFabricator" parent="." unique_id=1600000003 instance=ExtResource("32_fabricator")]
-position = Vector2(-101, 83)
+position = Vector2(975, 1188)
 crafting_ui_path = NodePath("../CraftingUI")
 locked_color = Color(1, 1, 1, 1)
 unlocked_color = Color(1, 1, 1, 1)
@@ -194,3 +188,8 @@ position = Vector2(-10, 822)
 
 [node name="EnemyZombie3" parent="." unique_id=1972462939 instance=ExtResource("19_1iba3")]
 position = Vector2(-134, 877)
+
+[node name="SupplyCrate" parent="." unique_id=1249557988 instance=ExtResource("20_1iba3")]
+position = Vector2(930, -341)
+display_name = "Supply Crate"
+loot_table = ExtResource("21_yxlcp")

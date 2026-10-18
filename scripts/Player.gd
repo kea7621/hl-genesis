@@ -3,9 +3,8 @@ extends CharacterBody2D
 ## --- Movement tuning ---
 @export var walk_speed: float = 180.0
 @export var sprint_speed: float = 300.0
-@export var acceleration: float = 1200.0
-@export var friction: float = 1000.0
-
+@export var acceleration: float = 3000.0
+@export var friction: float = 4000.0
 ## --- Stamina ---
 @export var max_stamina: float = 100.0
 @export var stamina_drain_per_sec: float = 20.0
@@ -141,7 +140,12 @@ func _handle_movement(delta: float) -> void:
 	var target_velocity: Vector2 = input_dir * target_speed
 
 	if input_dir.length() > 0.0:
-		velocity = velocity.move_toward(target_velocity, acceleration * delta)
+		# If the input opposes (or sharply turns from) current velocity,
+		# brake with friction first so direction changes feel snappy.
+		var rate: float = acceleration
+		if velocity.dot(target_velocity) < 0.0:
+			rate = friction
+		velocity = velocity.move_toward(target_velocity, rate * delta)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 
